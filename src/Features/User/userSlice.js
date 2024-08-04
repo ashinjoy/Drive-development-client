@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { emailAuth, googleAuth, verifyOtp, resendOtp } from "./userActions";
+import { emailAuth, googleAuth, verifyOtp, resendOtp,userProfileUpdate } from "./userActions";
 
 
 const userDetails = JSON.parse(localStorage.getItem('userDetail'))
 
-const userAccessToken = localStorage.getItem('userToken')
+const userAccessToken = localStorage.getItem('userAccessToken')
 
 const initialState = {
   user:userDetails ? userDetails : null,
@@ -27,6 +27,12 @@ const userSlice = createSlice({
       state.error = "";
       state.message = "";
     },
+    reset:(state)=>{
+      state.loading = false;
+      state.success = false
+      state.error = ""
+      state.message = ''
+    }
   },
 
   extraReducers(builder) {
@@ -54,11 +60,8 @@ const userSlice = createSlice({
 
       .addCase(emailAuth.fulfilled, (state, action) => {
         console.log("emmailAuthresponse", action);
-        // localStorage.setItem("token", action?.payload?.accessToken);
-        // state.success = true;
-        // state.user = action?.payload?.data;
-        // state.token = action?.payload?.accessToken;
-        // state.message = action?.payload?.message;
+        state.success = true;
+        state.message = action?.payload?.message;
       })
       .addCase(emailAuth.rejected, (state, action) => {
         state.error = action?.payload;
@@ -67,11 +70,13 @@ const userSlice = createSlice({
         state.loading = true;
       })
       .addCase(verifyOtp.fulfilled, (state, action) => {
-        // localStorage.setItem("token", action?.payload?.accessToken);
-        // state.success = true;
-        // state.user = action?.payload?.data;
-        // state.token = action?.payload?.accessToken;
-        // state.message = action?.payload?.message;
+        console.log('actionss',action);
+        localStorage.setItem("userAccessToken", action?.payload?.accessToken);
+        localStorage.setItem('userDetail',JSON.stringify(action?.payload?.data))
+        state.success = true;
+        state.user = action?.payload?.data;
+        state.token = action?.payload?.accessToken;
+        state.message = action?.payload?.message;
       })
       .addCase(verifyOtp.rejected, (state, action) => {
         console.log(action);
@@ -87,10 +92,23 @@ const userSlice = createSlice({
       })
       .addCase(resendOtp.rejected, (state, action) => {
         state.error = action?.payload?.message;
+      })
+      .addCase(userProfileUpdate.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(userProfileUpdate.fulfilled, (state, action) => {
+        console.log('action',action);
+        localStorage.setItem('userDetail',JSON.stringify(action?.payload?.data))
+        state.success = true;
+        state.user = action?.payload?.data
+        state.message = action?.payload?.message;
+      })
+      .addCase(userProfileUpdate.rejected, (state, action) => {
+        // state.error = action?.payload?.message;
       });
   },
 });
 
-export const { resetAll } = userSlice.actions;
+export const { resetAll ,reset } = userSlice.actions;
 
 export default userSlice.reducer;

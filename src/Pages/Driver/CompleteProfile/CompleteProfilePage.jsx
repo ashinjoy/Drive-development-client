@@ -6,7 +6,9 @@ import {resestAll} from '../../../Features/Driver/driverSlice'
 import { toast } from "react-toastify";
 import { BiUpload } from "react-icons/bi";
 import { MdCancel } from "react-icons/md";
-import UserNavbar from '../../../Components/Navbar/UserNavbar'
+// import UserNavbar from '../../../Components/Navbar/UserNavbar'
+import { useNavigate } from "react-router-dom";
+import DriverNavBar from "../../../Components/Navbar/DriverNavBar";
 
 function CompleteProfilePage() {
   const [licenseNumber, setLicenseNumber] = useState("");
@@ -16,6 +18,7 @@ function CompleteProfilePage() {
   const [vehicleRC, setVehicleRC] = useState("");
   const [vehiclePermit, setVehiclePermit] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const driverDetails = useSelector(state => state.driver)
 
   const proImgRef = useRef(null)
@@ -29,8 +32,6 @@ function CompleteProfilePage() {
   
     }
   }
-
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const formdata = new FormData();
@@ -42,18 +43,35 @@ function CompleteProfilePage() {
     formdata.append("vehicleRC", vehicleRC);
     formdata.append('driverId',driverDetails?.driver?.id)
     dispatch(resestAll())
-    dispatch(driverCompleteProfile(formdata));
+    if(licenseNumber.trim() == "" && licensePhoto == "" && proImg == "" , vehicleType == "" && vehiclePermit == ""){
+      toast('Please Fill all Fields')
+    }else if(licenseNumber.trim() == ""){
+      toast('Enter License Number')
+    }else if(vehicleType == ""){
+      toast('Enter Vehcile Type')
+    }else if(licensePhoto == ""){
+      toast('Provide license Front Image')
+    }else if(vehicleRC == ""){
+     toast('Please Provide your Vehicle RC')
+    }else if(proImg == ""){
+      toast('please provide a Profile Image')
+    }else{
+      dispatch(driverCompleteProfile(formdata));
+    }
   };
   useEffect(()=>{
- if(driverDetails?.message === 'You have completed your profile successfully'){
+    console.log('inside useeffecct');
+ if(driverDetails?.message == 'You have completed your profile successfully'){
   toast('Profile is Completed')
+  navigate('/driver/home',{replace:true})
+  return
  }
     
   },[driverDetails?.message])
 
-  useEffect(()=>{
-console.log('proImg',proImg);
-  },[proImg])
+//   useEffect(()=>{
+// console.log('proImg',proImg);
+//   },[proImg])
 
 const handleLicenseUpload = ()=>{
   licenseImgRef.current.click()
@@ -62,12 +80,61 @@ const handleLicenseUpload = ()=>{
 const handlePermitUpload =()=>{
 permitRef.current.click()
 }
+
+const handleProfileImgChange = (e)=>{
+const img = e.target.files[0]
+const typesIncluded = ['image/png','image/jpeg',]
+if(!typesIncluded.includes(img.type)){
+  console.log('condition matched');
+  toast('Only supports jpeg and png images')
+  return
+}else if(img.size > 5 * 1024 * 1024){
+  toast('upload Images less than 5MB')
+  return
+}else{
+  setProfileImg(img)
+  return
+}
+}
+
+const handleLicenseImgChange = (e)=>{
+  const img = e.target.files[0]
+  const typesIncluded = ['image/png','image/jpeg']
+  if(!typesIncluded.includes(img.type)){
+    console.log('condition matched');
+    toast('Only supports jpeg and png images')
+    return
+  }else if(img.size > 5 * 1024 * 1024){
+    toast('upload Images less than 5MB')
+    return
+  }else{
+    setLicenseImage(img)
+    return
+  }
+  }
+ 
+const handlePermitUploads =(e)=>{
+  const img = e.target.files[0]
+  const typesIncluded = ['image/png','image/jpeg']
+  if(!typesIncluded.includes(img.type)){
+    console.log('condition matched');
+    toast('Only supports jpeg and png images')
+    return
+  }else if(img.size > 5 * 1024 * 1024){
+    toast('upload Images less than 5MB')
+    return
+  }else{
+    setVehiclePermit(img)
+    return
+  }
+}  
+
   return (
     <>
-    <UserNavbar/>
-    <section className="bg-gray-50 bg-gradient-to-r from-white to-yellow-50 h-screen">
+    <DriverNavBar/>
+    <section className="  h-screen">
   <div className="flex flex-col items-center justify-center px-6 py-8 mt-24 mx-auto  lg:py-0">
-    <div className="w-full bg-white rounded-lg shadow-lg sm:max-w-xl xl:p-0 border border-yellow-300 bg-gradient-to-t from-white to-yellow-100">
+    <div className="w-full bg-white rounded-lg shadow-lg sm:max-w-xl xl:p-0 border border-yellow-300 bg-gradient-to-bl from-white to-yellow-50 mt-6">
       <div className="p-6 space-y-6 md:space-y-9 sm:p-8">
         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center">
           Complete Profile
@@ -79,10 +146,7 @@ permitRef.current.click()
           >
           <BiUpload size={'44'} className="text-gray-400 hover:text-yellow-500" onClick={handleProfileImg}/>
           <span className="text-gray-400">Click to upload</span>
-          <input  type="file" ref={proImgRef}  className="hidden" onChange={(e)=>{
-            
-            setProfileImg(e.target.files[0])
-          }} />
+          <input  type="file" ref={proImgRef} accept="image/png,image/jpeg" className="hidden" onChange={(e)=>handleProfileImgChange(e)} />
         </div>
       </div> ) :
      ( <div className="w-1/3">
@@ -100,7 +164,7 @@ permitRef.current.click()
       
           <div>
             <label for="license" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">License Number</label>
-            <input type="text" name="license" id="license" class="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500" placeholder="Enter your license number" required  
+            <input type="text" name="license" id="license" class="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500" placeholder="Enter your license number"   
             value={licenseNumber}
             onChange={(e) => setLicenseNumber(e.target.value)} />
           </div>
@@ -110,7 +174,7 @@ permitRef.current.click()
               >
               <BiUpload size={'44'} className="text-gray-400 hover:text-yellow-500" onClick={handleLicenseUpload} />
               <span className="text-gray-400">Click to upload</span>
-              <input type="file" ref={licenseImgRef} className="hidden" onChange={(e) => setLicenseImage(e.target.files[0])} />
+              <input type="file" ref={licenseImgRef} className="hidden" accept="image/png,image/jpeg" onChange={(e) => handleLicenseImgChange(e)} />
             </div>
           </div>) :
           (<div className="w-1/3">
@@ -161,7 +225,7 @@ permitRef.current.click()
           </div>
           <div>
             <label for="rcNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">RC Number</label>
-            <input type="text" name="rcNumber" id="rcNumber" class="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500" placeholder="Enter your RC number" required 
+            <input type="text" name="rcNumber" id="rcNumber" class="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500" placeholder="Enter your RC number"  
             value={vehicleRC}
             onChange={(e) => setVehicleRC(e.target.value)} />
           </div>
@@ -172,13 +236,12 @@ permitRef.current.click()
                 >
                 <BiUpload size={'44'} className="text-gray-400 hover:text-yellow-500" onClick={handlePermitUpload} />
                 <span className="text-gray-400">Click to upload</span>
-                <input type="file" ref={permitRef} className="hidden" onChange={(e) => setVehiclePermit(e.target.files[0])} />
+                <input type="file" ref={permitRef} className="hidden" accept="image/png,image/jpeg" onChange={(e) => handlePermitUploads(e)} />
               </div>
             </div>):
             <div className="w-1/3">
             <label for="licenseFrontImage" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Vehicle Permit</label>
             <MdCancel size={'30'} onClick={()=>{
-              console.log('heheh');
               setVehiclePermit('')
             }} />
       

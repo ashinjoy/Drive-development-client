@@ -1,4 +1,6 @@
-import axios from "../../Utils/Axios/axios";
+import axios from '../../Utils/Axios/baseUrl'
+
+import {driverPrivate} from "../../Utils/Axios/driverInterceptor";
 
 export const registerDriverService = async (formDetails) => {
   try {
@@ -15,7 +17,6 @@ export const registerDriverService = async (formDetails) => {
 export const verifyOtpService = async (otp) => {
   try {
     const response = await axios.post("auth/driver/verify-otp", { otp });
-
     return response;
   } catch (error) {
     console.error(error);
@@ -41,15 +42,15 @@ export const completeProfileService = async (formdata) => {
   }
 };
 
-export const confirmUpdateService = async (email) => {
-  try {
-    const response = await axios.post("auth/driver/confirmUpdate", { email });
-    return response;
-  } catch (error) {
-    console.error(error);
-  }
-};
+export const profileUpdateService = async (formDetails) => {
+  return driverPrivate.put('auth/driver/profileUpdate-request',formDetails,{headers:{'Content-Type':'multipart/form-data'}})
+ };
 
-export const driverLoginService = async()=>{
-  return await axios.post('auth/driver/login')
+
+export const driverLoginService = async(formDetails)=>{
+  return await axios.post('auth/driver/login',formDetails)
+}
+
+export const logoutService = async()=>{
+  return await axios.get('auth/driver/logout')
 }

@@ -7,6 +7,7 @@ import { verifyOtp, resendOtp } from "../../../Features/User/userActions";
 
 
 function OtpModal({ email, setShowModal }) {
+  console.log('email',email)
   const [otpInp, setOtp] = useState(new Array(4).fill(""));
   const otpBoxReference = useRef([]);
   const [enableButton, setEnable] = useState(true);
@@ -80,9 +81,6 @@ function OtpModal({ email, setShowModal }) {
     const otp = otpInp.join("");
       dispatch(verifyOtp(otp));
     setOtp(new Array(4).fill(""));
-    if (message === "Otp Verification SucessFull") {
-      navigate("/");
-    }
   };
 
   const handleResendOtp = () => {
@@ -94,6 +92,12 @@ function OtpModal({ email, setShowModal }) {
   const closeModal = () => {
     setShowModal(false);
   };
+
+  useEffect(()=>{
+    if(message == 'Otp Verification SucessFull'){
+      navigate('/')
+    }
+  },[message])
 
   return createPortal(
     <>

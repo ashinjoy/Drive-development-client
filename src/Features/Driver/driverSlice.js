@@ -5,14 +5,16 @@ import {
   resendDriverOtp,
   verifyDriverOtp,
   driverLogin,
-  confirmUpdate
+  confirmUpdate,
+  profileUpdateRequest
 } from "./driverActions";
 
 
 const driverData  =JSON.parse(localStorage.getItem('driverData'))
+const driverAccessToken = localStorage.getItem('driverAccessToken')
 const initialState = {
   driver: driverData ? driverData :'',
-  token: null,
+  token:driverAccessToken ? driverAccessToken : null,
   loading: false,
   success: false,
   message:'',
@@ -24,12 +26,7 @@ const driverSlice = createSlice({
     initialState,
     reducers: {
       resestAll: (state) => {
-        state.driver = "";
-          state.token = null;
-          state.loading = false;
-          state.success = "";
-          state.error = "";
-          
+       return initialState   
       },
     },
     extraReducers(builder) {
@@ -44,30 +41,44 @@ const driverSlice = createSlice({
         .addCase(registerDriver.rejected, (state, action) => {
           state.error = action?.payload
         })
+
         .addCase(verifyDriverOtp.pending, (state, action) => {
           state.loading = true;
         })
         .addCase(verifyDriverOtp.fulfilled, (state, action) => {
-          console.log('action',action);
-
-          // localStorage.setItem('driverToken',action?.payload?.accessToken)
+          localStorage.setItem('driverData',JSON.stringify(action?.payload?.data))
           state.driver = action?.payload?.data
-          // state.token = action?.payload?.accessToken
           state.message = action?.payload?.message
         })
         .addCase(verifyDriverOtp.rejected, (state, action) => {
           state.error = action?.payload?.error
         })
         .addCase(resendDriverOtp.pending, (state, action) => {
-          
+          state.loading =  true
         })
-        .addCase(resendDriverOtp.fulfilled, (state, action) => {})
-        .addCase(resendDriverOtp.rejected, (state, action) => {})
-        // .addCase(login.pending, (state, action) => {
-        //   state.loading = true;
-        // })
-      //   .addCase(login.fulfilled, (state, action) => {})
-      //   .addCase(login.rejected, (state, action) => {})
+        .addCase(resendDriverOtp.fulfilled, (state, action) => {
+console.log('actionnnnn',action);
+          state.success =  true
+          state.message = action?.payload?.message
+        })
+        .addCase(resendDriverOtp.rejected, (state, action) => {
+          state.error = action?.payload
+        })
+        .addCase(driverLogin.pending, (state, action) => {
+          state.loading = true;
+        })
+        .addCase(driverLogin.fulfilled, (state, action) => {
+          console.log('asas',action)
+          localStorage.setItem('driverData',JSON.stringify(action?.payload?.data))
+          localStorage.setItem('driverAccessToken',action?.payload?.accessToken)
+          state.success = true
+          state.driver = action?.payload?.data
+          state.token = action?.payload?.accessToken
+          state.message = action?.payload?.message
+        })
+        .addCase(driverLogin.rejected, (state, action) => {
+          state.error = action?.payload
+        })
         .addCase(driverCompleteProfile.pending, (state, action) => {
           state.loading = true;
         })
@@ -75,10 +86,27 @@ const driverSlice = createSlice({
           localStorage.setItem('driverData',JSON.stringify(action?.payload?.data))
           state.success = true
           state.driver = action?.payload?.data
-          state.message = action?.payload?.message
-          
+          state.message = action?.payload?.message       
         })
-        .addCase(driverCompleteProfile.rejected, (state, action) => {});
+        .addCase(driverCompleteProfile.rejected, (state, action) => {
+          state.error = action?.payload
+        })
+        .addCase(profileUpdateRequest.pending, (state, action) => {
+          state.loading = true;
+        })
+        .addCase(profileUpdateRequest.fulfilled, (state, action) => {
+          console.log('myactionin',action);
+          localStorage.setItem('driverData',JSON.stringify(action?.payload?.data?.driverData))
+          localStorage.removeItem('driverAccessToken')
+          state.success = true
+          state.driver = action?.payload?.data
+          state.message = action?.payload?.data?.message
+        })
+        .addCase(profileUpdateRequest.rejected, (state, action) => {
+          console.log('profileUpdation',action);
+          // state.error
+        });
+        
     }
 })  
 export const {resestAll} = driverSlice.actions

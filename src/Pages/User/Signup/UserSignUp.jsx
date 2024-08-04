@@ -19,7 +19,11 @@ function SignupForm() {
   const handleEmailLogin = (e) => {
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if(!emailRegex.test(email)){
+    if(email == ''){
+      toast('Please Enter your Email')
+      return
+    }else if(!emailRegex.test(email)){
+      toast('Enter valid Email')
       return
     }
     dispatch(emailAuth(email));
@@ -56,7 +60,7 @@ function SignupForm() {
   return (
     <>
     <UserNavbar/>
-    {showModal && <OtpModal setShowModal = {setShowModal} />}
+    {showModal && <OtpModal email={email} setShowModal = {setShowModal} />}
     <div className="flex justify-center items-center mt-12 bg-gradient-to-r from-white to-yellow-50 h-screen">
       <div className="w-2/5 h-3/4 border-2 rounded-lg shadow-2xl border-yellow-300 bg-gradient-to-t from-white to-yellow-100">
         <h1 className="text-center mt-10 font-semibold text-2xl text-gray-700">

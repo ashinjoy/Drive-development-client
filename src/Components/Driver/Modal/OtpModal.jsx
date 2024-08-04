@@ -10,7 +10,7 @@ function OtpModal({ email, setShowModal }) {
   const otpBoxReference = useRef([]);
   const [enableButton, setEnable] = useState(true);
   const [resendOtpEnable, setResendOtpEnable] = useState(true);
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(60);
   const [restartTimer, setTimerRestart] = useState(false);
   const { user, error, message } = useSelector((state) => state.driver);
   
@@ -37,6 +37,8 @@ function OtpModal({ email, setShowModal }) {
       navigate("/driver/complete-profile", { replace: true });
     }
   }, [message]);
+
+  
 
   useEffect(() => {
     const allInp = otpInp.every((otp) => otp !== "");
@@ -86,7 +88,7 @@ function OtpModal({ email, setShowModal }) {
   };
 
   const handleResendOtp = () => {
-    setTimer(10);
+    setTimer(60);
     setTimerRestart(!restartTimer);
     dispatch(resendDriverOtp(email));
   };

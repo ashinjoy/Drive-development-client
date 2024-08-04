@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { googleAuthService ,emailAuthService ,verifyOtpService,resendOtpService } from "../../Features/User/userService";
+import { googleAuthService ,emailAuthService ,verifyOtpService,resendOtpService,userProfileUpdateService,userLogoutService  } from "../../Features/User/userService";
 console.log('userAction');
 
 export const googleAuth = createAsyncThunk("googleAuth", async (token,{rejectWithValue}) => {
@@ -44,5 +44,23 @@ export const resendOtp = createAsyncThunk('resendOtp',async(email)=>{
     console.error(error)
   }
 
+})
+
+export const userProfileUpdate = createAsyncThunk('userProfileUpdate',async(formData,{rejectWithValue})=>{
+  try {
+    const response = await userProfileUpdateService(formData)
+    return response.data
+  } catch (error) {
+    console.error(error)
+    rejectWithValue(error?.response?.data?.error)
+  }
+})
+
+export const userLogout = createAsyncThunk('userLogout',async()=>{
+  try {
+    await userLogoutService()
+  } catch (error) {
+    
+  }
 })
 

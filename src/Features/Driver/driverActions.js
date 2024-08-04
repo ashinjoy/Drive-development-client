@@ -4,8 +4,9 @@ import {
   verifyOtpService,
   resendOtpService,
   completeProfileService,
-  confirmUpdateService,
-  driverLoginService
+  driverLoginService,
+  profileUpdateService,
+  logoutService
 } from "./driverService";
 
 export const registerDriver = createAsyncThunk(
@@ -62,22 +63,30 @@ export const driverCompleteProfile = createAsyncThunk(
 
 export const driverLogin = createAsyncThunk("driverLogin", async (formdata,{rejectWithValue}) => {
   try {
+    console.log('fr',formdata);
     const response = await driverLoginService(formdata);
     return response.data;
   } catch (error) {
-    console.error(error);
+    console.log('err in login',error);
     return rejectWithValue(error?.response?.data?.error)
   }
 });
 
-// export const confirmUpdate = createAsyncThunk(
-//   "confirmProfileUpdation",
-//   async (email) => {
-//     try {
-//       const response = await confirmUpdateService(email);
-//       return response.data;
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   }
-// );
+export const profileUpdateRequest = createAsyncThunk('profileUpdate',async(profileDetails,{rejectWithValue})=>{
+try {
+  const response = await profileUpdateService(profileDetails)
+  return response
+} catch (error) {
+ return rejectWithValue(error?.response?.data?.error)
+}
+})
+
+export const logoutAction = createAsyncThunk('handleLogoutAction',async(userId,{rejectWithValue})=>{
+  try {
+    const response = await logoutService(userId)
+    return response
+  } catch (error) {
+   return rejectWithValue(error?.response?.data?.error)
+  }
+  })
+  

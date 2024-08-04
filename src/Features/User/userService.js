@@ -1,4 +1,5 @@
-import axios from "../../Utils/Axios/axios";
+import axios from '../../Utils/Axios/baseUrl'
+import {UserPrivate} from "../../Utils/Axios/userInterceptor";
 console.log('services');
 
 export const googleAuthService = async (token) => {
@@ -38,8 +39,15 @@ export const resendOtpService = async(email)=>{
   try {
     console.log('email in resendOtp',email);
     return await axios.post('auth/user/resend-otp',{email})
-
   } catch (error) {
     console.error(error)
   }
+}
+
+export const userProfileUpdateService = async(formdata)=>{
+  return await UserPrivate.put(`auth/user/userProfileUpdate`,formdata,{headers:{'Content-Type':'multipart/form-data'}})
+}
+
+export const userLogoutService = async()=>{
+  return await axios.get('auth/user/logout')
 }

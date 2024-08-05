@@ -7,6 +7,11 @@ body{
   font-family: "Lexend Deca", sans-serif;
   font-weight: 500;
   height: 100%;
+  /* overflow-x: hidden; */
   background: linear-gradient(to right, #ffffff, #ffffe8);
-  
+}
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; 
 }

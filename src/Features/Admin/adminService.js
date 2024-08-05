@@ -37,3 +37,8 @@ export const getUserDetailService =async(driverId)=>{
 export const blockUnblockUserService = async(userId)=>{
   return adminPrivate.patch(`/auth/admin/blockunblockUser/${userId}`)
 }
+
+export const searchDriverService = async(search)=>{
+  return adminPrivate.get(`/auth/admin/drivers?search=${search}`)
+}
+

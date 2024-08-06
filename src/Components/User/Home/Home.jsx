@@ -1,8 +1,19 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { TfiLocationPin,TfiFlag } from "react-icons/tfi";
 
+import LocationModal from '../Modal/LocationModal';
+
 function Home() {
+    const [modal,setModal] = useState(false)
+useEffect(()=>{
+setModal(true)
+return ()=>{
+    setModal(false)
+}
+},[])
   return (
+    <>
+    {modal && <LocationModal isOpen={modal} setModal={setModal}/>}
     <div className='flex justify-between items-center min-h-[50vh] bg-white ml-10 pt-[8rem]'>
             <div className='sm:ml-10'>
                 <h1 className='text-4xl font-bold tracking-wide'>Always There to</h1>
@@ -35,6 +46,7 @@ function Home() {
                 </div>
             </div>
         </div>
+        </>
   )
 }
 

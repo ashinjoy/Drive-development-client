@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import {adminLogin,getDriverDetails,blockUnblockDriver,driverDetails,getUserDetails, blockUnblockUser,searchDrivers} from './adminActions'
+import {adminLogin,getDriverDetails,blockUnblockDriver,driverDetails,getUserDetails, blockUnblockUser,searchDrivers,approveDriver} from './adminActions'
 
 const adminData = JSON.parse(localStorage.getItem('adminData'))
 const adminAccessToken = localStorage.getItem('adminAccessToken')
@@ -22,7 +22,7 @@ const initialState = {
       reducers: {
         resetAdminState: () => {
          return initialState   
-        },
+        }
       },
       extraReducers(builder) {
         builder
@@ -100,26 +100,22 @@ const initialState = {
             state.loading = true;
           })
           .addCase(getUserDetails.fulfilled, (state,action) => {
-            console.log('acacac',action )
+           
               state.success = true
               state.userData = action?.payload?.userDetails
               state.message = action?.payload?.message
           })
-          .addCase(getUserDetails.rejected, (state, action) => {
-          })
-          .addCase(searchDrivers.pending,(state,action)=>{
+          .addCase(approveDriver.pending,(state,action)=>{
             state.loading = true
           })
-          .addCase(searchDrivers.fulfilled,(state,action)=>{
-            state.success = true
-            state.driverData =action?.payload?.driverDetails
-          })
-          .addCase(searchDrivers.rejected,(state,action)=>{
-            state.error = 'err'
-          })
-        }      
+          .addCase(approveDriver.fulfilled,(state,action)=>{
+            state.success =  true
+            state.driverData.isAccepted = action?.payload?.driverUpdatedData?.isAccepted
+            state.message = action?.payload?.message
+        })  
+      }   
   })
 
-  export const {resetAdminState} = adminSlice.actions
+  export const {resetAdminState,updateDriver} = adminSlice.actions
 
   export default adminSlice.reducer

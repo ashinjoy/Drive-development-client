@@ -42,7 +42,7 @@ const userSlice = createSlice({
       })
 
       .addCase(googleAuth.fulfilled, (state, action) => {
-        localStorage.setItem("userToken", action?.payload?.accessToken);
+        localStorage.setItem("userAccessToken", action?.payload?.accessToken);
         localStorage.setItem('userDetail',JSON.stringify(action?.payload?.data))
         state.success = true;
         state.user = action?.payload?.data;

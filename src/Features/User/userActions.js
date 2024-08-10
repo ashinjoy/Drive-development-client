@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { googleAuthService ,emailAuthService ,verifyOtpService,resendOtpService,userProfileUpdateService,userLogoutService  } from "../../Features/User/userService";
+import { googleAuthService ,emailAuthService ,verifyOtpService,resendOtpService,userProfileUpdateService,userLogoutService,userCurrentLocationService  } from "../../Features/User/userService";
 console.log('userAction');
 
 export const googleAuth = createAsyncThunk("googleAuth", async (token,{rejectWithValue}) => {
@@ -59,6 +59,15 @@ export const userProfileUpdate = createAsyncThunk('userProfileUpdate',async(form
 export const userLogout = createAsyncThunk('userLogout',async()=>{
   try {
     await userLogoutService()
+  } catch (error) {
+    
+  }
+})
+
+export const userCurrentLocation =createAsyncThunk('userCurrentLocation',async(coordinates)=>{
+  try {
+  const response = await userCurrentLocationService(coordinates) 
+  return response.data
   } catch (error) {
     
   }

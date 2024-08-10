@@ -29,9 +29,13 @@ function CompleteProfilePage() {
     console.log(proImgRef.current);
     if(proImgRef.current){
       proImgRef.current.click()
-  
     }
   }
+
+   useEffect(() => {
+    console.log('driverDetails',driverDetails);
+
+  }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
     const formdata = new FormData();
@@ -41,7 +45,7 @@ function CompleteProfilePage() {
     formdata.append("licenseNumber", licenseNumber);
     formdata.append("vehicleType", vehicleType);
     formdata.append("vehicleRC", vehicleRC);
-    formdata.append('driverId',driverDetails?.driver?.id)
+    formdata.append('driverId',driverDetails?.driver?._id)
     dispatch(resestAll())
     if(licenseNumber.trim() == "" && licensePhoto == "" && proImg == "" , vehicleType == "" && vehiclePermit == ""){
       toast('Please Fill all Fields')
@@ -66,13 +70,11 @@ function CompleteProfilePage() {
   navigate('/driver/home',{replace:true})
   return
  }
-    
-  },[driverDetails?.message])
+},[driverDetails?.message])
 
 //   useEffect(()=>{
 // console.log('proImg',proImg);
 //   },[proImg])
-
 const handleLicenseUpload = ()=>{
   licenseImgRef.current.click()
 }

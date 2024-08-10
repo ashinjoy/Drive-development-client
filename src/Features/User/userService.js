@@ -1,6 +1,6 @@
 import axios from '../../Utils/Axios/baseUrl'
 import {UserPrivate} from "../../Utils/Axios/userInterceptor";
-console.log('services');
+
 
 export const googleAuthService = async (token) => {
   try {
@@ -50,4 +50,9 @@ export const userProfileUpdateService = async(formdata)=>{
 
 export const userLogoutService = async()=>{
   return await axios.get('auth/user/logout')
+}
+
+export const userCurrentLocationService = async(coordinates)=>{
+  console.log(coordinates);
+  return await axios.post('trip/users/location',coordinates)
 }

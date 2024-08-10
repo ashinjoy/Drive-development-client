@@ -11,6 +11,7 @@ import {
   searchDriverService
 } from "./adminService";
 
+
 export const adminLogin = createAsyncThunk(
   "adminLogin",
   async (formdata, { rejectWithValue }) => {
@@ -69,7 +70,7 @@ export const approveDriver = createAsyncThunk(
   async (driverId, { rejectWithValue }) => {
     try {
       const response = await approveDriverService(driverId);
-      return response.data;
+       return response.data
     } catch (error) {
       console.error(error);
       rejectWithValue(error?.response?.data?.error);
@@ -100,6 +101,7 @@ export const getUserDetails = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.error(error);
+      rejectWithValue(error)
     }
   }
 );

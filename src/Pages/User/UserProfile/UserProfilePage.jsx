@@ -59,7 +59,6 @@ function UserProfilePage() {
     form.append("phone", phone);
     form.append("profileImg", profileImg);
     form.append("userId", user?.id);
-
     dispatch(userProfileUpdate(form));
   };
   useEffect(() => {

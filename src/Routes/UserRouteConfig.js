@@ -17,6 +17,7 @@ import DriverProtected from "./DriverProtected.js";
 import Approval from "../Pages/Driver/ApprovalUI/Approval.jsx";
 import UsersList from "../Pages/Admin/UsersList.jsx";
 import UserProtected from "./UserProtected.js";
+import RidePage from "../Pages/User/Trip/RidePage.jsx";
 
 function RouteConfig() {
   const router = createBrowserRouter([
@@ -35,6 +36,10 @@ function RouteConfig() {
           <UserProfile />
         </UserProtected>
       ),
+    },
+    {
+      path:'/ridePage',
+      element:<RidePage/>
     },
     {
       path: "/driver",

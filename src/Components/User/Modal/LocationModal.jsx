@@ -8,6 +8,10 @@ import { createPortal } from 'react-dom';
 const LocationModal = ({ isOpen, setModal }) => {
 
   const handleAllow = () => {
+    console.log('entry');
+    navigator.geolocation.getCurrentPosition((position)=>{
+    console.log(position.coords);
+    })
     
   };
 

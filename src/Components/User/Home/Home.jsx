@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { TfiLocationPin, TfiFlag } from "react-icons/tfi";
 import { FaLocationArrow } from "react-icons/fa6";
-
+import { motion } from "framer-motion";
 import LocationModal from "../Modal/LocationModal";
+import {reset} from '../../../Features/User/userSlice'
+import { useDispatch } from "react-redux";
+
 
 
 function Home() {
+  const dispatch = useDispatch()
 
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -23,6 +27,10 @@ function Home() {
 
     }
   }
+
+  useEffect(()=>{
+    dispatch(reset())
+  },[])
 
 
 
@@ -68,15 +76,19 @@ function Home() {
           </button>
         </div>
 
-        <div className="relative md:block hidden">
+        <div className="relative md:block hidden ">
           <div className="lg:block hidden absolute bottom-0 right-0 w-[50vw] h-[50vh] border-b-[60vh] border-b-[#FEB71B] border-l-[50vw] border-l-transparent "></div>
-          <div className="w-[35vw] mr-[7rem] mb-[4rem]">
+          <motion.div 
+          initial={{x:1000}}
+          animate={{x:0}}
+          transition={{duration:0.9}}
+          className="w-[35vw] mr-[7rem] mb-[4rem]">
             <img
               src="/assets/Bike-Taxi-App-Bike-Taxi-Kolkata-Bike-Taxi-Number-Bike-Taxi-BroomBoom-1.webp"
               alt="Bike Riders"
               className="relative z-10 w-[100%]"
             />
-          </div>
+          </motion.div>
         </div>
       </div>
     </>

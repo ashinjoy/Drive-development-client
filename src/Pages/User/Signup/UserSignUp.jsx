@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { googleAuth, emailAuth } from "../../../Features/User/userActions";
 import UserNavbar from "../../../Components/Navbar/UserNavbar";
 import OtpModal from '../../../Components/User/Modal/OtpModal'
+import { useSocket } from "../../../Hooks/socket";
 
 function SignupForm() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ function SignupForm() {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.user);
   const navigate = useNavigate()
+  const socket = useSocket()
 
   const handleEmailLogin = (e) => {
 
@@ -42,7 +44,7 @@ function SignupForm() {
 
   useEffect(()=>{
     if(userData?.message == 'Google Authentication SuccessFull'){
-      toast('Welcome to Drive !')
+      socket?.emit('user-connected',userData?.user?.id)
       setTimeout(()=>{
         navigate('/',{replace:true})
       },1000)

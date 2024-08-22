@@ -123,8 +123,7 @@ export const searchDrivers = createAsyncThunk(
   "driverSearch",
   async (search,{rejectWithValue}) => {
     try {
-        console.log('data to be lodade');
-        
+      
       const response = await searchDriverService(search);
       console.log('response',response.data)
       return response.data  

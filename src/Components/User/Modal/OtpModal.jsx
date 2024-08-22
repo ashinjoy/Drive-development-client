@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaWindowClose } from "react-icons/fa";
 import { verifyOtp, resendOtp } from "../../../Features/User/userActions";
+import { useSocket } from "../../../Hooks/socket";
 
 
 function OtpModal({ email, setShowModal }) {
@@ -15,6 +16,7 @@ function OtpModal({ email, setShowModal }) {
   const [timer, setTimer] = useState(10);
   const [restartTimer, setTimerRestart] = useState(false);
   const { user, error, message } = useSelector((state) => state.user);
+  const socket = useSocket()
   
 
   const dispatch = useDispatch();
@@ -36,6 +38,7 @@ function OtpModal({ email, setShowModal }) {
 
   useEffect(() => {
     if (message === "Otp Verification SucessFull") {
+      socket?.emit('user-connected',user?.id)
       navigate("/", { replace: true });
     }
   }, [message]);

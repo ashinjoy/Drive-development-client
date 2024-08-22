@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userProfileUpdate } from "../../../Features/User/userActions";
 import { MdCancel } from "react-icons/md";
 import { toast } from "react-toastify";
+import { reset } from "../../../Features/User/userSlice";
 
 function UserProfilePage() {
   const imgUploadRef = useRef(null);
@@ -49,7 +50,7 @@ function UserProfilePage() {
     setProfileImg(e.target.files[0]);
     setChange(true);
   };
-  useEffect(() => {}, []);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -59,7 +60,15 @@ function UserProfilePage() {
     form.append("phone", phone);
     form.append("profileImg", profileImg);
     form.append("userId", user?.id);
-    dispatch(userProfileUpdate(form));
+    if(name == ''){
+      toast('Fill your Name')
+    }else if(email == ''){
+      toast('Fill Email Field')
+    }else if(phone == ''){
+      toast('fill phone field')
+    }else{
+      dispatch(userProfileUpdate(form));
+    }
   };
   useEffect(() => {
     if (profileImg instanceof File) {
@@ -70,10 +79,12 @@ function UserProfilePage() {
       setProfileUrl(profileImg);
     }
   }, [profileImg]);
+  
 
   useEffect(()=>{
     if(message == 'User Profile updated SuccessFully'){
       toast(message)
+      dispatch(reset())
       return
     }
   },[message])

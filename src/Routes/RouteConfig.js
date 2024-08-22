@@ -1,8 +1,8 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "../Pages/User/Home/HomePage";
-import SignUp from "../Pages/User/Signup/UserSignUp";
-import UserProfile from "../Pages/User/UserProfile/UserProfilePage";
+import Home from "../Pages/User/Home/HomePage.jsx";
+import SignUp from "../Pages/User/Signup/UserSignUp.jsx";
+import UserProfile from "../Pages/User/UserProfile/UserProfilePage.jsx";
 import DriverSignup from "../Pages/Driver/Signup/SignupPage.js";
 import CompleteProfilePage from "../Pages/Driver/CompleteProfile/CompleteProfilePage.jsx";
 import DriverLoginPage from "../Pages/Driver/Login/DriverLoginPage.jsx";
@@ -18,6 +18,10 @@ import Approval from "../Pages/Driver/ApprovalUI/Approval.jsx";
 import UsersList from "../Pages/Admin/UsersList.jsx";
 import UserProtected from "./UserProtected.js";
 import RidePage from "../Pages/User/Trip/RidePage.jsx";
+import Trip from "../Pages/Driver/Trip/Trip.jsx";
+import LiveMapUpdates from "../Components/User/Maps/LiveMap.jsx";
+import LiveLocation from "../Pages/User/Trip/LiveLocation.jsx";
+// import UserSearchContext from "../Context/UserSearchContext.js";
 
 function RouteConfig() {
   const router = createBrowserRouter([
@@ -38,8 +42,12 @@ function RouteConfig() {
       ),
     },
     {
-      path:'/ridePage',
-      element:<RidePage/>
+      path: "/search-ride",
+      element: <RidePage />,
+    },
+    {
+      path: "/trip",
+      element: <LiveLocation/>,
     },
     {
       path: "/driver",
@@ -49,12 +57,12 @@ function RouteConfig() {
           element: <DriverSignup />,
         },
         {
-          path: "complete-profile",
-          element: <CompleteProfilePage />,
-        },
-        {
           path: "login",
           element: <DriverLoginPage />,
+        },
+        {
+          path: "complete-profile",
+          element: <CompleteProfilePage />,
         },
         {
           path: "profile",
@@ -74,8 +82,18 @@ function RouteConfig() {
         },
         {
           path: "approval",
-          element: <Approval />,
+          element: <Approval/>,
         },
+
+        {
+          path: "trip",
+          element: (
+            <DriverProtected>
+              <Trip/>
+            </DriverProtected>
+          ),
+        },
+        
       ],
     },
     {

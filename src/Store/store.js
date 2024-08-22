@@ -2,13 +2,17 @@ import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "../Features/User/userSlice";
 import driverReducer from "../Features/Driver/driverSlice";
 import adminReducer from "../Features/Admin/adminSlice";
+import locationReducer from '../Features/Location/locationSlice'
+import tripReducer from '../Features/Trip/tripSlice'
 
-console.log('this is store');
+
 const store = configureStore({
   reducer: {
     user: userReducer,
     driver:driverReducer,
-    admin:adminReducer
+    admin:adminReducer,
+    location:locationReducer,
+    trip:tripReducer
   },
 });
 

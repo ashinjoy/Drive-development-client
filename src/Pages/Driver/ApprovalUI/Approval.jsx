@@ -4,19 +4,27 @@ import DriverNavBar from '../../../Components/Navbar/DriverNavBar'
 function Approval() {
   return (
     <>
-    {/* <DriverNavBar/> */}
-    <section class="bg-gray-50 bg-gradient-to-r from-white to-yellow-50 h-screen">
-    <div class="flex flex-col items-center justify-center px-6 py-8 mt-6 mx-auto md:h-screen lg:py-0">
-      <div class="w-full bg-white rounded-lg shadow-lg md:mt-16 sm:max-w-md xl:p-0 border border-yellow-300 bg-gradient-to-t from-white to-yellow-100">
-        <div class="p-6 space-y-6 md:space-y-8 sm:p-8">
-          <h1 class="text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-black md:text-3xl">
-            Waiting Approval UI DUMMY Only for Tommorows Review-
-          </h1>
-  
+    {/* <div className='flex h-screen gap-[23rem] items-center'>
+    <DriverNavBar/>
+   <div className='w-[500px] h-[500px] mt-24  border-2 rounded-full border-slate-100 drop-shadow-md py-10 flex items-center justify-center text-5xl font-bold bg-gradient-to-br from-white to-yellow-200 text-red-300'>
+    Approval Pending
+   </div>
+   </div> */}
+   <div className="flex h-screen gap-[15rem] items-center ">
+    <DriverNavBar />
+    <div className="flex flex-col items-center justify-center">
+        <div className="w-[500px] h-[500px] border-4 rounded-full border-yellow-400 shadow-lg flex items-center justify-center bg-gradient-to-br from-yellow-100 to-yellow-300">
+            <span className="text-4xl font-bold text-yellow-700">Approval Pending</span>
         </div>
-      </div>
+        <div className="mt-8 text-center">
+            <p className="text-lg text-gray-600">We are reviewing your profile. You will be notified once it is approved.</p>
+            <button className="mt-4 px-6 py-2 bg-yellow-400 text-white rounded-full shadow-md hover:bg-yellow-500 transition duration-300 ease-in-out">
+                Learn More
+            </button>
+        </div>
     </div>
-  </section>
+</div>
+
   </>
   )
 }

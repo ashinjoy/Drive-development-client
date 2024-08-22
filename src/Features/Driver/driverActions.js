@@ -6,6 +6,8 @@ import {
   completeProfileService,
   driverLoginService,
   profileUpdateService,
+  driverActiveService,
+  driverInactiveService,
   logoutService
 } from "./driverService";
 
@@ -89,4 +91,22 @@ export const logoutAction = createAsyncThunk('handleLogoutAction',async(userId,{
    return rejectWithValue(error?.response?.data?.error)
   }
   })
+
+  export const driverActive =createAsyncThunk('driverActive',async(driverData,{rejectWithValue})=>{
+try {
+  const response = await driverActiveService(driverData)
+  return response.data
+} catch (error) {
+  console.error(error)
+}
+  })
+
+  export const driverInctive =createAsyncThunk('driverInctive',async(driverId,{rejectWithValue})=>{
+    try {
+      const response = await driverInactiveService(driverId)
+      return response.data
+    } catch (error) {
+      console.error(error)
+    }
+      })
   

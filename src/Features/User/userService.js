@@ -53,6 +53,5 @@ export const userLogoutService = async()=>{
 }
 
 export const userCurrentLocationService = async(coordinates)=>{
-  console.log(coordinates);
-  return await axios.post('trip/users/location',coordinates)
+  return await UserPrivate.post('trip/users/location',coordinates)
 }

@@ -6,17 +6,21 @@ import {
   verifyDriverOtp,
   driverLogin,
   confirmUpdate,
-  profileUpdateRequest
+  profileUpdateRequest,
+  driverActive,
+  driverInctive
 } from "./driverActions";
 
 
 const driverData  =JSON.parse(localStorage.getItem('driverData'))
 const driverAccessToken = localStorage.getItem('driverAccessToken')
+const driverStatus = JSON.parse(localStorage.getItem('status'))
 const initialState = {
   driver: driverData ? driverData :'',
   token:driverAccessToken ? driverAccessToken : null,
   loading: false,
   success: false,
+  currentStatus:driverStatus || null,
   message:'',
   error: "",
 };
@@ -57,7 +61,7 @@ const driverSlice = createSlice({
           state.loading =  true
         })
         .addCase(resendDriverOtp.fulfilled, (state, action) => {
-console.log('actionnnnn',action);
+          console.log('actionnnnn',action);
           state.success =  true
           state.message = action?.payload?.message
         })
@@ -105,7 +109,30 @@ console.log('actionnnnn',action);
         .addCase(profileUpdateRequest.rejected, (state, action) => {
           console.log('profileUpdation',action);
           // state.error
-        });
+        })
+        .addCase(driverActive.pending,(state,action)=>{
+          state.loading = true
+        })
+        .addCase(driverActive.fulfilled,(state,action)=>{
+          localStorage.setItem('status',JSON.stringify(action?.payload?.data))
+          state.success = true
+          state.currentStatus = action?.payload?.data
+        })
+        .addCase(driverActive.rejected,(state)=>{
+          // state.error = 
+        })
+        .addCase(driverInctive.pending,(state,action)=>{
+          state.loading = true
+        })
+        .addCase(driverInctive.fulfilled,(state,action)=>{
+          localStorage.setItem('status',JSON.stringify(action?.payload?.data))
+          state.currentStatus = action?.payload?.data
+          state.message = action?.payload?.message
+        })
+        .addCase(driverInctive.rejected,(state,action)=>{
+          // state.error = error
+        })
+        
         
     }
 })  

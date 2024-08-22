@@ -54,3 +54,11 @@ export const driverLoginService = async(formDetails)=>{
 export const logoutService = async()=>{
   return await axios.get('auth/driver/logout')
 }
+
+export const driverActiveService = async(driverDetails)=>{
+return await driverPrivate.put('trip/driver/online',driverDetails)
+}
+
+export const driverInactiveService = async(driverId)=>{
+  return await driverPrivate.put('trip/driver/offline',{driverId})
+  }

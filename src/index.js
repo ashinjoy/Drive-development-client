@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import {GoogleOAuthProvider} from '@react-oauth/google'
 import { Provider } from 'react-redux';
 import store from './Store/store';
+import SocketWrapper from "./Context/SocketWrapper";
+
 import App from './App.js'
 import './index.css'
 
@@ -11,6 +13,7 @@ console.log(clientId);
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
+  <SocketWrapper>
   <GoogleOAuthProvider clientId={clientId}>
   <Provider store={store}>
   {/* <React.StrictMode> */}
@@ -18,5 +21,6 @@ root.render(
   {/* </React.StrictMode> */}
   </Provider> 
   </GoogleOAuthProvider>
+  </SocketWrapper>
 );
 

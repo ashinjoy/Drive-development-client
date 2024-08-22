@@ -5,12 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { driverLogin } from "../../../Features/Driver/driverActions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useSocket } from "../../../Hooks/socket";
 
 function DriverLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const socket = useSocket()
   const dispatch = useDispatch();
-  const { message, error } = useSelector((state) => state.driver);
+  const { driver, message, error } = useSelector((state) => state.driver);
   const navigate = useNavigate();
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordRegex = /^.{8,}$/;
@@ -38,6 +40,11 @@ function DriverLoginPage() {
   useEffect(() => {
     if (message == "Logged In Successfully") {
       toast(message);
+      console.log('socket Refernece',socket);
+      console.log('useSocketRef',useSocket);
+      
+      
+      socket?.emit('driver-connected',driver.id)
       navigate("/driver/home");
     } else if (error) {
       toast(error);

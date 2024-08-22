@@ -1,0 +1,31 @@
+import { driverPrivate } from "../../Utils/Axios/driverInterceptor";
+import { UserPrivate } from "../../Utils/Axios/userInterceptor";
+
+export const searchNearByDriverService = async (
+  userId,
+  pickupLocation,
+  dropoffLocation
+) => {
+  return UserPrivate.get(
+    `trip/users/nearby-drivers?userId=${userId}&pickupLongitude=${pickupLocation[0]}&pickupLatitude=${pickupLocation[1]}&dropLongitude=${dropoffLocation[0]}&dropLatitude=${dropoffLocation[1]}`
+  );
+};
+
+export const  requestRideService = async (data) => {
+  return await UserPrivate.post("trip/users/request-ride", data);
+};
+
+export const acceptTripService = async(data)=>{
+  const {tripId,driverId,status} = data
+
+  return await driverPrivate.post('trip/driver/accept-ride',{tripId,driverId,status})
+}
+
+export const rejectTripService = async(data)=>{
+  const {driverId,status,tripId} = data
+  return await driverPrivate.post('trip/driver/reject-ride',{tripId,driverId,status})
+}
+
+export const startRideService = async(data)=>{
+  return await driverPrivate.post('trip/driver/start-ride',data)
+}

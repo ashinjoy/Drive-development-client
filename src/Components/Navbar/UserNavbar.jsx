@@ -1,17 +1,48 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, NavLink } from 'react-router-dom'
 import { BiUserCircle } from "react-icons/bi";
 import { useNavigate} from 'react-router-dom';
+import { useSocket } from '../../Hooks/socket';
+import { setTripData } from '../../Features/Trip/tripSlice';
 function UserNavbar() {
   const userData = useSelector((state)=>state.user)
+  const {tripDetail} = useSelector(state=>state.trip)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const userId = userData?.user?.id
   const  {token} = userData
+  const socket = useSocket()
 
   const handleUserLogout =()=>{
-    dispatch()
   }
+
+  useEffect(()=>{
+    if(token && userData?.user){
+      socket?.on('rideAccepted',(tripData)=>{
+        console.log(tripData);  
+    dispatch(setTripData(tripData))
+    
+      })
+    }
+  },[socket,userData?.user])
+
+  useEffect(()=>{
+    if(token && userData?.user && tripDetail){
+      socket?.on('live-location',(data)=>{
+        console.log('positional Coordinates-Live Tracking',data); 
+      })
+      socket?.on('ride-start',(data)=>{
+        console.log('ride started',data);
+        dispatch(setTripData(data))
+        
+      })
+    }
+    
+
+  },[socket,tripDetail])
+
+
   
 
   return ( 
@@ -22,7 +53,7 @@ function UserNavbar() {
       <div className='hidden md:flex  text-sm lg:text-lg items-center gap-x-16 tracking-wider'>
         <NavLink to='/' className={'text-lg font-medium leading-tight'}>Home</NavLink>
         <NavLink to='/driver/signup' className={'text-lg font-medium leading-tight'}>Drive</NavLink>
-        <NavLink className={'text-lg font-medium leading-tight'}>Ride</NavLink>
+        <NavLink to='/search-ride' className={'text-lg font-medium leading-tight'}>Ride</NavLink>
         <NavLink className={'text-lg font-medium leading-tight'}>Contact Us</NavLink>
       </div>
       <div className='hidden md:flex text-sm lg:text-lg items-center gap-x-16 mr-10'>

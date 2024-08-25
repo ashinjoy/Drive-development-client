@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { acceptTrip,rejectTrip } from '../../../Features/Trip/tripActions';
 
 
-function RideRequestNotifications({trip}) {
+function RideRequestNotifications({trip,setOpenNotification}) {
     const [isExpand,setExpand] = useState(false)
     const {driver} = useSelector(state=>state.driver)
     const  dispatch = useDispatch()
@@ -17,6 +17,7 @@ function RideRequestNotifications({trip}) {
         tripId:trip?._id
       }
       dispatch(acceptTrip(data))
+      setOpenNotification(false)
     }
     const rejectRide = ()=>{
       const data = {
@@ -25,6 +26,7 @@ function RideRequestNotifications({trip}) {
         tripId:trip?._id
       }
       dispatch(rejectTrip(data))
+      setOpenNotification(false)
     }
   return (
     <motion.div 

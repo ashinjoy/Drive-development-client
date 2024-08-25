@@ -41,6 +41,7 @@ function OtpModal({ email, setShowModal }) {
       socket?.emit('user-connected',user?.id)
       navigate("/", { replace: true });
     }
+    
   }, [message]);
 
   useEffect(() => {

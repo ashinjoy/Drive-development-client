@@ -20,22 +20,39 @@ function BookingInfo() {
     <div className="w-[20rem] mt-[7rem] ml-[2rem] h-[35rem] border-2 border-gray-300 shadow-lg rounded-lg overflow-hidden">
   <div className="relative h-[14rem] p-4 bg-gradient-to-r from-purple-50 to-blue-100 text-black">
     <h1 className="text-center text-xl font-bold tracking-wide">{tripDetail ? 'Driver Details' :'Looking For NearBy Drivers'}</h1>
-    {!tripDetail &&(
+    {!tripDetail ? (
       <img
         src="/assets/ai-generated-magnifying-glass-cartoon-png-transformed.webp"
         alt="img"
         className="h-[50%] w-auto mx-auto mt-6 opacity-90 animate-pulse"
       />
-    )}
-    {tripDetail?.driverId?.vehicleDetails?.vehicle_type == 'Auto ' ? (<img
-        src="/assets/TukTuk_Green_v1.png"
+    ) :
+   
+    tripDetail?.driverDetails && 
+    <>
+     <img
+        src={tripDetail?.driverDetails?.profileImg}
         alt="img"
-        className="h-[50%] w-auto mx-auto mt-6 "
-      />):(<img
-        src="/assets/scooter-illustration-vintage-vehicle-sign-and-symbol-vector-removebg-preview.png"
-        alt="img"
-        className="h-[50%] w-auto mx-auto mt-6 "
-      />) }
+        className="h-[45%] w-auto mx-auto mt-2 "
+      />
+      <div className='w-full flex items-around'>
+    <h1 className="font-semibold text-gray-600">Name:</h1>
+    <span>{tripDetail?.driverDetails?.name}</span>
+      </div>
+      <div className='w-full flex items-around'>
+    <h1 className="font-semibold text-gray-600">Email:</h1>
+    <span>{tripDetail?.driverDetails?.email}</span>
+      </div>
+      <div className='w-full flex items-around'>
+    <h1 className="font-semibold text-gray-600">Phone:</h1>
+    <span>{tripDetail?.driverDetails?.phone}</span>
+      </div>
+
+
+    
+    </>
+   }
+    
   </div>
   <div className="p-4 flex flex-col gap-4">
     <div className="flex justify-between items-center">

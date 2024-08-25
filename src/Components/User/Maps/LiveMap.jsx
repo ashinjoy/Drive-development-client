@@ -6,6 +6,7 @@ import { searchLocationContext } from "../../../Context/UserSearchContext";
 import { useSelector } from "react-redux";
 import { useSocket } from "../../../Hooks/socket";
 import axios from "axios";
+import NearByPickup from "../Notification/NearByPickup";
 function LiveMapUpdates() {
   const mapContainerRef = useRef(null);
   const { token, userData } = useSelector((state) => state.user);
@@ -15,6 +16,7 @@ function LiveMapUpdates() {
   const [dropOff, setDropoff] = useState([]);
   const [driverCoords, setDriverCoords] = useState([]);
   const [viewState, setViewState] = useState({});
+  const [liveUpdates,setLiveUpdate] = useState({})
 
   
 
@@ -27,22 +29,26 @@ function LiveMapUpdates() {
     if(tripDetail){
     setPickUp(tripDetail?.startLocation?.coordinates);
     setDropoff(tripDetail?.endLocation?.coordinates);
-    setDriverCoords(tripDetail?.driverId?.currentLocation?.coordinates)
+    // setDriverCoords(tripDetail?.driverId?.currentLocation?.coordinates)
+    setDriverCoords(tripDetail?.driverDetails?.currentLocation?.coordinates)
+
+
+
   
     const getRoute = async()=>{
-    const response =   await axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${tripDetail?.driverId?.currentLocation?.coordinates[0]},${tripDetail?.driverId?.currentLocation?.coordinates[1]};${tripDetail?.startLocation?.coordinates[0]},${tripDetail?.startLocation?.coordinates[1]};${tripDetail?.endLocation?.coordinates[0]},${tripDetail?.endLocation?.coordinates[1]}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
+    const response =   await axios.get(`https://api.mapbox.com/directions/v5/mapbox/driving/${tripDetail?.driverDetails?.currentLocation?.coordinates[0]},${tripDetail?.driverDetails?.currentLocation?.coordinates[1]};${tripDetail?.startLocation?.coordinates[0]},${tripDetail?.startLocation?.coordinates[1]};${tripDetail?.endLocation?.coordinates[0]},${tripDetail?.endLocation?.coordinates[1]}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
     console.log('response Data',response.data)
     const routeInfo =response.data
     setRoute(routeInfo?.routes[0]?.geometry)
     }
       const bounds = [
         [
-          Math.min(tripDetail?.startLocation?.coordinates[0], tripDetail?.endLocation?.coordinates[0],tripDetail?.driverId?.currentLocation?.coordinates[0] ),
-          Math.min(tripDetail?.startLocation?.coordinates[1], tripDetail?.endLocation?.coordinates[1],tripDetail?.driverId?.currentLocation?.coordinates[1] ),
+          Math.min(tripDetail?.startLocation?.coordinates[0], tripDetail?.endLocation?.coordinates[0],tripDetail?.driverDetails?.currentLocation?.coordinates[0] ),
+          Math.min(tripDetail?.startLocation?.coordinates[1], tripDetail?.endLocation?.coordinates[1],tripDetail?.driverDetails?.currentLocation?.coordinates[1] ),
         ], 
         [
-          Math.max(tripDetail?.startLocation?.coordinates[0], tripDetail?.endLocation?.coordinates[0],tripDetail?.driverId?.currentLocation?.coordinates[0]),
-          Math.max(tripDetail?.startLocation?.coordinates[1], tripDetail?.endLocation?.coordinates[1],tripDetail?.driverId?.currentLocation?.coordinates[1]),
+          Math.max(tripDetail?.startLocation?.coordinates[0], tripDetail?.endLocation?.coordinates[0],tripDetail?.driverDetails?.currentLocation?.coordinates[0]),
+          Math.max(tripDetail?.startLocation?.coordinates[1], tripDetail?.endLocation?.coordinates[1],tripDetail?.driverDetails?.currentLocation?.coordinates[1]),
         ], 
       ];
   
@@ -63,8 +69,8 @@ function LiveMapUpdates() {
         console.log('positional Coordinates-Live Trackinggggggggggg',data);          
         setDriverCoords([data?.pos?.coords?.longitude,data?.pos?.coords?.latitude]);
           })
-        socket.on("dummy-event",()=>console.log("Worked")
-        )
+        // socket.on("dummy-event",()=>console.log("Worked")
+        // )
       }
 
   }, [socket,tripDetail,driverCoords]);
@@ -92,6 +98,7 @@ function LiveMapUpdates() {
 
 
   return (
+    <>
     <Map
     ref={mapContainerRef}
       mapStyle="mapbox://styles/mapbox/streets-v9"
@@ -125,7 +132,7 @@ function LiveMapUpdates() {
           style={{ width: "2rem" }}
         >
         <img
-            src="/assets/automobile-gps-tracking-pulsing-signal-600nw-2055784856.webp"
+            src="/assets/wifi-tracking.png"
             alt="Dropoff Marker"
         />
         </Marker>
@@ -136,6 +143,8 @@ function LiveMapUpdates() {
             </Source>
           )}
     </Map>
+    <NearByPickup/>
+   </>
   );
 }
 

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { seacrhNearByDriver,requestRideAction,acceptTrip,startTrip } from "./tripActions";
+import { seacrhNearByDriver,requestRideAction,acceptTrip,startTrip,finishRide } from "./tripActions";
 
 const trip = JSON.parse(localStorage.getItem('tripDetail'))
 const initialState = {
@@ -19,6 +19,10 @@ const tripSlice = createSlice({
             console.log('action',action);
             localStorage.setItem('tripDetail',JSON.stringify(action?.payload))
             state.tripDetail = action?.payload
+        },
+        resetTripDetails:(state,action)=>{
+            localStorage.removeItem('tripDetail')
+            state.tripDetail = null
         }
     },
     extraReducers(builder){
@@ -66,7 +70,18 @@ const tripSlice = createSlice({
         .addCase(startTrip.rejected,(state,action)=>{
             // state.error = action?.payload
         })
+        .addCase(finishRide.pending,(state)=>{
+            state.loading = true
+        })
+        .addCase(finishRide.fulfilled,(state,action)=>{
+            localStorage.removeItem('tripDetail')
+            state.success = true
+            state.message = action?.payload?.message
+        })
+        .addCase(finishRide.rejected,(state,action)=>{
+            // state.error = 
+        })
     }
 })
-export const {setTripData} = tripSlice.actions
+export const {setTripData,resetTripDetails} = tripSlice.actions
 export default tripSlice.reducer

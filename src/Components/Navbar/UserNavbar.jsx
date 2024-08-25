@@ -4,7 +4,7 @@ import { Navigate, NavLink } from 'react-router-dom'
 import { BiUserCircle } from "react-icons/bi";
 import { useNavigate} from 'react-router-dom';
 import { useSocket } from '../../Hooks/socket';
-import { setTripData } from '../../Features/Trip/tripSlice';
+import { resetTripDetails, setTripData } from '../../Features/Trip/tripSlice';
 function UserNavbar() {
   const userData = useSelector((state)=>state.user)
   const {tripDetail} = useSelector(state=>state.trip)
@@ -32,10 +32,24 @@ function UserNavbar() {
       socket?.on('live-location',(data)=>{
         console.log('positional Coordinates-Live Tracking',data); 
       })
+
+      socket?.on('driver-NearBy-pickup',(data)=>{
+        console.log('data in nearby',data);
+      })
+
       socket?.on('ride-start',(data)=>{
         console.log('ride started',data);
-        dispatch(setTripData(data))
+        // dispatch(setTripData(data))
         
+      })
+
+      socket?.on('nearby-dropoff',(data)=>{
+        console.log('nearby-dropoff',data);
+      })
+
+      socket?.on('ride-complete',()=>{
+        dispatch(resetTripDetails())
+        console.log('ride finished')
       })
     }
     

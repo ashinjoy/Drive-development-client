@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import mapboxgl from "mapbox-gl";
+// import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Map, { Marker, Source, Layer } from "react-map-gl";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,14 +11,17 @@ import {
   driverActive,
   driverInctive,
 } from "../../../Features/Driver/driverActions";
-import { startTrip } from "../../../Features/Trip/tripActions";
+import { startTrip, finishRide } from "../../../Features/Trip/tripActions";
 import { useSocket } from "../../../Hooks/socket";
-
+import { toast } from "react-toastify";
+import DriverNearByPickup from "../Notifications/DriverNearByPickup";
+import { AnimatePresence } from "framer-motion";
+import DriverNearByDropOff from "../Notifications/DriverNearByDropOff";
 
 function DriverMap() {
   const mapContainerRef = useRef(null);
   const { token, driver, currentStatus } = useSelector((state) => state.driver);
-  const { tripDetail,message } = useSelector((state) => state.trip);
+  const { tripDetail, message } = useSelector((state) => state.trip);
   const { driverLive } = useContext(driverLiveLocation);
   const dispatch = useDispatch();
 
@@ -31,10 +34,11 @@ function DriverMap() {
   const [endRide, setEndRide] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [tripOtp, setOtp] = useState("");
-  const [mapStyle, setMapStyle] = useState(
-    "mapbox://styles/mapbox/streets-v12"
-  );
-  const socket =useSocket()
+const [nearByPickup,setNearByPickup] = useState(false)
+const [nearByDropOff,setNearByDropOff] = useState(false)
+
+  const notificationRef = useRef(null);
+  const socket = useSocket();
   useEffect(() => {
     if (!tripDetail) {
       if (navigator.geolocation) {
@@ -50,7 +54,6 @@ function DriverMap() {
   }, []);
 
   useEffect(() => {
-    console.log("tripDetual", tripDetail);
     if (tripDetail) {
       setPickUp(tripDetail?.startLocation?.coordinates);
       setDropoff(tripDetail?.endLocation?.coordinates);
@@ -60,7 +63,10 @@ function DriverMap() {
         const response = await axios.get(
           `https://api.mapbox.com/directions/v5/mapbox/driving/${tripDetail?.driverId?.currentLocation?.coordinates[0]},${tripDetail?.driverId?.currentLocation?.coordinates[1]};${tripDetail?.startLocation?.coordinates[0]},${tripDetail?.startLocation?.coordinates[1]};${tripDetail?.endLocation?.coordinates[0]},${tripDetail?.endLocation?.coordinates[1]}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`
         );
-        console.log("response Data", response.data);
+        console.log(
+          "Coordintaes For Testing Purpose of Live Location ===>",
+          response.data
+        );
         const routeInfo = response.data;
         setRoute(routeInfo?.routes[0]?.geometry);
       };
@@ -100,27 +106,57 @@ function DriverMap() {
     }
   }, [tripDetail]);
 
-  useEffect(() => {
-    setDriverCoords(driverLive);
-    console.log("coords in map", driverLive, pickup);
+useEffect(() => {
+  if (!driverLive || !tripDetail) return;
 
-    const approx = checkApproxDistance(driverLive, pickup);
-    const dropDestination =checkApproxDistance(driverLive,dropOff)
-    if (approx < 1) {
-      console.log("entry");
-      setStartRide(true);
-    } else {
-      setStartRide(false);
-    }
-    if(dropDestination < 1){
-      setEndRide(true)
-    }else{
-      setEndRide(false)
-    }
-  }, [driverLive]);
+  setDriverCoords(driverLive);
+  const approx = checkApproxDistance(driverLive, pickup);
+  const dropDestination = checkApproxDistance(driverLive, dropOff);
+  
+  console.log('approx', approx);
+  console.log('dropDestination', dropDestination);
+
+  if (approx < 2 && approx > 1) {
+    console.log('nearBy Aprrox');
+    setNearByPickup(true);
+    setStartRide(false);
+    setEndRide(false);
+    socket?.emit("driver-NearBy-pickup", {
+      userId: tripDetail?.userId,
+      distance: approx,
+    });
+  } else if (approx <= 1) {
+    console.log('pickup started');
+    setStartRide(true);
+    setEndRide(false);
+    socket.emit("ride-started", {
+      userId: tripDetail?.userId,
+      duration: tripDetail?.duration,
+    });
+  } else if (dropDestination < 2 && dropDestination > 1) {
+    console.log('nearby dropOff');
+    setNearByDropOff(true);
+    setStartRide(false);
+    setEndRide(false);
+    socket.emit("nearby-dropoff", {
+      userId: tripDetail?.userId,
+      distance: dropDestination,
+    });
+  } else if (dropDestination <= 1) {
+    console.log('dropoff');
+    setEndRide(true);
+    setStartRide(false);
+    socket.emit("ride-complete", {
+      userId: tripDetail?.userId,
+      distance: dropDestination,
+    });
+  } else {
+    setEndRide(false);
+    setStartRide(false);
+  }
+}, [socket, driverLive, tripDetail]);
 
   const checkApproxDistance = (driverLocation, destination) => {
-    console.log("driverLo", driverLocation, destination);
     if (
       driverLocation &&
       driverLocation.length > 0 &&
@@ -150,8 +186,6 @@ function DriverMap() {
   };
 
   const handleDriverActive = () => {
-    console.log('entry');
-    
     let currentLocation;
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((pos) => {
@@ -174,18 +208,26 @@ function DriverMap() {
   };
 
   const startJourney = () => {
-    dispatch(startTrip({ tripOtp, driverId: driver?.id, tripId: tripDetail?._id }));
+    dispatch(
+      startTrip({ tripOtp, driverId: driver?.id, tripId: tripDetail?._id })
+    );
+    setShowOtp(false);
   };
 
-useEffect(()=>{
-  if(message == "Ride started SucessFully"){
-    console.log('entry in if');
-    socket?.emit('ride-started',tripDetail)
-  }
+  const completeJourney = () => {
+    dispatch(
+      finishRide({ userId: tripDetail?.userId, tripId: tripDetail?._id })
+    );
+  };
 
-},[socket,message,tripDetail])
-
-
+  useEffect(() => {
+    if (message == "Ride started SucessFully") {
+      socket?.emit("ride-started", tripDetail);
+    }
+    if (message == "Ride Completed SuccessFully") {
+      toast("Ride Finished Completely");
+    }
+  }, [socket, message, tripDetail]);
 
   return (
     <div className="flex w-full h-screen">
@@ -224,36 +266,40 @@ useEffect(()=>{
           <p className="text-gray-600">No active ride</p>
 
           <div className="flex w-full justify-around mt-4">
-            {startRide && (
+            {startRide &&
               <button
                 className="w-32 h-12 bg-green-600 text-white rounded-md font-bold shadow-md hover:bg-green-700 transition-colors duration-200"
                 onClick={() => verifyRide()}
               >
                 Start Ride
               </button>
-            )}
-           {showOtp && <>
-           <div className="flex flex-col w-full p-1  ">
-              <input
-                type=""
-                name=""
-                id=""
-                className="outline-none border-2 border-black w-full p-1"
-                maxLength={4}
-                value={tripOtp}
-                onChange={(e) => setOtp(e.target.value)}
-              />
-              <button
-                className="bg-blue-400 mt-2 rounded-sm p-1"
-                onClick={() => startJourney()}
-              >
-                Verify
-              </button>
-            </div>
-            </>
             }
+            {showOtp && (
+              <>
+                <div className="flex flex-col w-full p-1  ">
+                  <input
+                    type=""
+                    name=""
+                    id=""
+                    className="outline-none border-2 border-black w-full p-1"
+                    maxLength={4}
+                    value={tripOtp}
+                    onChange={(e) => setOtp(e.target.value)}
+                  />
+                  <button
+                    className="bg-blue-400 mt-2 rounded-sm p-1"
+                    onClick={() => startJourney()}
+                  >
+                    Verify
+                  </button>
+                </div>
+              </>
+            )}
             {endRide && (
-              <button className="w-32 h-12 bg-red-600 text-white rounded-md font-bold shadow-md hover:bg-red-700 transition-colors duration-200">
+              <button
+                className="w-32 h-12 bg-red-600 text-white rounded-md font-bold shadow-md hover:bg-red-700 transition-colors duration-200"
+                onClick={() => completeJourney()}
+              >
                 End Ride
               </button>
             )}
@@ -266,13 +312,13 @@ useEffect(()=>{
           </h2>
           <div className="w-full flex justify-between mt-4">
             <div className="text-left">
-              <p className="text-gray-600">Name: John Doe</p>
+              <p className="text-gray-600">Name: {driver?.name}</p>
               <p className="text-gray-600">Earnings: $120.00</p>
               <p className="text-gray-600">Rating: 4.8 ⭐</p>
             </div>
             <div className="text-right">
               <p className="text-gray-600">Trips: 34</p>
-              <p className="text-gray-600">Online: 3h 20m</p>
+              {/* <p className="text-gray-600">Online: 3h 20m</p> */}
             </div>
           </div>
         </div>
@@ -284,7 +330,7 @@ useEffect(()=>{
           onMove={(evt) => setViewState(evt.viewState)}
           ref={mapContainerRef}
           mapStyle="mapbox://styles/mapbox/streets-v9"
-          style={{ width: "95%", height: "95%", marginTop:"1rem" }}
+          style={{ width: "95%", height: "95%", marginTop: "1rem" }}
           attributionControl={false}
           mapboxAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
         >
@@ -310,12 +356,9 @@ useEffect(()=>{
             <Marker
               longitude={driverCoords[0]}
               latitude={driverCoords[1]}
-              style={{ width: "2rem" }}
+              style={{ width: "2.5rem" }}
             >
-              <img
-                src="/assets/automobile-gps-tracking-pulsing-signal-600nw-2055784856.webp"
-                alt="Driver Marker"
-              />
+              <img src="/assets/wifi-tracking.png" alt="Driver Marker" />
             </Marker>
           )}
           {route && (
@@ -325,6 +368,17 @@ useEffect(()=>{
           )}
         </Map>
       </div>
+          <AnimatePresence mode="wait">
+            {
+            nearByPickup &&
+          <DriverNearByPickup setNearByPickup={setNearByPickup} />
+            }
+             {
+            nearByDropOff &&
+          <DriverNearByDropOff setNearByDropOff={setNearByDropOff}  />
+            }
+
+          </AnimatePresence>
     </div>
   );
 }

@@ -29,3 +29,7 @@ export const rejectTripService = async(data)=>{
 export const startRideService = async(data)=>{
   return await driverPrivate.post('trip/driver/start-ride',data)
 }
+
+export const finishRideService = async(data)=>{
+  return await driverPrivate.post('trip/driver/complete-ride',data)
+}

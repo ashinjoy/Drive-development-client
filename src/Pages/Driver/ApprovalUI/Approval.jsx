@@ -4,12 +4,7 @@ import DriverNavBar from '../../../Components/Navbar/DriverNavBar'
 function Approval() {
   return (
     <>
-    {/* <div className='flex h-screen gap-[23rem] items-center'>
-    <DriverNavBar/>
-   <div className='w-[500px] h-[500px] mt-24  border-2 rounded-full border-slate-100 drop-shadow-md py-10 flex items-center justify-center text-5xl font-bold bg-gradient-to-br from-white to-yellow-200 text-red-300'>
-    Approval Pending
-   </div>
-   </div> */}
+
    <div className="flex h-screen gap-[15rem] items-center ">
     <DriverNavBar />
     <div className="flex flex-col items-center justify-center">

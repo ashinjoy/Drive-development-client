@@ -16,7 +16,7 @@ function SignupForm() {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.user);
   const navigate = useNavigate()
-  const socket = useSocket()
+  const {socket} = useSocket()
 
   const handleEmailLogin = (e) => {
 

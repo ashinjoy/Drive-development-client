@@ -24,13 +24,16 @@ function DriverNavBar() {
 
   const { token, driver } = useSelector((state) => state.driver);
   const { tripDetail } = useSelector((state) => state.trip);
-  const socket = useSocket();
+  const {socket,chatSocket} = useSocket();
   useEffect(() => {
     let timeOut;
     if (token && driver) {
       socket?.on("ride-request", (tripData) => {
         setTrip(tripData);
         setOpenNotification(true);
+        console.log("chatSocket",chatSocket);
+
+        chatSocket?.emit("driver-chat-connect",{driverId:driver?.id})
         setEnableChat(true)
         timeOut = setTimeout(() => {
           setOpenNotification(false);
@@ -40,7 +43,7 @@ function DriverNavBar() {
     return () => {
       clearTimeout(timeOut);
     };
-  }, [socket]);
+  }, [socket,chatSocket]);
 
   useEffect(() => {
     if (token && driver && tripDetail) {
@@ -92,10 +95,6 @@ function DriverNavBar() {
           <FaWallet className="mt-1" />
           Wallet
         </NavLink>
-       {enableChat && <NavLink className={"flex gap-2 text-lg font-bold"} to={'/driver/chat'}>
-          <IoIosChatbubbles className="mt-1" />
-          Messages
-        </NavLink>}
         <NavLink className={"flex gap-2 text-lg font-bold"}>
           <MdPayments className="mt-1" />
           Payments

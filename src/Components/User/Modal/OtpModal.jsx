@@ -16,7 +16,7 @@ function OtpModal({ email, setShowModal }) {
   const [timer, setTimer] = useState(10);
   const [restartTimer, setTimerRestart] = useState(false);
   const { user, error, message } = useSelector((state) => state.user);
-  const socket = useSocket()
+  const {socket} = useSocket()
   
 
   const dispatch = useDispatch();

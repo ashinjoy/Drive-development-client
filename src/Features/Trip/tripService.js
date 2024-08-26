@@ -1,3 +1,4 @@
+import axiosInstance from "../../Utils/Axios/baseUrl";
 import { driverPrivate } from "../../Utils/Axios/driverInterceptor";
 import { UserPrivate } from "../../Utils/Axios/userInterceptor";
 
@@ -32,4 +33,18 @@ export const startRideService = async(data)=>{
 
 export const finishRideService = async(data)=>{
   return await driverPrivate.post('trip/driver/complete-ride',data)
+}
+
+export const sendMessageService = async(data)=>{
+  return await axiosInstance.post('chat/sendMessage',data)
+}
+
+export const getMessageService = async(tripId)=>{
+  try {
+   const response =  await axiosInstance.get(`chat/messages/${tripId}`)
+   console.log(response.data);
+   return response.data
+  } catch (error) {
+    
+  }
 }

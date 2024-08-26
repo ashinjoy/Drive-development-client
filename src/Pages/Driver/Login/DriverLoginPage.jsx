@@ -10,7 +10,7 @@ import { useSocket } from "../../../Hooks/socket";
 function DriverLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const socket = useSocket()
+  const {socket} = useSocket()
   const dispatch = useDispatch();
   const { driver, message, error } = useSelector((state) => state.driver);
   const navigate = useNavigate();

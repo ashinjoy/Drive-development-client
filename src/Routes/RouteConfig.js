@@ -21,8 +21,8 @@ import RidePage from "../Pages/User/Trip/RidePage.jsx";
 import Trip from "../Pages/Driver/Trip/Trip.jsx";
 import LiveMapUpdates from "../Components/User/Maps/LiveMap.jsx";
 import LiveLocation from "../Pages/User/Trip/LiveLocation.jsx";
-import Chat from "../Components/Driver/Chat/Chat.jsx";
-import ChatPage from "../Pages/Driver/Chat/ChatPage.jsx";
+// import Chat from "../Components/Driver/Chat/Chat.jsx";
+// import ChatPage from "../Pages/Driver/Chat/ChatPage.jsx";
 // import UserSearchContext from "../Context/UserSearchContext.js";
 
 function RouteConfig() {
@@ -102,14 +102,7 @@ function RouteConfig() {
             </DriverProtected>
           ),
         },
-        {
-          path: "chat",
-          element: (
-            <DriverProtected>
-             <ChatPage/>
-            </DriverProtected>
-          ),
-        },
+        
         
       ],
     },

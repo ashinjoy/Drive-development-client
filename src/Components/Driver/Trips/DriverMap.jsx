@@ -17,13 +17,18 @@ import { toast } from "react-toastify";
 import DriverNearByPickup from "../Notifications/DriverNearByPickup";
 import { AnimatePresence } from "framer-motion";
 import DriverNearByDropOff from "../Notifications/DriverNearByDropOff";
+import Chat from "../../Chat/Chat";
 
 function DriverMap() {
   const mapContainerRef = useRef(null);
+  const [recieverId,setRecieverId] = useState(null)
+  const [senderId,setSenderId] = useState(null)
   const { token, driver, currentStatus } = useSelector((state) => state.driver);
   const { tripDetail, message } = useSelector((state) => state.trip);
   const { driverLive } = useContext(driverLiveLocation);
   const dispatch = useDispatch();
+
+  const [openChat,setOpenChat] = useState(false) 
 
   const [pickup, setPickUp] = useState([]);
   const [dropOff, setDropoff] = useState([]);
@@ -38,7 +43,7 @@ const [nearByPickup,setNearByPickup] = useState(false)
 const [nearByDropOff,setNearByDropOff] = useState(false)
 
   const notificationRef = useRef(null);
-  const socket = useSocket();
+  const {socket} = useSocket();
   useEffect(() => {
     if (!tripDetail) {
       if (navigator.geolocation) {
@@ -53,12 +58,18 @@ const [nearByDropOff,setNearByDropOff] = useState(false)
     }
   }, []);
 
+  useEffect(()=>{
+if(tripDetail){
+  setRecieverId(tripDetail?.userId)
+  setSenderId(tripDetail?.driverId?._id)
+}
+  },[tripDetail])
+
   useEffect(() => {
     if (tripDetail) {
       setPickUp(tripDetail?.startLocation?.coordinates);
       setDropoff(tripDetail?.endLocation?.coordinates);
       setDriverCoords(tripDetail?.driverId?.currentLocation?.coordinates);
-
       const getRoute = async () => {
         const response = await axios.get(
           `https://api.mapbox.com/directions/v5/mapbox/driving/${tripDetail?.driverId?.currentLocation?.coordinates[0]},${tripDetail?.driverId?.currentLocation?.coordinates[1]};${tripDetail?.startLocation?.coordinates[0]},${tripDetail?.startLocation?.coordinates[1]};${tripDetail?.endLocation?.coordinates[0]},${tripDetail?.endLocation?.coordinates[1]}?geometries=geojson&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`
@@ -263,6 +274,7 @@ useEffect(() => {
 
         <div className="w-full bg-white rounded-lg p-4 flex flex-col items-center justify-between h-[24%] shadow-md">
           <h2 className="text-xl font-semibold text-gray-800">Current Ride</h2>
+         {tripDetail && <button onClick={()=>setOpenChat(true)}>Chat</button>}
           <p className="text-gray-600">No active ride</p>
 
           <div className="flex w-full justify-around mt-4">
@@ -325,6 +337,7 @@ useEffect(() => {
       </div>
 
       <div className=" ml-5 w-[95%] h-full">
+        {openChat && <Chat driver={driver} recieverId={recieverId} senderId={senderId}/>}
         <Map
           {...viewState}
           onMove={(evt) => setViewState(evt.viewState)}

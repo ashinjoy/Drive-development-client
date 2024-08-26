@@ -5,7 +5,8 @@ import {
   acceptTripService,
   rejectTripService,
   startRideService,
-  finishRideService
+  finishRideService,
+  sendMessageService
 } from "./tripService";
 import { UserPrivate } from "../../Utils/Axios/userInterceptor";
 
@@ -80,3 +81,12 @@ export const rejectTrip = createAsyncThunk(
       console.error(error);
     }
   })
+
+  export const sendMessage = createAsyncThunk('sendMessage',async(data)=>{
+    try {
+      const response = await sendMessageService(data)
+    } catch (error) {
+      console.error(error)
+    }
+  })
+

@@ -12,7 +12,7 @@ function UserNavbar() {
   const navigate = useNavigate()
   const userId = userData?.user?.id
   const  {token} = userData
-  const socket = useSocket()
+  const {socket,chatSocket} = useSocket()
 
   const handleUserLogout =()=>{
   }
@@ -20,9 +20,9 @@ function UserNavbar() {
   useEffect(()=>{
     if(token && userData?.user){
       socket?.on('rideAccepted',(tripData)=>{
+        console.log("ride  accepted");   
         console.log(tripData);  
     dispatch(setTripData(tripData))
-    
       })
     }
   },[socket,userData?.user])

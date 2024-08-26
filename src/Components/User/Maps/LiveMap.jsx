@@ -9,7 +9,7 @@ import axios from "axios";
 import NearByPickup from "../Notification/NearByPickup";
 function LiveMapUpdates() {
   const mapContainerRef = useRef(null);
-  const { token, userData } = useSelector((state) => state.user);
+  const { token, user } = useSelector((state) => state.user);
   const { tripDetail } = useSelector((state) => state.trip);
 
   const [pickup, setPickUp] = useState([]);
@@ -22,8 +22,21 @@ function LiveMapUpdates() {
 
   const [route,setRoute] = useState(null)
 
-  const socket = useSocket();
+  const {socket,chatSocket} = useSocket();
   const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/streets-v12");
+
+  useEffect(()=>{
+    if(chatSocket && token){
+      console.log("chatspckket");
+      
+      chatSocket?.emit("user-chat-connect",{userId:user?.id})
+    }
+    // return ()=>{
+    //   chatSocket?.off()
+    // }
+
+  },[chatSocket])
+
   useEffect(() => {
     console.log('tripDetual',tripDetail);
     if(tripDetail){
@@ -75,11 +88,7 @@ function LiveMapUpdates() {
 
   }, [socket,tripDetail,driverCoords]);
 
-  useEffect(()=>{
 
-  
-
-  },[])
 
   const routeLine = {
     id: "route",

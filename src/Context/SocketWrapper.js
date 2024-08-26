@@ -4,6 +4,7 @@ export const SocketProvider = createContext(null);
 
 function SocketWrapper({ children }) {
   const [socket, setSocket] = useState(null);
+  const [chatSocket,setChatSocket] = useState(null)
 
   useEffect(() => {
     const socketInstance = io("http://localhost:3003");
@@ -22,8 +23,26 @@ function SocketWrapper({ children }) {
     };
   }, []);
 
+  useEffect(()=>{
+    const chatSocketInstance = io("http://localhost:3004")
+    setChatSocket(chatSocketInstance)
+    chatSocketInstance.on("connect",()=>{
+      console.log("connected SuccessFully");
+      
+    })
+    chatSocketInstance.on("connect_error",(err)=>{
+      console.log("connection error",err);
+      
+    })
+
+    return ()=>{
+      chatSocketInstance.disconnect()
+    }
+
+  },[])
+
   return (
-    <SocketProvider.Provider value={socket}>{children}</SocketProvider.Provider>
+    <SocketProvider.Provider value={{socket,chatSocket}}>{children}</SocketProvider.Provider>
   );
 }
 

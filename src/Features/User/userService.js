@@ -55,3 +55,13 @@ export const userLogoutService = async()=>{
 export const userCurrentLocationService = async(coordinates)=>{
   return await UserPrivate.post('trip/users/location',coordinates)
 }
+
+export const paymentService = async(data)=>{
+  try {
+   const response =  await UserPrivate.post('payment/stripe-session',data)
+   return response.data
+  } catch (error) {
+    console.error(error);
+    
+  }
+}

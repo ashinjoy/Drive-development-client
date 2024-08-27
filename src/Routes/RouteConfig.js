@@ -58,6 +58,10 @@ function RouteConfig() {
         </UserProtected>
         )
     },
+    // {
+    //   path:"/checkout-success",
+    //   element
+    // }
     {
       path: "/driver",
       children: [

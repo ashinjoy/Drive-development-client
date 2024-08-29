@@ -27,12 +27,14 @@ function DriverNavBar() {
   const {socket,chatSocket} = useSocket();
   useEffect(() => {
     let timeOut;
+    const handleRideRequest =()=>{
+      
+    }
     if (token && driver) {
       socket?.on("ride-request", (tripData) => {
         setTrip(tripData);
         setOpenNotification(true);
         console.log("chatSocket",chatSocket);
-
         chatSocket?.emit("driver-chat-connect",{driverId:driver?.id})
         setEnableChat(true)
         timeOut = setTimeout(() => {

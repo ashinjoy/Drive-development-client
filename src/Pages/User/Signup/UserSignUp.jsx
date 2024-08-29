@@ -70,10 +70,10 @@ function SignupForm() {
         </h1>
         <div className="flex justify-center items-center mt-10">
           <div className="w-full flex flex-col items-center">
-            <div className="flex border-gray-400 border-2 rounded-full w-80 h-12 mt-10 hover:border-black">
+            <div className="flex border-gray-400 border-2 rounded-lg w-80 h-12 mt-10 hover:border-black">
               <input
                 type="text"
-                className="border-none outline-none flex-grow rounded-full pl-6 text-gray-700 placeholder-gray-400"
+                className="border-none outline-none flex-grow rounded-lg pl-6 text-gray-700 placeholder-gray-400"
                 placeholder="Enter Your Email Address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -81,13 +81,13 @@ function SignupForm() {
             </div>
             
             <button
-              className="border-2 border-black rounded-full w-80 h-12 mt-8 hover:bg-yellow-400 hover:text-black font-medium text-lg bg-white transition-colors"
+              className="border-2 border-black rounded-lg w-80 h-12 mt-8 hover:bg-yellow-400 hover:text-black font-medium text-lg bg-white transition-colors"
               onClick={handleEmailLogin}
             >
               Continue
             </button>
             <button
-              className="flex items-center justify-center border-2 border-black rounded-full w-80 h-12 mt-8 gap-2 bg-white hover:bg-yellow-400 transition-colors"
+              className="flex items-center justify-center border-2 border-black rounded-lg w-80 h-12 mt-8 gap-2 bg-white hover:bg-yellow-400 transition-colors"
               onClick={handleGoogleLogin}
             >
               <FcGoogle className="w-6 h-6" />

@@ -48,3 +48,13 @@ export const getMessageService = async(tripId)=>{
     
   }
 }
+
+export const getAllTripsService =async()=>{
+  try {
+    const response =await UserPrivate.get(`payment/user/trip-details`)
+    return response.data
+  } catch (error) {
+    console.error(error);
+    
+  }
+}

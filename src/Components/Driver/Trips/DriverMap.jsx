@@ -18,6 +18,7 @@ import DriverNearByPickup from "../Notifications/DriverNearByPickup";
 import { AnimatePresence } from "framer-motion";
 import DriverNearByDropOff from "../Notifications/DriverNearByDropOff";
 import Chat from "../../Chat/Chat";
+import RideStartConfirmationModal from "../Modal/RideStartConfirmationModal";
 
 function DriverMap() {
   const mapContainerRef = useRef(null);
@@ -39,10 +40,10 @@ function DriverMap() {
   const [endRide, setEndRide] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [tripOtp, setOtp] = useState("");
-const [nearByPickup,setNearByPickup] = useState(false)
-const [nearByDropOff,setNearByDropOff] = useState(false)
+// const [nearByPickup,setNearByPickup] = useState(false)
+// const [nearByDropOff,setNearByDropOff] = useState(false)
 
-  const notificationRef = useRef(null);
+  // const notificationRef = useRef(null);
   const {socket} = useSocket();
   useEffect(() => {
     if (!tripDetail) {
@@ -124,19 +125,20 @@ useEffect(() => {
   const approx = checkApproxDistance(driverLive, pickup);
   const dropDestination = checkApproxDistance(driverLive, dropOff);
   
-  console.log('approx', approx);
-  console.log('dropDestination', dropDestination);
+  // console.log('approx', approx);
+  // console.log('dropDestination', dropDestination);
 
-  if (approx < 2 && approx > 1) {
-    console.log('nearBy Aprrox');
-    setNearByPickup(true);
-    setStartRide(false);
-    setEndRide(false);
-    socket?.emit("driver-NearBy-pickup", {
-      userId: tripDetail?.userId,
-      distance: approx,
-    });
-  } else if (approx <= 1) {
+  // if (approx < 2 && approx > 1) {
+  //   console.log('nearBy Aprrox');
+  //   setNearByPickup(true);
+  //   setStartRide(false);
+  //   setEndRide(false);
+  //   socket?.emit("driver-NearBy-pickup", {
+  //     userId: tripDetail?.userId,
+  //     distance: approx,
+  //   });
+  // } 
+   if (approx <= 1) {
     console.log('pickup started');
     setStartRide(true);
     setEndRide(false);
@@ -144,16 +146,18 @@ useEffect(() => {
       userId: tripDetail?.userId,
       duration: tripDetail?.duration,
     });
-  } else if (dropDestination < 2 && dropDestination > 1) {
-    console.log('nearby dropOff');
-    setNearByDropOff(true);
-    setStartRide(false);
-    setEndRide(false);
-    socket.emit("nearby-dropoff", {
-      userId: tripDetail?.userId,
-      distance: dropDestination,
-    });
-  } else if (dropDestination <= 1) {
+  }
+  //  else if (dropDestination < 2 && dropDestination > 1) {
+  //   console.log('nearby dropOff');
+  //   setNearByDropOff(true);
+  //   setStartRide(false);
+  //   setEndRide(false);
+  //   socket.emit("nearby-dropoff", {
+  //     userId: tripDetail?.userId,
+  //     distance: dropDestination,
+  //   });
+  // } 
+  else if (dropDestination <= 1) {
     console.log('dropoff');
     setEndRide(true);
     setStartRide(false);
@@ -161,7 +165,8 @@ useEffect(() => {
       userId: tripDetail?.userId,
       distance: dropDestination,
     });
-  } else {
+  }
+   else {
     setEndRide(false);
     setStartRide(false);
   }
@@ -218,12 +223,12 @@ useEffect(() => {
     setShowOtp(true);
   };
 
-  const startJourney = () => {
-    dispatch(
-      startTrip({ tripOtp, driverId: driver?.id, tripId: tripDetail?._id })
-    );
-    setShowOtp(false);
-  };
+  // const startJourney = () => {
+  //   dispatch(
+  //     startTrip({ tripOtp, driverId: driver?.id, tripId: tripDetail?._id })
+  //   );
+  //   setShowOtp(false);
+  // };
 
   const completeJourney = () => {
     dispatch(
@@ -232,16 +237,16 @@ useEffect(() => {
   };
 
   useEffect(() => {
-    if (message == "Ride started SucessFully") {
-      socket?.emit("ride-started", tripDetail);
-    }
+
     if (message == "Ride Completed SuccessFully") {
       toast("Ride Finished Completely");
     }
   }, [socket, message, tripDetail]);
 
   return (
+    
     <div className="flex w-full h-screen">
+     {showOtp && <RideStartConfirmationModal setShowOtp={setShowOtp} setStartRide={setStartRide} />}
       <div className="flex flex-col w-[24rem] p-4 items-center justify-around bg-[#f3f0da] shadow-lg">
         <div className="w-full bg-white rounded-lg p-4 flex flex-col items-center justify-between h-[20%] shadow-md relative">
           <h1 className="text-2xl font-bold text-gray-800">Driver Status</h1>
@@ -267,15 +272,15 @@ useEffect(() => {
           <p className="text-lg text-gray-600">
             You are currently{" "}
             <span className="font-semibold">
-              {currentStatus?.currentStatus == "active" ? "Online" : "Offline"}
+              {/* {currentStatus?.currentStatus == "active" ? "Online" : "Offline"} */}
             </span>
           </p>
         </div>
 
         <div className="w-full bg-white rounded-lg p-4 flex flex-col items-center justify-between h-[24%] shadow-md">
-          <h2 className="text-xl font-semibold text-gray-800">Current Ride</h2>
+          <h2 className="text-xl font-semibold text-gray-800">Ride Controls</h2>
          {tripDetail && <button onClick={()=>setOpenChat(true)}>Chat</button>}
-          <p className="text-gray-600">No active ride</p>
+          {/* <p className="text-gray-600">No active ride</p> */}
 
           <div className="flex w-full justify-around mt-4">
             {startRide &&
@@ -286,35 +291,15 @@ useEffect(() => {
                 Start Ride
               </button>
             }
-            {showOtp && (
-              <>
-                <div className="flex flex-col w-full p-1  ">
-                  <input
-                    type=""
-                    name=""
-                    id=""
-                    className="outline-none border-2 border-black w-full p-1"
-                    maxLength={4}
-                    value={tripOtp}
-                    onChange={(e) => setOtp(e.target.value)}
-                  />
-                  <button
-                    className="bg-blue-400 mt-2 rounded-sm p-1"
-                    onClick={() => startJourney()}
-                  >
-                    Verify
-                  </button>
-                </div>
-              </>
-            )}
-            {endRide && (
+            
+             {endRide && (
               <button
                 className="w-32 h-12 bg-red-600 text-white rounded-md font-bold shadow-md hover:bg-red-700 transition-colors duration-200"
                 onClick={() => completeJourney()}
               >
                 End Ride
               </button>
-            )}
+            )} 
           </div>
         </div>
 
@@ -381,7 +366,7 @@ useEffect(() => {
           )}
         </Map>
       </div>
-          <AnimatePresence mode="wait">
+          {/* <AnimatePresence mode="wait">
             {
             nearByPickup &&
           <DriverNearByPickup setNearByPickup={setNearByPickup} />
@@ -391,7 +376,7 @@ useEffect(() => {
           <DriverNearByDropOff setNearByDropOff={setNearByDropOff}  />
             }
 
-          </AnimatePresence>
+          </AnimatePresence> */}
     </div>
   );
 }

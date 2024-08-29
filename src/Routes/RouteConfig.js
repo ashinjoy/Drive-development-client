@@ -21,6 +21,7 @@ import RidePage from "../Pages/User/Trip/RidePage.jsx";
 import Trip from "../Pages/Driver/Trip/Trip.jsx";
 import LiveMapUpdates from "../Components/User/Maps/LiveMap.jsx";
 import LiveLocation from "../Pages/User/Trip/LiveLocation.jsx";
+import TripHistory from "../Pages/User/TripHistory/TripHistory.jsx";
 // import Chat from "../Components/Driver/Chat/Chat.jsx";
 // import ChatPage from "../Pages/Driver/Chat/ChatPage.jsx";
 // import UserSearchContext from "../Context/UserSearchContext.js";
@@ -58,10 +59,14 @@ function RouteConfig() {
         </UserProtected>
         )
     },
-    // {
-    //   path:"/checkout-success",
-    //   element
-    // }
+    {
+      path:'/trip-history',
+      element:(<UserProtected>
+              <TripHistory/>
+              </UserProtected>)
+      
+    },
+
     {
       path: "/driver",
       children: [

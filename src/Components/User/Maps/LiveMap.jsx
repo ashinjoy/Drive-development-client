@@ -152,7 +152,6 @@ function LiveMapUpdates() {
             </Source>
           )}
     </Map>
-    <NearByPickup/>
    </>
   );
 }

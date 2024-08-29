@@ -198,7 +198,7 @@ function BookingInfo() {
               <button className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors" onClick={()=>setPayOption('Online Payment')}>
                 Online Payment
               </button>
-              <button className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors">
+              <button className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors" onClick={()=>setPayOption('COD')}>
                 COD
               </button>
               <button

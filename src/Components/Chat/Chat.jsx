@@ -53,6 +53,9 @@ console.log("sender and reciever",sender,reciever);
                 setMessages((prev)=>[...prev,data])
             })
         }
+        return ()=>{
+          chatSocket?.off('latestMessage')
+        }
 
     },[chatSocket,driver,user])
 

@@ -3,68 +3,72 @@ import { useDispatch, useSelector } from "react-redux";
 import { requestRideAction } from "../../../Features/Trip/tripActions";
 import { useNavigate } from "react-router-dom";
 
-
-function ListVehiclePriceDetails({pickUpCoords,dropCoords,pickupLocation,dropLocation}) {
+function ListVehiclePriceDetails({
+  pickUpCoords,
+  dropCoords,
+  pickupLocation,
+  dropLocation,
+}) {
   const [selectCategory, setSelectCategory] = useState("");
-  const {user}= useSelector(state=>state.user)
-  const [bikeFare,setBikeFare] = useState(null)
-  const [autoFare,setAutoFare] = useState(null)
-  const [eta,setEta] = useState(null)
-  const bikeContainerRef = useRef(null)
-  const autoContainerRef = useRef(null)
-  const navigate = useNavigate()
+  const { user } = useSelector((state) => state.user);
+  const [bikeFare, setBikeFare] = useState(null);
+  const [autoFare, setAutoFare] = useState(null);
+  const [eta, setEta] = useState(null);
+  const bikeContainerRef = useRef(null);
+  const autoContainerRef = useRef(null);
+  const navigate = useNavigate();
 
+  const { additionalSearchMetaData } = useSelector((state) => state.trip);
+  const dispatch = useDispatch();
 
-  const {additionalSearchMetaData} = useSelector(state=>state.trip)
-  const dispatch = useDispatch()
-  
   const handleSelectVehicle = (vehicle) => {
     setSelectCategory(vehicle);
-    if(selectCategory == 'Bike'){
-      console.log('select',bikeContainerRef.current);
-      
-      bikeContainerRef.current.focus()
-    }else{
-      autoContainerRef.current.focus()
+    if (selectCategory == "Bike") {
+      bikeContainerRef.current.focus();
+    } else {
+      autoContainerRef.current.focus();
     }
   };
-  const handleRequestRide = ()=>{
-    let data ={
-      userId:user?.id,
-      vehicleType:selectCategory,
-      eta:eta,
+  const handleRequestRide = () => {
+    let data = {
+      userId: user?.id,
+      vehicleType: selectCategory,
+      eta: eta,
       pickUpCoords,
       dropCoords,
       pickupLocation,
       dropLocation,
-      distance:additionalSearchMetaData?.distance,
-      duration:additionalSearchMetaData?.duration
+      distance: additionalSearchMetaData?.distance,
+      duration: additionalSearchMetaData?.duration,
+    };
+    if (selectCategory == "Bike") {
+      data = { ...data, fare: bikeFare };
+    } else {
+      data = { ...data, fare: autoFare };
     }
-    if(selectCategory == 'Bike'){
-      data = {...data,fare:bikeFare}
-    }else{
-      data = {...data,fare:autoFare}
-    }
-    dispatch(requestRideAction(data))
-    navigate('/trip')
-  }
+    dispatch(requestRideAction(data));
+    navigate("/trip");
+  };
 
-  useEffect(()=>{
-   const vehicleDetails =  calculateFare(additionalSearchMetaData)
-   console.log('vehivle',vehicleDetails);
-   setAutoFare(vehicleDetails?.AUTO_FARE)
-   setBikeFare(vehicleDetails?.BIKE_FARE)
-   setEta(vehicleDetails?.eta)
-    
-  },[pickUpCoords,dropCoords])
+  useEffect(() => {
+    const vehicleDetails = calculateFare(additionalSearchMetaData);
+    setAutoFare(vehicleDetails?.AUTO_FARE);
+    setBikeFare(vehicleDetails?.BIKE_FARE);
+    setEta(vehicleDetails?.eta);
+  }, [pickUpCoords, dropCoords]);
 
   return (
     <>
       <div className="flex flex-col mt-[8rem]  w-[80%] ">
         <h2 className="text-xl font-bold mb-4">Choose a ride</h2>
-        <div className="h-[10rem]" onClick={() => handleSelectVehicle("Bike")} ref={bikeContainerRef} id="bikeContainer">
+        <div
+          className="h-[10rem]"
+          onClick={() => handleSelectVehicle("Bike")}
+          ref={bikeContainerRef}
+          id="bikeContainer"
+        >
           <div className="border-2  rounded-lg p-4 flex items-center justify-between cursor-pointer h-[9rem] hover:shadow-lg transition-shadow duration-200 ">
-            <div className="flex items-center " >
+            <div className="flex items-center ">
               <img
                 src="/assets/scooter-illustration-vintage-vehicle-sign-and-symbol-vector.jpg"
                 alt="bike"
@@ -72,16 +76,23 @@ function ListVehiclePriceDetails({pickUpCoords,dropCoords,pickupLocation,dropLoc
               />
               <div>
                 <p className="font-semibold">Bike Ride</p>
-                <p className="text-sm text-gray-500">{eta && eta} mins away • 10:33 AM</p>
+                <p className="text-sm text-gray-500">
+                  {eta && eta} mins away • 10:33 AM
+                </p>
                 <p className="text-sm text-gray-500">
                   Pay directly to driver, cash/UPI only
                 </p>
               </div>
             </div>
-            <p className="font-bold text-lg">{bikeFare && '₹'+bikeFare}</p>
+            <p className="font-bold text-lg">{bikeFare && "₹" + bikeFare}</p>
           </div>
         </div>
-        <div className="h-[10rem]" onClick={() => handleSelectVehicle("Auto")} ref={autoContainerRef} id="autoContainer">
+        <div
+          className="h-[10rem]"
+          onClick={() => handleSelectVehicle("Auto")}
+          ref={autoContainerRef}
+          id="autoContainer"
+        >
           <div className="border rounded-lg p-4 flex items-center justify-between cursor-pointer h-[9rem] hover:shadow-lg transition-shadow duration-200 ">
             <div className="flex items-center">
               <img
@@ -91,57 +102,54 @@ function ListVehiclePriceDetails({pickUpCoords,dropCoords,pickupLocation,dropLoc
               />
               <div>
                 <p className="font-semibold">Auto Ride</p>
-                <p className="text-sm text-gray-500">{eta && eta} mins away • 10:33 AM</p>
+                <p className="text-sm text-gray-500">
+                  {eta && eta} mins away • 10:33 AM
+                </p>
                 <p className="text-sm text-gray-500">
                   Pay directly to driver, cash/UPI only
                 </p>
               </div>
             </div>
-            <p className="font-bold text-lg">{autoFare && '₹'+autoFare}</p>
+            <p className="font-bold text-lg">{autoFare && "₹" + autoFare}</p>
           </div>
         </div>
         <div className="mt-6 flex items-center justify-between">
-    <select className="border p-2 rounded-md">
-      <option value="cash">Cash</option>
-      <option value="upi">UPI</option>
-    </select>
-    <button className="bg-black text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition-colors duration-200"onClick={()=>handleRequestRide(selectCategory)}>
-      Request Ride
-    </button>
-  </div>
+          <select className="border p-2 rounded-md">
+            <option value="cash">Cash</option>
+            <option value="upi">UPI</option>
+          </select>
+          <button
+            className="bg-black text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition-colors duration-200"
+            onClick={() => handleRequestRide(selectCategory)}
+          >
+            Request Ride
+          </button>
+        </div>
       </div>
     </>
   );
-
 }
 
 export default ListVehiclePriceDetails;
 
-function calculateFare(additionalSearchMetaData){
-console.log('entry in calculate fare');
+function calculateFare(additionalSearchMetaData) {
+  const BIKE_MIN_RATE = 40;
+  const AUTO_MIN_RATE = 60;
 
-const BIKE_MIN_RATE = 40
-const AUTO_MIN_RATE = 60
+  const BIKE_CHARGE_PER_KM = 5;
+  const AUTO_CHARGE_PER_KM = 12;
 
-const BIKE_CHARGE_PER_KM = 5
-const AUTO_CHARGE_PER_KM = 12
+  const TotalDistance_Kilometres = additionalSearchMetaData?.distance / 1000;
 
+  const BIKE_FARE = Math.ceil(TotalDistance_Kilometres * BIKE_CHARGE_PER_KM + BIKE_MIN_RATE);
 
-const TotalDistance_Kilometres = additionalSearchMetaData?.distance/1000
-console.log('distance for calculating the money',additionalSearchMetaData?.distance);
+  const AUTO_FARE = Math.ceil(TotalDistance_Kilometres * AUTO_MIN_RATE + AUTO_CHARGE_PER_KM);
 
-const BIKE_FARE = Math.ceil((TotalDistance_Kilometres * BIKE_CHARGE_PER_KM)+BIKE_MIN_RATE)
+  const eta = Math.floor(additionalSearchMetaData?.duration / 60);
 
-const AUTO_FARE = Math.ceil((TotalDistance_Kilometres * AUTO_MIN_RATE)+AUTO_CHARGE_PER_KM)
-
-const eta =  Math.floor(additionalSearchMetaData?.duration / 60)
-console.log('duration',additionalSearchMetaData?.duration);
-
-return {
-  BIKE_FARE,
-  AUTO_FARE,
-  eta
+  return {
+    BIKE_FARE,
+    AUTO_FARE,
+    eta,
+  };
 }
-
-}
-

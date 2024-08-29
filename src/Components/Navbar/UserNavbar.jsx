@@ -1,59 +1,81 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, NavLink } from 'react-router-dom'
 import { BiUserCircle } from "react-icons/bi";
 import { useNavigate} from 'react-router-dom';
 import { useSocket } from '../../Hooks/socket';
 import { resetTripDetails, setTripData } from '../../Features/Trip/tripSlice';
+import { AnimatePresence } from 'framer-motion';
+import NearByPickup from '../User/Notification/NearByPickup';
 function UserNavbar() {
-  const userData = useSelector((state)=>state.user)
+  const {user,token} = useSelector((state)=>state.user)
   const {tripDetail} = useSelector(state=>state.trip)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const userId = userData?.user?.id
-  const  {token} = userData
+  const [showNotification,setShowNofication] = useState(false)
+  const [notifyData,setNotifyData] = useState('')
+  const userId = user?.id
+  
   const {socket,chatSocket} = useSocket()
 
   const handleUserLogout =()=>{
   }
 
   useEffect(()=>{
-    if(token && userData?.user){
-      socket?.on('rideAccepted',(tripData)=>{
-        console.log("ride  accepted");   
-        console.log(tripData);  
-    dispatch(setTripData(tripData))
-      })
+    console.log("useEffect Running");    
+    if(!token || !user ||!socket){
+      console.log("inside the if");
+    return
     }
-  },[socket,userData?.user])
+    console.log("outside the if");
+    socket?.emit('user-connected',userId)
+    socket?.on('rideAccepted',(tripData)=>{ 
+   dispatch(setTripData(tripData))
+    })
+    return ()=>{
+      socket?.off('user-connected')
+      socket?.off('rideAccepted')
+    }
+  },[socket,user])
 
   useEffect(()=>{
-    if(token && userData?.user && tripDetail){
-      socket?.on('live-location',(data)=>{
-        console.log('positional Coordinates-Live Tracking',data); 
-      })
+    if(!token || !user || !tripDetail){
+      
+      return
+      // socket?.on('live-location',(data)=>{
+      //   console.log('positional Coordinates-Live Tracking',data); 
+      // })
 
-      socket?.on('driver-NearBy-pickup',(data)=>{
-        console.log('data in nearby',data);
-      })
+      // socket?.on('driver-NearBy-pickup',(data)=>{
+      //   console.log('data in nearby',data);
+      // })
 
-      socket?.on('ride-start',(data)=>{
-        console.log('ride started',data);
-        // dispatch(setTripData(data))
-        
-      })
 
-      socket?.on('nearby-dropoff',(data)=>{
-        console.log('nearby-dropoff',data);
-      })
 
-      socket?.on('ride-complete',()=>{
-        dispatch(resetTripDetails())
-        console.log('ride finished')
-      })
+      // socket?.on('nearby-dropoff',(data)=>{
+      //   console.log('nearby-dropoff',data);
+      // })
+
+    
+    }
+
+    const handleRideStartSocket = (data)=>{
+      console.log('ride started');
+      setNotifyData(data)
+    }
+
+    const handleRideEndSocket = ()=>{
+      dispatch(resetTripDetails())
+      console.log('ride finished')
+    }
+    socket?.on('ride-start',handleRideStartSocket)
+    socket?.on('ride-complete',handleRideEndSocket)
+
+    return ()=>{
+      socket?.off('ride-start')
+      socket?.off('ride-complete')
     }
     
-
   },[socket,tripDetail])
 
 
@@ -70,13 +92,14 @@ function UserNavbar() {
         <NavLink to='/search-ride' className={'text-lg font-medium leading-tight'}>Ride</NavLink>
         <NavLink className={'text-lg font-medium leading-tight'}>Contact Us</NavLink>
       </div>
-      <div className='hidden md:flex text-sm lg:text-lg items-center gap-x-16 mr-10'>
-      {token ?<>
-      <NavLink to={`/userprofile/${userId}`}><BiUserCircle size={'28px'}/></NavLink>
-      <NavLink className={'text-lg font-medium leading-tight'} onClick={handleUserLogout}>Logout</NavLink>
-      </>
-      :<NavLink to='/login'className={'text-lg font-medium leading-tight'}>Login</NavLink>}
+      <div className='hidden md:flex text-sm lg:text-lg items-center mr-16'>
+      {token ?
+      <NavLink to={`/userprofile/${userId}`}><BiUserCircle size={'28px'}/></NavLink>:
+     <NavLink to='/login'className={'text-lg font-medium leading-tight'}>Login</NavLink>}
       </div>
+    <AnimatePresence mode='wait'>
+   {showNotification && <NearByPickup setShowNofication={setShowNofication} notifyData={notifyData} />}
+    </AnimatePresence>
     </nav>
   )
 }

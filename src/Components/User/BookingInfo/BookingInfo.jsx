@@ -10,6 +10,7 @@ function BookingInfo() {
   const [openPayment, setOpenPayment] = useState(false);
 
   const [payOption, setPayOption] = useState(false);
+  
   const [senderId, setSenderId] = useState(null);
   const [recieverId, setRecieverId] = useState(null);
   const { user } = useSelector((state) => state.user);
@@ -101,7 +102,7 @@ function BookingInfo() {
     //   </button>
     // </div>
     <div className="w-[20rem] mt-[7rem] ml-[2rem] h-auto border-2 border-gray-300 shadow-lg rounded-lg overflow-hidden">
-      {openChat && <Chat openChat={openChat} user={user} />}
+      {openChat && <Chat openChat={openChat} user={user} setOpenChat={setOpenChat}/>}
 
       <div className="relative h-[14rem] p-4 bg-gradient-to-r from-purple-50 to-blue-100 text-black">
         <h1 className="text-center text-xl font-bold tracking-wide">
@@ -167,24 +168,24 @@ function BookingInfo() {
       </div>
 
       <div className="flex flex-col items-center gap-4 p-4">
-        <button
+       {!tripDetail && <button
           className="bg-red-500 w-[60%] p-2 rounded-full text-white font-semibold hover:bg-red-600 transition-colors shadow-md"
           // onClick={handleCancelRide}  // Add cancel ride handler
         >
           Cancel Ride
-        </button>
-        <button
+        </button>}
+       {tripDetail && <button
           className="bg-blue-500 w-[60%] p-2 rounded-full text-white font-semibold hover:bg-blue-600 transition-colors shadow-md"
           onClick={() => setOpenChat(true)}
         >
           Chat
-        </button>
-        <button
+        </button>}
+       {tripDetail && <button
           className="bg-green-500 w-[60%] p-2 rounded-full text-white font-semibold hover:bg-green-600 transition-colors shadow-md"
           onClick={() => setOpenPayment(true)} // Add open payment handler
         >
           Payment Options
-        </button>
+        </button>}
       </div>
 
       {openPayment && (

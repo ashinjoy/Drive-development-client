@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const TripCard = ({ title, date, time, price, status }) => {
+const TripCard = ({ title, date, time, price, status,id }) => {
   return (
-    <div className="flex items-center bg-white p-4 rounded-lg border-2 border-black shadow-md mb-4">
+    <div className="flex w-full items-center  bg-white p-4 rounded-lg border-2 border-black shadow-md mb-4">
       <div className="flex-shrink-0">
         <img
           src="/assets/TukTuk_Green_v1.png"
@@ -13,15 +14,15 @@ const TripCard = ({ title, date, time, price, status }) => {
       <div className="ml-4 flex-grow">
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="text-sm text-gray-600">
-          {date} • {time}
+          {date}  {time}
         </p>
         <p className="text-sm text-gray-600">
-          ₹{price} • {status}
+          ₹{price}  {status}
         </p>
       </div>
       <div className="flex space-x-2">
-        <button className="px-4 py-2 bg-gray-200 rounded-lg text-sm">Help</button>
-        <button className="px-4 py-2 bg-gray-200 rounded-lg text-sm">Details</button>
+        {/* <button className="px-4 py-2 bg-gray-200 rounded-lg text-sm">Help</button> */}
+        <Link className="px-4 py-2 bg-gray-200 rounded-lg text-sm" to={`/trip-Detail/${id}`}>Details</Link>
         <button className="px-4 py-2 bg-gray-200 rounded-lg text-sm">Rebook</button>
       </div>
     </div>

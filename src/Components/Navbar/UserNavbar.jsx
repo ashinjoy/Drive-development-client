@@ -7,6 +7,7 @@ import { useSocket } from '../../Hooks/socket';
 import { resetTripDetails, setTripData } from '../../Features/Trip/tripSlice';
 import { AnimatePresence } from 'framer-motion';
 import NearByPickup from '../User/Notification/NearByPickup';
+import { toast } from 'react-toastify';
 function UserNavbar() {
   const {user,token} = useSelector((state)=>state.user)
   const {tripDetail} = useSelector(state=>state.trip)
@@ -65,6 +66,7 @@ function UserNavbar() {
     }
 
     const handleRideEndSocket = ()=>{
+      toast('Ride Completed')
       dispatch(resetTripDetails())
       console.log('ride finished')
     }
@@ -90,7 +92,7 @@ function UserNavbar() {
         <NavLink to='/' className={'text-lg font-medium leading-tight'}>Home</NavLink>
         <NavLink to='/driver/signup' className={'text-lg font-medium leading-tight'}>Drive</NavLink>
         <NavLink to='/search-ride' className={'text-lg font-medium leading-tight'}>Ride</NavLink>
-        <NavLink className={'text-lg font-medium leading-tight'}>Contact Us</NavLink>
+        <NavLink className={'text-lg font-medium leading-tight'} to={'/trip-history'}>Trips</NavLink>
       </div>
       <div className='hidden md:flex text-sm lg:text-lg items-center mr-16'>
       {token ?

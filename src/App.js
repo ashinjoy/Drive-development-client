@@ -3,6 +3,7 @@ import Toast from "./Utils/CustomToasts/Toast";
 import UserSearchContext from "./Context/UserSearchContext";
 import RideRequestNotifications from "./Components/Driver/Notifications/RideRequestNotifications";
 import DriverLocation from "./Context/DriverLocation";
+import ChatProvider from "./Context/ChatProvider";
 
 function App() {
   return (
@@ -10,7 +11,9 @@ function App() {
       <Toast />
       <DriverLocation>
       <UserSearchContext>
+        <ChatProvider>
         <Router/>
+        </ChatProvider>
       </UserSearchContext>
       </DriverLocation>
     </div>

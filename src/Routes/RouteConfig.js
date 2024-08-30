@@ -22,6 +22,8 @@ import Trip from "../Pages/Driver/Trip/Trip.jsx";
 import LiveMapUpdates from "../Components/User/Maps/LiveMap.jsx";
 import LiveLocation from "../Pages/User/Trip/LiveLocation.jsx";
 import TripHistory from "../Pages/User/TripHistory/TripHistory.jsx";
+import PaymentSucess from "../Pages/User/Payment/PaymentSucess.jsx";
+import TripDetailPage from "../Pages/User/TripHistory/TripDetailPage.jsx";
 // import Chat from "../Components/Driver/Chat/Chat.jsx";
 // import ChatPage from "../Pages/Driver/Chat/ChatPage.jsx";
 // import UserSearchContext from "../Context/UserSearchContext.js";
@@ -65,6 +67,20 @@ function RouteConfig() {
               <TripHistory/>
               </UserProtected>)
       
+    },
+    {
+      path:'/trip-detail/:tripId',
+      element:(<UserProtected>
+              <TripDetailPage/>
+              </UserProtected>)
+      
+    },
+    {
+      path:'/payment-success',
+      element:(<UserProtected>
+          <PaymentSucess/>
+        </UserProtected>
+      )
     },
 
     {

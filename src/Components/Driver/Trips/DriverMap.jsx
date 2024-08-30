@@ -322,7 +322,7 @@ useEffect(() => {
       </div>
 
       <div className=" ml-5 w-[95%] h-full">
-        {openChat && <Chat driver={driver} recieverId={recieverId} senderId={senderId}/>}
+        {openChat && <Chat driver={driver} recieverId={recieverId} senderId={senderId} setOpenChat={setOpenChat}/>}
         <Map
           {...viewState}
           onMove={(evt) => setViewState(evt.viewState)}

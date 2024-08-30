@@ -49,12 +49,21 @@ export const getMessageService = async(tripId)=>{
   }
 }
 
-export const getAllTripsService =async()=>{
+export const getAllTripsService =async(userId)=>{
   try {
-    const response =await UserPrivate.get(`payment/user/trip-details`)
+    const response =await UserPrivate.get(`payment/user/trip-details/${userId}`)
     return response.data
   } catch (error) {
     console.error(error);
+    
+  }
+}
+
+export const getTripDetailService =async(tripId)=>{
+  try {
+    const response = await UserPrivate.get(`payment/user/trip-deatils/${tripId}`)
+    return response.data
+  } catch (error) {
     
   }
 }

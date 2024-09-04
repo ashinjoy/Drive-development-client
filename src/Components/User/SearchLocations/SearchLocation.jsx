@@ -1,19 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FaLocationArrow } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-// import {userCurrentLocation} from '../../../Features/User/userActions'
+
 import SuggesstionBox from "../SuggestionBox/SuggesstionBox";
 import { UserPrivate } from "../../../Utils/Axios/userInterceptor";
 import { Geocoder } from "@mapbox/search-js-react";
 import { seacrhNearByDriver } from "../../../Features/Trip/tripActions";
 import { searchLocationContext } from "../../../Context/UserSearchContext";
-// import { requestRideAction } from '../../../Features/Trip/tripActions';
+
 import ListVehiclePriceDetails from "../Trip/ListVehiclePriceDetails";
 
 function SearchLocation({ isSearch, setSearch }) {
-  const { selectDropOffLocation, pickUpCoords, dropCoords } = useContext(searchLocationContext);
-
-  // const [dropoffCoords, setDropCoordinates] = useState(null);
+  const { selectDropOffLocation, pickUpCoords, dropCoords,selectPickupLocation } = useContext(searchLocationContext);
 
   const [isPickUpSuggestion, setPickupSuggestion] = useState(false);
 
@@ -32,9 +30,7 @@ function SearchLocation({ isSearch, setSearch }) {
     setPickupLocation(value);
 
     try {
-      const response = await UserPrivate.get(
-        `trip/users/pickup-location-autocomplete?search=${value}`
-      );
+      const response = await UserPrivate.get(`trip/users/pickup-location-autocomplete?search=${value}`);
       const data = response.data;
       setSuggestions(data?.searchResults);
     } catch (error) {
@@ -61,6 +57,21 @@ function SearchLocation({ isSearch, setSearch }) {
 
     dispatch(seacrhNearByDriver(formData));
   };
+
+  const handleCurrentLocation = ()=>{
+    if(!navigator.geolocation){
+      return
+    }
+    navigator.geolocation.getCurrentPosition(async(pos)=>{
+      console.log('position',pos);
+      const response = await UserPrivate.get(`trip/users/pickup-location-autocomplete?search=${[pos?.coords?.longitude,pos?.coords?.latitude]}`)
+      console.log("pickup",response?.data?.searchResult?.properties?.full_address);
+      setPickupLocation(response?.data?.searchResult?.properties?.full_address)
+      selectPickupLocation([pos?.coords?.longitude,pos?.coords?.latitude])
+    })
+  }
+
+
 
   useEffect(() => {
     if (additionalSearchMetaData) {
@@ -96,7 +107,7 @@ function SearchLocation({ isSearch, setSearch }) {
                     value={pickupLocation}
                     onChange={handlePickUpLocation}
                   />
-                  <button className="h-12 w-12 text-black flex items-center justify-center transition duration-200">
+                  <button type="button" className="h-12 w-12 text-black flex items-center justify-center transition duration-200" onClick={handleCurrentLocation}>
                     <FaLocationArrow />
                   </button>
                 </div>

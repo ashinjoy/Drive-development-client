@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Chat from "../../Chat/Chat";
-import { paymentService } from "../../../Features/User/userService";
+import { stripePaymentService, walletPaymentService } from "../../../Features/User/userService";
+import { UserPrivate } from "../../../Utils/Axios/userInterceptor";
 
 
 function BookingInfo() {
@@ -15,12 +16,15 @@ function BookingInfo() {
   const [recieverId, setRecieverId] = useState(null);
   const { user } = useSelector((state) => state.user);
 
-
-
+  const selectPaymentOption =async(e)=>{
+    setPayOption(e.target.value)
+    const response =  await UserPrivate.put('trip/users/change-paymentmode',{tripId:tripDetail?._id,paymentMethod:e.target.value})
+  }
   useEffect(() => {
     if (tripDetail) {
       setRecieverId(tripDetail?.driverId);
       setSenderId(tripDetail?.userId);
+      setPayOption(tripDetail?.paymentMethod)
     }
   }, [tripDetail]);
 
@@ -28,15 +32,22 @@ function BookingInfo() {
     const data = {
       userId: user?.id,
       tripId: tripDetail?._id,
+      driverId:tripDetail?.driverId,
       paymentMethod: payOption,
       fare: tripDetail?.fare,
-    };
-  const response =  await paymentService(data)
-  console.log("response",response);
-  if(response.payment?.url){
-    window.location.href = response.payment.url
-  }
+    }
+    if(payOption == "Online-Payment"){
+      const response =  await stripePaymentService(data)
+      console.log("response",response);
+      if(response.payment?.url){
+        window.location.href = response.payment.url
+      }
+    }
+    else if(payOption == "Wallet"){
+      const response = await walletPaymentService(data)
+    }
   };
+
 
   return (
     //     <div className="w-[20rem] mt-[7rem] ml-[2rem] h-[35rem] border-2 border-gray-300 shadow-lg rounded-lg overflow-hidden">
@@ -180,23 +191,34 @@ function BookingInfo() {
         >
           Chat
         </button>}
-       {tripDetail && <button
+       {/* {tripDetail && <button
           className="bg-green-500 w-[60%] p-2 rounded-full text-white font-semibold hover:bg-green-600 transition-colors shadow-md"
           onClick={() => setOpenPayment(true)} // Add open payment handler
         >
           Payment Options
-        </button>}
+        </button>} */}
+        {
+          tripDetail &&<>
+           <select value={payOption}  name="" id="" onChange={selectPaymentOption}>
+            <option value="Cash">Cash</option>
+            <option value="Online-Payment">Pay Online</option>
+            <option value="Wallet">Wallet</option>  
+          </select>
+          <button onClick={handlePayment}>Pay Now</button>
+          </>
+        }
       </div>
 
-      {openPayment && (
+
+      {/* {openPayment && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
           <div className="bg-white w-[20rem] p-6 rounded-lg shadow-lg">
             <h2 className="text-lg font-bold text-center mb-4">
               Select Payment Method
             </h2>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4"> */}
               {/* <button className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors" onClick={()=>setPayOption()}>Credit/Debit Card</button> */}
-              <button className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors" onClick={()=>setPayOption('Online Payment')}>
+              {/* <button className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors" onClick={()=>setPayOption('Online Payment')}>
                 Online Payment
               </button>
               <button className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors" onClick={()=>setPayOption('COD')}>
@@ -217,7 +239,7 @@ function BookingInfo() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

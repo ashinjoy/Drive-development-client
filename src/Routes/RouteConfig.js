@@ -24,6 +24,9 @@ import LiveLocation from "../Pages/User/Trip/LiveLocation.jsx";
 import TripHistory from "../Pages/User/TripHistory/TripHistory.jsx";
 import PaymentSucess from "../Pages/User/Payment/PaymentSucess.jsx";
 import TripDetailPage from "../Pages/User/TripHistory/TripDetailPage.jsx";
+import WalletPage from "../Pages/User/Profile/WalletPage.jsx";
+import AddContacts from "../Pages/User/AddContacts/AddContacts.jsx";
+import DriverWalletPage from "../Pages/Driver/Wallet/DriverWalletPage.jsx";
 // import Chat from "../Components/Driver/Chat/Chat.jsx";
 // import ChatPage from "../Pages/Driver/Chat/ChatPage.jsx";
 // import UserSearchContext from "../Context/UserSearchContext.js";
@@ -82,7 +85,18 @@ function RouteConfig() {
         </UserProtected>
       )
     },
-
+    {
+      path:'/wallet',
+      element:(<UserProtected>
+        <WalletPage/>
+      </UserProtected>)
+    },
+    {
+      path:'/safety',
+      element:(<UserProtected>
+       <AddContacts/>
+      </UserProtected>)
+    },
     {
       path: "/driver",
       children: [
@@ -127,6 +141,14 @@ function RouteConfig() {
             </DriverProtected>
           ),
         },
+        {
+          path:'wallet',
+          element:(
+            <DriverProtected>
+              <DriverWalletPage/>
+            </DriverProtected>
+          )
+        }
         
         
       ],

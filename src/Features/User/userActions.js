@@ -1,12 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { googleAuthService ,emailAuthService ,verifyOtpService,resendOtpService,userProfileUpdateService,userLogoutService,userCurrentLocationService  } from "../../Features/User/userService";
+import { googleAuthService ,emailAuthService ,verifyOtpService,resendOtpService,userProfileUpdateService,userLogoutService,userCurrentLocationService,saveContactServices} from "../../Features/User/userService";
 console.log('userAction');
 
 export const googleAuth = createAsyncThunk("googleAuth", async (token,{rejectWithValue}) => {
   try {
-    console.log('token',token);
+    // console.log('token',token);
+console.log('inside action of gogle auth 1');
+
    const response =  await googleAuthService(token)
+console.log('inside action of gogle auth 2');
+
    return response.data
   } catch (error) {
     console.error(error);
@@ -70,6 +74,17 @@ export const userCurrentLocation =createAsyncThunk('userCurrentLocation',async(c
   return response.data
   } catch (error) {
     
+  }
+})
+
+export const saveContacts = createAsyncThunk('saveContacts',async(contactDetails)=>{
+  try {
+    console.log("contactDetails",contactDetails);
+    
+    const response = await saveContactServices(contactDetails)
+    return response.data
+  } catch (error) {
+    console.log(error);
   }
 })
 

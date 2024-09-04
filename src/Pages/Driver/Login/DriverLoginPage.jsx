@@ -38,12 +38,7 @@ function DriverLoginPage() {
     }
   };
   useEffect(() => {
-    if (message == "Logged In Successfully") {
-      toast(message);
-      console.log('socket Refernece',socket);
-      console.log('useSocketRef',useSocket);
-      
-      
+    if (message == "Logged In Successfully") {  
       socket?.emit('driver-connected',driver.id)
       navigate("/driver/home");
     } else if (error) {

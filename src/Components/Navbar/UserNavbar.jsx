@@ -5,9 +5,11 @@ import { BiUserCircle } from "react-icons/bi";
 import { useNavigate} from 'react-router-dom';
 import { useSocket } from '../../Hooks/socket';
 import { resetTripDetails, setTripData } from '../../Features/Trip/tripSlice';
+import { RiArrowDropDownLine } from "react-icons/ri";
 import { AnimatePresence } from 'framer-motion';
 import NearByPickup from '../User/Notification/NearByPickup';
 import { toast } from 'react-toastify';
+import UserAccountMenu from '../User/UserAccountMenu/UserAccountMenu';
 function UserNavbar() {
   const {user,token} = useSelector((state)=>state.user)
   const {tripDetail} = useSelector(state=>state.trip)
@@ -15,6 +17,7 @@ function UserNavbar() {
   const navigate = useNavigate()
   const [showNotification,setShowNofication] = useState(false)
   const [notifyData,setNotifyData] = useState('')
+  const [showMenu,setShowMenu] = useState(false)
   const userId = user?.id
   
   const {socket,chatSocket} = useSocket()
@@ -28,7 +31,6 @@ function UserNavbar() {
       console.log("inside the if");
     return
     }
-    console.log("outside the if");
     socket?.emit('user-connected',userId)
     socket?.on('rideAccepted',(tripData)=>{ 
    dispatch(setTripData(tripData))
@@ -41,23 +43,7 @@ function UserNavbar() {
 
   useEffect(()=>{
     if(!token || !user || !tripDetail){
-      
       return
-      // socket?.on('live-location',(data)=>{
-      //   console.log('positional Coordinates-Live Tracking',data); 
-      // })
-
-      // socket?.on('driver-NearBy-pickup',(data)=>{
-      //   console.log('data in nearby',data);
-      // })
-
-
-
-      // socket?.on('nearby-dropoff',(data)=>{
-      //   console.log('nearby-dropoff',data);
-      // })
-
-    
     }
 
     const handleRideStartSocket = (data)=>{
@@ -84,6 +70,7 @@ function UserNavbar() {
   
 
   return ( 
+    
     <nav className='fixed top-0 flex flex-row justify-between  h-[6rem] drop-shadow-lg w-[100vw] 9 bg-white z-40 border'>
       <div className='ml-10 w-44'>
         <img src="/assets/logo-cl.png" alt="drive logo" className='w-full h-full object-contain'/>
@@ -95,8 +82,14 @@ function UserNavbar() {
         <NavLink className={'text-lg font-medium leading-tight'} to={'/trip-history'}>Trips</NavLink>
       </div>
       <div className='hidden md:flex text-sm lg:text-lg items-center mr-16'>
+        {showMenu && <UserAccountMenu/>}
       {token ?
-      <NavLink to={`/userprofile/${userId}`}><BiUserCircle size={'28px'}/></NavLink>:
+      // <NavLink className='flex'></NavLink>
+      <div className='flex items-center hover:cursor-pointer' onClick={()=>setShowMenu(!showMenu)}>
+        <BiUserCircle size={'28px'}/>
+        <RiArrowDropDownLine size={'20'} />
+      </div>
+      :
      <NavLink to='/login'className={'text-lg font-medium leading-tight'}>Login</NavLink>}
       </div>
     <AnimatePresence mode='wait'>

@@ -6,9 +6,11 @@ function DriverLocation({children}) {
 
     const [driverLive,setDriverLive] = useState([])
 
+    const [tripCoordinates,setTripCoordintes] =  useState([])
+
     const [enableChat,setEnableChat] = useState(false)
   return (
-    <driverLiveLocation.Provider value ={{driverLive,setDriverLive,enableChat,setEnableChat}}>
+    <driverLiveLocation.Provider value ={{driverLive,setDriverLive,enableChat,setEnableChat,tripCoordinates,setTripCoordintes}}>
        { children}
     </driverLiveLocation.Provider>
   )

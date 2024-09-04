@@ -16,6 +16,7 @@ function ListVehiclePriceDetails({
   const [eta, setEta] = useState(null);
   const bikeContainerRef = useRef(null);
   const autoContainerRef = useRef(null);
+  const [paymentMethod,setPaymentMethod] = useState("Online-Payment")
   const navigate = useNavigate();
 
   const { additionalSearchMetaData } = useSelector((state) => state.trip);
@@ -40,6 +41,7 @@ function ListVehiclePriceDetails({
       dropLocation,
       distance: additionalSearchMetaData?.distance,
       duration: additionalSearchMetaData?.duration,
+      paymentMethod 
     };
     if (selectCategory == "Bike") {
       data = { ...data, fare: bikeFare };
@@ -114,9 +116,12 @@ function ListVehiclePriceDetails({
           </div>
         </div>
         <div className="mt-6 flex items-center justify-between">
-          <select className="border p-2 rounded-md">
-            <option value="cash">Cash</option>
-            <option value="upi">UPI</option>
+          <select className="border p-2 rounded-md" onChange={(e)=>setPaymentMethod(e.target.value)
+          } >
+            <option value="Cash">Cash</option>
+            <option value="Online-Payment" selected>Pay Online</option>
+            <option value="Wallet">Wallet</option>
+
           </select>
           <button
             className="bg-black text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition-colors duration-200"

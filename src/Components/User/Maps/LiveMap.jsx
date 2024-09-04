@@ -80,7 +80,8 @@ function LiveMapUpdates() {
       if(socket && tripDetail){
         socket?.on("live-location",(data)=>{
         console.log('positional Coordinates-Live Trackinggggggggggg',data);          
-        setDriverCoords([data?.pos?.coords?.longitude,data?.pos?.coords?.latitude]);
+        // setDriverCoords([data?.pos?.coords?.longitude,data?.pos?.coords?.latitude]);
+        setDriverCoords(data?.liveLocation)
           })
         // socket.on("dummy-event",()=>console.log("Worked")
         // )

@@ -5,7 +5,6 @@ import {driverPrivate} from "../../Utils/Axios/driverInterceptor";
 export const registerDriverService = async (formDetails) => {
   try {
     const response = await axios.post("auth/driver/signup",formDetails);
-
     return response;
   } catch (error) {
 
@@ -62,3 +61,14 @@ return await driverPrivate.put('trip/driver/online',driverDetails)
 export const driverInactiveService = async(driverId)=>{
   return await driverPrivate.put('trip/driver/offline',{driverId})
   }
+export const getDriverBalance = async(driverId)=>{
+  return await driverPrivate.get(`payment/driver/get-walletbalance/${driverId}`)
+}  
+
+export const getDriverWalletHistoryService = async(driverId)=>{
+  return await driverPrivate.get(`payment/driver/wallethistory/${driverId}`)
+}
+
+export const getDriverWalletDetailService = async(driverId)=>{
+return await driverPrivate.get(`payment/driver/walletdetails/${driverId}`)
+}

@@ -6,6 +6,7 @@ import Map from "../../../Components/Driver/Trips/DriverMap";
 import { useDispatch, useSelector } from "react-redux";
 import { driverOnlineAction } from "../../../Features/Location/locationActions";
 import DriverNavBar from "../../../Components/Navbar/DriverNavBar";
+import DriverMenuBar from "../../../Components/Navbar/DriverMenuBar";
 
 function Trip() {
   const mapContainerRef = useRef(null);
@@ -35,6 +36,7 @@ function Trip() {
     <>
     <div className="flex gap-1">
       <DriverNavBar/>
+      {/* <DriverMenuBar/> */}
          <Map />
  </div>
     </>

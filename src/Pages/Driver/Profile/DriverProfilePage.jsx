@@ -4,6 +4,7 @@ import UserNavbar from "../../../Components/Navbar/UserNavbar";
 import { profileUpdateRequest } from "../../../Features/Driver/driverActions";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import DriverMenuBar from "../../../Components/Navbar/DriverMenuBar";
 
 function DriverProfilePage() {
   const [name, setName] = useState("");
@@ -113,7 +114,7 @@ if(driverState?.message == 'Profile request send'){
 
   return (
     <>
-      <UserNavbar />
+      <DriverMenuBar/>
       <section className="bg-gray-50 bg-gradient-to-r from-white to-yellow-50 h-screen">
         <div className="flex flex-col items-center justify-center px-6 py- 8 mt-28 mx-auto  lg:py-0">
           <div className="w-full bg-white rounded-lg shadow-lg sm:max-w-xl xl:p-0 border border-yellow-300 bg-gradient-to-t from-white to-yellow-100">

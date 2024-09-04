@@ -12,14 +12,14 @@ function RidePage() {
   const [isSearch,setSearch] = useState(false)
   // const [live,setLive] = useState(false)
   const {tripDetail} = useSelector(state=>state.trip)
-  useEffect(()=>{
-    if(!tripDetail){
-      return
+  // useEffect(()=>{
+  //   if(!tripDetail){
+  //     return
       
-      // setLive(true)
-    }
-    setSearch(false)
-  },[tripDetail])
+  //     // setLive(true)
+  //   }
+  //   // setSearch(false)
+  // },[tripDetail])
   
   return (
     <>

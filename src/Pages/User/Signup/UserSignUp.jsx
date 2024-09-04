@@ -14,7 +14,7 @@ function SignupForm() {
   const [email, setEmail] = useState("");
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.user);
+  const {user,message,error} = useSelector((state) => state.user);
   const navigate = useNavigate()
   const {socket} = useSocket()
 
@@ -43,21 +43,20 @@ function SignupForm() {
   });
 
   useEffect(()=>{
-    if(userData?.message == 'Google Authentication SuccessFull'){
-      socket?.emit('user-connected',userData?.user?.id)
+    if(message == 'Google Authentication SuccessFull'){
       setTimeout(()=>{
         navigate('/',{replace:true})
       },1000)
       return
-    }else if(userData?.error === 'You are Currently blocked by the Admin'){
+    }else if(error === 'You are Currently blocked by the Admin'){
       toast('Your Account has been temporarily Suspended ')
       return
-    }else if(userData?.error === 'Your Google Account is not Verified'){
+    }else if(error === 'Your Google Account is not Verified'){
       toast('Your Google Account is not Verified')
       return
     }
 
-  },[userData?.message,userData?.error])
+  },[message,error])
 
   return (
     <>

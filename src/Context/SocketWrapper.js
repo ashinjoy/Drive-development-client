@@ -10,14 +10,16 @@ function SocketWrapper({ children }) {
     const socketInstance = io("http://localhost:3003");
     setSocket(socketInstance);
     socketInstance.on("connect", () => {
-      console.log("inside the socketProvoder");
-      console.log("connected successFully");
+      console.log(" client connected successFully to trip-srv");
     });
     socketInstance.on("connect_error", (err) => {
       console.error(err);
     });
     return () => {
+      console.log("inside the return");
+      
       if (socketInstance) {
+        console.log("socket discoonnect");
         socketInstance.disconnect();
       } 
     };
@@ -27,16 +29,16 @@ function SocketWrapper({ children }) {
     const chatSocketInstance = io("http://localhost:3004")
     setChatSocket(chatSocketInstance)
     chatSocketInstance.on("connect",()=>{
-      console.log("connected SuccessFully");
-      
+      console.log(" client connected successFully to chat-srv");
     })
     chatSocketInstance.on("connect_error",(err)=>{
       console.log("connection error",err);
-      
     })
 
     return ()=>{
-      chatSocketInstance.disconnect()
+      if(chatSocketInstance){
+        chatSocketInstance.disconnect()
+      }
     }
 
   },[])

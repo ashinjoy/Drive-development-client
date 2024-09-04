@@ -26,7 +26,7 @@ function DriverMap() {
   const [senderId,setSenderId] = useState(null)
   const { token, driver, currentStatus } = useSelector((state) => state.driver);
   const { tripDetail, message } = useSelector((state) => state.trip);
-  const { driverLive } = useContext(driverLiveLocation);
+  const { driverLive,setTripCoordintes } = useContext(driverLiveLocation);
   const dispatch = useDispatch();
 
   const [openChat,setOpenChat] = useState(false) 
@@ -81,6 +81,7 @@ if(tripDetail){
         );
         const routeInfo = response.data;
         setRoute(routeInfo?.routes[0]?.geometry);
+        setTripCoordintes(routeInfo?.routes[0]?.geometry?.coordinates)
       };
       const bounds = [
         [
@@ -120,7 +121,8 @@ if(tripDetail){
 
 useEffect(() => {
   if (!driverLive || !tripDetail) return;
-
+  console.log("driverLive in useEffect",driverLive);
+  
   setDriverCoords(driverLive);
   const approx = checkApproxDistance(driverLive, pickup);
   const dropDestination = checkApproxDistance(driverLive, dropOff);
@@ -171,6 +173,10 @@ useEffect(() => {
     setStartRide(false);
   }
 }, [socket, driverLive, tripDetail]);
+useEffect(()=>{
+console.log('drivreLive',driverLive);
+
+},[driverLive])
 
   const checkApproxDistance = (driverLocation, destination) => {
     if (
@@ -247,7 +253,7 @@ useEffect(() => {
     
     <div className="flex w-full h-screen">
      {showOtp && <RideStartConfirmationModal setShowOtp={setShowOtp} setStartRide={setStartRide} />}
-      <div className="flex flex-col w-[24rem] p-4 items-center justify-around bg-[#f3f0da] shadow-lg">
+      <div className="flex flex-col w-[24rem] p-4 items-center justify-around  ">
         <div className="w-full bg-white rounded-lg p-4 flex flex-col items-center justify-between h-[20%] shadow-md relative">
           <h1 className="text-2xl font-bold text-gray-800">Driver Status</h1>
           {currentStatus?.currentStatus == "inactive" ? (

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { emailAuth, googleAuth, verifyOtp, resendOtp,userProfileUpdate,userCurrentLocation } from "./userActions";
+import { emailAuth, googleAuth, verifyOtp, resendOtp,userProfileUpdate,userCurrentLocation, saveContacts } from "./userActions";
 
 
 const userDetails = JSON.parse(localStorage.getItem('userDetail'))
@@ -38,12 +38,16 @@ const userSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(googleAuth.pending, (state) => {
+        console.log("slice initaiates");
+        
         state.loading = true;
       })
 
       .addCase(googleAuth.fulfilled, (state, action) => {
         localStorage.setItem("userAccessToken", action?.payload?.accessToken);
         localStorage.setItem('userDetail',JSON.stringify(action?.payload?.data))
+        console.log("inside google auth fulfil");
+        
         state.success = true;
         state.user = action?.payload?.data;
         state.token = action?.payload?.accessToken;
@@ -118,6 +122,17 @@ const userSlice = createSlice({
         console.log('eror');
         
         // state.error = action.payload
+      })
+      .addCase(saveContacts.pending,(state,action)=>{
+       state.loading =  true
+      })
+      .addCase(saveContacts.fulfilled,(state,action)=>{
+        localStorage.setItem('userDetail',JSON.stringify(action.payload?.userDetail))
+        state.success = true
+        state.user = action?.payload?.userDetail
+      })
+      .addCase(saveContacts.rejected,(state,action)=>{
+        // state.error = 
       })
   },
 });

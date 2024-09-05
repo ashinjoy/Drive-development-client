@@ -1,27 +1,31 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate, NavLink } from "react-router-dom";
-import { IoHome } from "react-icons/io5";
-import { MdSpaceDashboard } from "react-icons/md";
-import { GiJourney } from "react-icons/gi";
-import { FaWallet } from "react-icons/fa6";
-import { IoIosChatbubbles } from "react-icons/io";
-import { MdPayments } from "react-icons/md";
+import {  useSelector } from "react-redux";
+import {  NavLink } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
 import { useSocket } from "../../Hooks/socket";
 
 import RideRequestNotifications from "../Driver/Notifications/RideRequestNotifications";
-import { AnimatePresence } from "framer-motion";
 import { driverLiveLocation } from "../../Context/DriverLocation";
+
+
+import { MdSpaceDashboard } from "react-icons/md";
+import { GiJourney } from "react-icons/gi";
+import { FaWallet } from "react-icons/fa6";
+
+import { MdPayments } from "react-icons/md";
+
+
+
 
 // import { logoutAction } from '../../Features/Driver/driverActions';
 function DriverNavBar() {
   const [openNotification, setOpenNotification] = useState(false);
   const [trip, setTrip] = useState(null);
-  const notificationDuration = useRef(null);
+  const notificationDurationRef = useRef(null);
   const liveIntervalRef = useRef(null)
 
-  const { setDriverLive, driverLive,tripCoordinates, enableChat, setEnableChat } =
+  const { setDriverLive,tripCoordinates,  setEnableChat } =
     useContext(driverLiveLocation);
 
   const { token, driver } = useSelector((state) => state.driver);
@@ -33,10 +37,9 @@ function DriverNavBar() {
     const handleRideRequest = (tripData) => {
       setTrip(tripData);
       setOpenNotification(true);
-      // console.log("chatSocket",chatSocket);
       chatSocket?.emit("driver-chat-connect", { driverId: driver?.id });
       setEnableChat(true);
-      notificationDuration.current = setTimeout(() => {
+      notificationDurationRef.current = setTimeout(() => {
         setOpenNotification(false);
       }, 13000);
     };
@@ -47,7 +50,7 @@ function DriverNavBar() {
       });
     }
     return () => {
-      clearTimeout(notificationDuration.current);
+      clearTimeout(notificationDurationRef.current);
       socket?.off("ride-request");
     };
   }, [socket, chatSocket]);
@@ -81,9 +84,7 @@ function DriverNavBar() {
     if(!token || !driver || !tripDetail){
       return
     }
-    // console.log("driverLives============>",driverLive);
-    // for(const liveLocation of tripCoordinates){
-    console.log("reacgedced");
+
     
     let i = 0
       liveIntervalRef.current =   setInterval(()=>{
@@ -114,14 +115,18 @@ function DriverNavBar() {
         <div>
           <img src="/assets/logo-cl.png" alt="logo" />
         </div>
-        <NavLink className={"flex gap-2 text-lg font-bold"}>
+        <div className="flex justify-between items-center">
+        <NavLink className={"flex gap-2 text-lg font-semibold"}>
           <MdSpaceDashboard className="mt-1" />
           DashBoard
         </NavLink>
+        </div>
+        <div className="flex justify-between">
         <NavLink className={"flex gap-2 text-lg font-bold"} to="/driver/trip">
           <GiJourney className="mt-1" />
           Trip
         </NavLink>
+        </div>
         <NavLink className={"flex gap-2 text-lg font-bold"} to="/driver/wallet">
           <FaWallet className="mt-1" />
           Wallet

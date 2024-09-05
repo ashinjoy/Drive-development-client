@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { reset } from "../../../Features/User/userSlice";
 
 function UserProfilePage() {
-  const imgUploadRef = useRef(null);
+  // const imgUploadRef = useRef(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -18,10 +18,12 @@ function UserProfilePage() {
   const [isChange, setChange] = useState(false);
 
   const dispatch = useDispatch();
-  const { user, message } = useSelector((state) => state.user);
+  const { user, message,error } = useSelector((state) => state.user);
   const profileImgRef = useRef(null);
 
   useEffect(() => {
+    console.log('udr changes');
+    
     setEmail(user?.email);
     setName(user?.name);
     setPhone(user?.phone);
@@ -46,7 +48,7 @@ function UserProfilePage() {
     profileImgRef.current.click();
   };
   const uploadImg = (e) => {
-    console.log("hel");
+   
     setProfileImg(e.target.files[0]);
     setChange(true);
   };
@@ -54,6 +56,8 @@ function UserProfilePage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^\d{10,}$/
     const form = new FormData();
     form.append("name", name);
     form.append("email", email);
@@ -66,7 +70,12 @@ function UserProfilePage() {
       toast('Fill Email Field')
     }else if(phone == ''){
       toast('fill phone field')
-    }else{
+    }else if(!emailRegex.test(email)){
+      toast('provide valid Email')
+    }else if(!phoneRegex.test(phone)){
+      toast('provide valid phone')
+    }
+      else{
       dispatch(userProfileUpdate(form));
     }
   };
@@ -87,6 +96,9 @@ function UserProfilePage() {
       dispatch(reset())
       return
     }
+    // if(error){
+    //   toast(error)
+    // }
   },[message])
 
   return (

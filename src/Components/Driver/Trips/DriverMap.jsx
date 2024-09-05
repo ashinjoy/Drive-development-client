@@ -258,7 +258,7 @@ console.log('drivreLive',driverLive);
           <h1 className="text-2xl font-bold text-gray-800">Driver Status</h1>
           {currentStatus?.currentStatus == "inactive" ? (
             <button
-              className="absolute bottom-12 right-1/2 transform translate-x-1/2 border-2 z-50 rounded-full w-22 h-22 bg-blue-600 border-blue-800 text-white text-lg font-bold shadow-md hover:bg-blue-700 transition-colors duration-200"
+              className="absolute bottom-10 right-20 z-50 rounded-full w-28 h-14 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xl font-bold shadow-lg flex items-center justify-center transition-transform duration-200 transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300"
               onClick={() => {
                 handleDriverActive();
               }}
@@ -267,13 +267,13 @@ console.log('drivreLive',driverLive);
             </button>
           ) : (
             <button
-              className="absolute bottom-12 right-1/2 transform translate-x-1/2 border-2 z-50 rounded-full w-22 h-22 bg-red-400 border-blue-800 text-white text-lg font-bold shadow-md hover:bg-red-600 transition-colors duration-200"
-              onClick={() => {
-                handleDriverInactive();
-              }}
-            >
-              Go Offline
-            </button>
+            className="absolute bottom-10 right-20 z-50 rounded-full w-28 h-14 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white text-xl font-bold shadow-lg flex items-center justify-center transition-transform duration-200 transform hover:scale-105 active:scale-95 "
+            onClick={() => {
+              handleDriverInactive();
+            }}
+          >
+            Go Offline
+          </button>
           )}
           <p className="text-lg text-gray-600">
             You are currently{" "}

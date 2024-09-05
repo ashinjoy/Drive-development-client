@@ -50,6 +50,10 @@ UserPrivate.interceptors.response.use(
         ] = `Bearer ${newUserAceessToken}`;
         return UserPrivate(originalRequest);
       }
+      if(error?.response?.status === 403 && error?.response?.data?.error === "Your Account has been Blocked temporarily" && !originalRequest._retry){
+        localStorage.removeItem('userAccessToken')
+        localStorage.removeItem('userDetail')
+      }
     } catch (error) {
 
     }

@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { FaWindowClose } from "react-icons/fa";
 import { verifyOtp, resendOtp } from "../../../Features/User/userActions";
 import { useSocket } from "../../../Hooks/socket";
+import { toast } from "react-toastify";
+import { reset } from "../../../Features/User/userSlice";
 
 
 function OtpModal({ email, setShowModal }) {
@@ -40,9 +42,14 @@ function OtpModal({ email, setShowModal }) {
     if (message === "Otp Verification SucessFull") {
       socket?.emit('user-connected',user?.id)
       navigate("/", { replace: true });
+      return
+    }
+    if(error){
+      toast(error)
+      dispatch(reset())
     }
     
-  }, [message]);
+  }, [message,error]);
 
   useEffect(() => {
     const allInp = otpInp.every((otp) => otp !== "");
@@ -88,7 +95,7 @@ function OtpModal({ email, setShowModal }) {
   };
 
   const handleResendOtp = () => {
-    setTimer(10);
+    setTimer(60);
     setTimerRestart(!restartTimer);
     dispatch(resendOtp(email));
   };
@@ -97,11 +104,6 @@ function OtpModal({ email, setShowModal }) {
     setShowModal(false);
   };
 
-  useEffect(()=>{
-    if(message == 'Otp Verification SucessFull'){
-      navigate('/')
-    }
-  },[message])
 
   return createPortal(
     <>

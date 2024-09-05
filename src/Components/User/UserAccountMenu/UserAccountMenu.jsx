@@ -35,7 +35,7 @@ function UserAccountMenu() {
       </div>
       <div className="flex justify-between items-center group">
         <NavLink 
-          to={"/user-profile"} 
+          to={"/userprofile"} 
           className="text-gray-700 font-medium "
           aria-label="Go to User Profile">
           UserProfile

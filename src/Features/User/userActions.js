@@ -5,11 +5,9 @@ console.log('userAction');
 
 export const googleAuth = createAsyncThunk("googleAuth", async (token,{rejectWithValue}) => {
   try {
-    // console.log('token',token);
-console.log('inside action of gogle auth 1');
 
    const response =  await googleAuthService(token)
-console.log('inside action of gogle auth 2');
+
 
    return response.data
   } catch (error) {
@@ -31,7 +29,6 @@ export const emailAuth = createAsyncThunk('emailAuth',async(email,{rejectWithVal
   
 export const verifyOtp = createAsyncThunk('verifyOtp',async(otp,{rejectWithValue})=>{
   try {
-    
     const response = await verifyOtpService(otp)
     return response.data
   } catch (error) {
@@ -55,8 +52,8 @@ export const userProfileUpdate = createAsyncThunk('userProfileUpdate',async(form
     const response = await userProfileUpdateService(formData)
     return response.data
   } catch (error) {
-    console.error(error)
-    rejectWithValue(error?.response?.data?.error)
+    console.error(error?.response?.data?.error)
+   return rejectWithValue(error?.response?.data?.error)
   }
 })
 

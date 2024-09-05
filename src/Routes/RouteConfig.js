@@ -42,7 +42,7 @@ function RouteConfig() {
       element: <SignUp />,
     },
     {
-      path: "/userProfile/:userId",
+      path: "/userprofile",
       element: (
         <UserProtected>
           <UserProfile />

@@ -38,16 +38,12 @@ const userSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(googleAuth.pending, (state) => {
-        console.log("slice initaiates");
-        
         state.loading = true;
       })
 
       .addCase(googleAuth.fulfilled, (state, action) => {
         localStorage.setItem("userAccessToken", action?.payload?.accessToken);
         localStorage.setItem('userDetail',JSON.stringify(action?.payload?.data))
-        console.log("inside google auth fulfil");
-        
         state.success = true;
         state.user = action?.payload?.data;
         state.token = action?.payload?.accessToken;
@@ -63,7 +59,6 @@ const userSlice = createSlice({
       })
 
       .addCase(emailAuth.fulfilled, (state, action) => {
-        console.log("emmailAuthresponse", action);
         state.success = true;
         state.message = action?.payload?.message;
       })
@@ -74,7 +69,7 @@ const userSlice = createSlice({
         state.loading = true;
       })
       .addCase(verifyOtp.fulfilled, (state, action) => {
-        console.log('actionss',action);
+        
         localStorage.setItem("userAccessToken", action?.payload?.accessToken);
         localStorage.setItem('userDetail',JSON.stringify(action?.payload?.data))
         state.success = true;
@@ -83,8 +78,6 @@ const userSlice = createSlice({
         state.message = action?.payload?.message;
       })
       .addCase(verifyOtp.rejected, (state, action) => {
-        console.log(action);
-        console.log(initialState);
         state.error = action?.payload;
       })
       .addCase(resendOtp.pending, (state) => {
@@ -101,14 +94,15 @@ const userSlice = createSlice({
         state.loading = true;
       })
       .addCase(userProfileUpdate.fulfilled, (state, action) => {
-        console.log('action',action);
+        
         localStorage.setItem('userDetail',JSON.stringify(action?.payload?.data))
         state.success = true;
         state.user = action?.payload?.data
         state.message = action?.payload?.message;
       })
-      .addCase(userProfileUpdate.rejected, (state, action) => {
-        // state.error = action?.payload?.message;
+      .addCase(userProfileUpdate.rejected, (state,action) => {
+        console.log('updateProfile',action);
+        state.error = action?.payload
       })
       .addCase(userCurrentLocation.pending,(state,action)=>{
         state.loading = true

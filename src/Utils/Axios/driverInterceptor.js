@@ -44,6 +44,10 @@ driverPrivate.interceptors.response.use((response)=>{
         ] = `Bearer ${newUserAccessToken}`;
         return driverPrivate(originalRequest);
       }
+      if(error?.response?.status === 403 && error?.response?.data?.error === "Your Account has been Blocked temporarily" && !originalRequest._retry){
+        localStorage.removeItem('driverAccessToken')
+        localStorage.removeItem('driverData')
+      }
     } catch (error) {
 
     }

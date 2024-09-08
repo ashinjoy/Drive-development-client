@@ -17,7 +17,9 @@ function SignupForm() {
   const dispatch = useDispatch();
   const {user,message,error} = useSelector((state) => state.user);
   const navigate = useNavigate()
-  const {socket} = useSocket()
+  console.log('in signup');
+  
+
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   const handleEmailLogin = (e) => {
@@ -35,6 +37,8 @@ function SignupForm() {
     }, 1000);
   };
 
+
+  //code for handling google login
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: (codeResponse) => {
       const token = codeResponse.access_token;

@@ -157,6 +157,15 @@ function RouteConfig() {
       path: "/admin",
       children: [
         {
+          path:'dashboard',
+          element:(
+          <AdminProtected>
+          <AdminDashBoard/>
+          </AdminProtected>
+          )
+
+        },
+        {
           path: "login",
           element: <AdminLogin />,
         },

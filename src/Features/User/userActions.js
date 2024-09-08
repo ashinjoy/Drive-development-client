@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { googleAuthService ,emailAuthService ,verifyOtpService,resendOtpService,userProfileUpdateService,userLogoutService,userCurrentLocationService,saveContactServices} from "../../Features/User/userService";
+import { googleAuthService ,emailAuthService ,verifyOtpService,resendOtpService,userProfileUpdateService,userLogoutService,userCurrentLocationService,saveContactServices,SosAlertService} from "../../Features/User/userService";
 console.log('userAction');
 
 export const googleAuth = createAsyncThunk("googleAuth", async (token,{rejectWithValue}) => {
@@ -84,4 +84,13 @@ export const saveContacts = createAsyncThunk('saveContacts',async(contactDetails
     console.log(error);
   }
 })
+
+export const SosAlert  = createAsyncThunk('sosAlert',async(userId,{rejectWithValue})=>{
+  try {
+    const response = await SosAlertService(userId)
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+  })
 

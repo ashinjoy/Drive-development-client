@@ -90,3 +90,7 @@ export const saveContactServices = async (contactDetails) => {
     return await UserPrivate.post("auth/user/save-contacts", contactDetails);
  
 };
+
+export const SosAlertService = async(userId)=>{
+  return await UserPrivate.post('trip/users/emergency-alert',{userId})
+}

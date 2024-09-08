@@ -8,7 +8,8 @@ import {
   approveDriverProfileUpdateService,
   getUserDetailService,
   blockUnblockUserService,
-  searchDriverService
+  searchDriverService,
+  newlyRegisteredUserService
 } from "./adminService";
 
 
@@ -132,3 +133,13 @@ export const searchDrivers = createAsyncThunk(
     }
   }
 )
+
+export const newlyRegisteredUsers = createAsyncThunk('newlyRegisterdUsers',async(filter,{rejectWithValue})=>{
+try {
+  const response = await newlyRegisteredUserService(filter)
+  return response.data
+} catch (error) {
+  console.error(error)
+}
+})
+

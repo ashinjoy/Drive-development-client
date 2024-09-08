@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Chat from "../../Chat/Chat";
 import { stripePaymentService, walletPaymentService } from "../../../Features/User/userService";
+import { SosAlert } from "../../../Features/User/userActions";
 import { UserPrivate } from "../../../Utils/Axios/userInterceptor";
 
 
@@ -11,6 +12,7 @@ function BookingInfo() {
   const [openPayment, setOpenPayment] = useState(false);
 
   const [payOption, setPayOption] = useState(false);
+  const dispatch = useDispatch()
   
   const [senderId, setSenderId] = useState(null);
   const [recieverId, setRecieverId] = useState(null);
@@ -47,6 +49,10 @@ function BookingInfo() {
       const response = await walletPaymentService(data)
     }
   };
+
+  const handleSos =()=>{
+    dispatch(SosAlert(user?.id))
+  }
 
 
   return (
@@ -207,6 +213,16 @@ function BookingInfo() {
           <button onClick={handlePayment}>Pay Now</button>
           </>
         }
+              <div class="flex justify-center items-center ">
+  <button class="relative px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:ring-4 focus:ring-red-300 focus:outline-none" onClick={()=>{handleSos()}}>
+
+    <svg class="inline-block w-5 h-5 mr-2 animate-pulse" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11h14M5 11l-1 5m0 0H4a2 2 0 001.68 1.98L7 19h10l1.32-.02A2 2 0 0020 16h-1l-1-5m-12 0L5 7h14l1 4m-2-6V4a2 2 0 00-2-2h-6a2 2 0 00-2 2v1m0 6h6" />
+    </svg>
+    SOS
+    <span class="absolute top-0 right-0 mt-2 mr-2 bg-red-500 h-3 w-3 rounded-full animate-ping"></span>
+  </button>
+</div>
       </div>
 
 
@@ -240,6 +256,8 @@ function BookingInfo() {
           </div>
         </div>
       )} */}
+
+
     </div>
   );
 }

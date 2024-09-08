@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import {adminLogin,getDriverDetails,blockUnblockDriver,driverDetails,getUserDetails, blockUnblockUser,searchDrivers,approveDriver} from './adminActions'
+import {adminLogin,getDriverDetails,blockUnblockDriver,driverDetails,getUserDetails, blockUnblockUser,searchDrivers,approveDriver,newlyRegisteredUsers} from './adminActions'
 
 const adminData = JSON.parse(localStorage.getItem('adminData'))
 const adminAccessToken = localStorage.getItem('adminAccessToken')
@@ -13,9 +13,9 @@ const initialState = {
     loading:false,
     success:false,
     message:'',
-    error:''
+    error:'',
+    report:null
   };
-  
   const adminSlice = createSlice({
       name: "adminSlice",
       initialState,
@@ -113,6 +113,17 @@ const initialState = {
             state.driverData.isAccepted = action?.payload?.driverUpdatedData?.isAccepted
             state.message = action?.payload?.message
         })  
+        .addCase(newlyRegisteredUsers.pending,(state,action)=>{
+          state.loading = true
+        })
+        .addCase(newlyRegisteredUsers.fulfilled,(state,action)=>{
+          console.log(action);
+          
+          state.report = action?.payload?.usersData
+        })
+        .addCase(newlyRegisteredUsers.rejected,(state,action)=>{
+          // state.error
+        })
       }   
   })
 

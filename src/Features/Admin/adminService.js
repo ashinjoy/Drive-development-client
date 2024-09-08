@@ -42,3 +42,7 @@ export const searchDriverService = async(search)=>{
   return adminPrivate.get(`/auth/admin/drivers?search=${search}`)
 }
 
+export const newlyRegisteredUserService = async(filter)=>{
+  return adminPrivate.get(`auth/admin/dashboard/newusers/${filter}`)
+}
+

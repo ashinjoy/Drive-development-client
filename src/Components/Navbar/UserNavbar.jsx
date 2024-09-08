@@ -1,34 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Navigate, NavLink } from 'react-router-dom'
+import {  NavLink } from 'react-router-dom'
 import { BiUserCircle } from "react-icons/bi";
-import { useNavigate} from 'react-router-dom';
-import { useSocket } from '../../Hooks/socket';
-import { resetTripDetails, setTripData } from '../../Features/Trip/tripSlice';
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { AnimatePresence } from 'framer-motion';
+
+import { useSocket } from '../../Hooks/socket';
+import { resetTripDetails, setTripData } from '../../Features/Trip/tripSlice';
 import NearByPickup from '../User/Notification/NearByPickup';
-import { toast } from 'react-toastify';
 import UserAccountMenu from '../User/UserAccountMenu/UserAccountMenu';
+
+
 function UserNavbar() {
   const {user,token} = useSelector((state)=>state.user)
   const {tripDetail} = useSelector(state=>state.trip)
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   const [showNotification,setShowNofication] = useState(false)
   const [notifyData,setNotifyData] = useState('')
   const [showMenu,setShowMenu] = useState(false)
   const userId = user?.id
   
-  const {socket,chatSocket} = useSocket()
+  const {socket} = useSocket()
 
-  const handleUserLogout =()=>{
-  }
+
 
   useEffect(()=>{
-    console.log("useEffect Running");    
+        
     if(!token || !user ||!socket){
-      console.log("inside the if");
     return
     }
     socket?.emit('user-connected',userId)
@@ -47,14 +45,14 @@ function UserNavbar() {
     }
 
     const handleRideStartSocket = (data)=>{
-      console.log('ride started');
+      
       setNotifyData(data)
     }
 
     const handleRideEndSocket = ()=>{
-      toast('Ride Completed')
+      
       dispatch(resetTripDetails())
-      console.log('ride finished')
+      
     }
     socket?.on('ride-start',handleRideStartSocket)
     socket?.on('ride-complete',handleRideEndSocket)
@@ -66,36 +64,107 @@ function UserNavbar() {
     
   },[socket,tripDetail])
 
+  const toggleMobileMenu=()=>{
+
+  }
+
 
   
 
   return ( 
-    
-    <nav className='fixed top-0 flex flex-row justify-between  h-[6rem] drop-shadow-lg w-[100vw] 9 bg-white z-40 border'>
-      <div className='ml-10 w-44'>
-        <img src="/assets/logo-cl.png" alt="drive logo" className='w-full h-full object-contain'/>
+
+  <nav className="fixed top-0 left-0 flex flex-row justify-between items-center h-[5rem] w-full bg-white shadow-md z-40 border-b">
+ 
+  <div className="ml-8 w-36">
+    <img
+      src="/assets/logo-cl.png"
+      alt="drive logo"
+      className="w-full h-full object-contain"
+    />
+  </div>
+
+
+  <div className="hidden md:flex items-center gap-x-12 text-gray-600">
+    <NavLink
+      to="/"
+      className="text-base font-medium leading-tight hover:text-yellow-500 transition-colors"
+    >
+      Home
+    </NavLink>
+    <NavLink
+      to="/driver/signup"
+      className="text-base font-medium leading-tight hover:text-yellow-500 transition-colors"
+    >
+      Drive
+    </NavLink>
+    <NavLink
+      to="/search-ride"
+      className="text-base font-medium leading-tight hover:text-yellow-500 transition-colors"
+    >
+      Ride
+    </NavLink>
+    <NavLink
+      to="/trip-history"
+      className="text-base font-medium leading-tight hover:text-yellow-500 transition-colors"
+    >
+      Trips
+    </NavLink>
+  </div>
+
+  
+  <div className="hidden md:flex items-center mr-12 text-gray-600">
+    {token ? (
+      <div
+        className="flex items-center hover:cursor-pointer hover:text-yellow-500 transition-colors"
+        onClick={() => setShowMenu(!showMenu)}
+      >
+        <BiUserCircle size={"28px"} />
+        <RiArrowDropDownLine size={"20px"} />
       </div>
-      <div className='hidden md:flex  text-sm lg:text-lg items-center gap-x-16 tracking-wider'>
-        <NavLink to='/' className={'text-lg font-medium leading-tight'}>Home</NavLink>
-        <NavLink to='/driver/signup' className={'text-lg font-medium leading-tight'}>Drive</NavLink>
-        <NavLink to='/search-ride' className={'text-lg font-medium leading-tight'}>Ride</NavLink>
-        <NavLink className={'text-lg font-medium leading-tight'} to={'/trip-history'}>Trips</NavLink>
-      </div>
-      <div className='hidden md:flex text-sm lg:text-lg items-center mr-16'>
-        {showMenu && <UserAccountMenu/>}
-      {token ?
-      // <NavLink className='flex'></NavLink>
-      <div className='flex items-center hover:cursor-pointer' onClick={()=>setShowMenu(!showMenu)}>
-        <BiUserCircle size={'28px'}/>
-        <RiArrowDropDownLine size={'20'} />
-      </div>
-      :
-     <NavLink to='/login'className={'text-lg font-medium leading-tight'}>Login</NavLink>}
-      </div>
-    <AnimatePresence mode='wait'>
-   {showNotification && <NearByPickup setShowNofication={setShowNofication} notifyData={notifyData} />}
-    </AnimatePresence>
-    </nav>
+    ) : (
+      <NavLink
+        to="/login"
+        className="text-base font-medium leading-tight hover:text-yellow-500 transition-colors"
+      >
+        Login
+      </NavLink>
+    )}
+  </div>
+
+ 
+  <div className="md:hidden flex items-center mr-6">
+   
+    <button onClick={toggleMobileMenu}>
+      <svg
+        className="w-6 h-6 text-gray-600"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M4 6h16M4 12h16m-7 6h7"
+        ></path>
+      </svg>
+    </button>
+  </div>
+
+ 
+  <AnimatePresence mode="wait">
+    {showNotification && (
+      <NearByPickup
+        setShowNofication={setShowNofication}
+        notifyData={notifyData}
+      />
+    )}
+  </AnimatePresence>
+
+  {showMenu && <UserAccountMenu />}
+</nav>
+
   )
 }
 

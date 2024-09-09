@@ -63,7 +63,7 @@ function SearchLocation({ isSearch, setSearch }) {
       return
     }
     navigator.geolocation.getCurrentPosition(async(pos)=>{
-      console.log('position',pos);
+      
       const response = await UserPrivate.get(`trip/users/pickup-location-autocomplete?search=${[pos?.coords?.longitude,pos?.coords?.latitude]}`)
       console.log("pickup",response?.data?.searchResult?.properties?.full_address);
       setPickupLocation(response?.data?.searchResult?.properties?.full_address)

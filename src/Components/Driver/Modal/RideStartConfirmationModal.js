@@ -92,7 +92,7 @@ function RideStartConfirmationModal({setShowOtp,setStartRide}) {
           </div>
         </div>
       </div>
-    </>,document.getElementById('modal')
+    </>,document.getElementById('otp-modal')
   )
 }
 

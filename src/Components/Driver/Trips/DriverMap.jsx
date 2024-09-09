@@ -26,7 +26,7 @@ function DriverMap() {
   const [senderId,setSenderId] = useState(null)
   const { token, driver, currentStatus } = useSelector((state) => state.driver);
   const { tripDetail, message } = useSelector((state) => state.trip);
-  const { driverLive,setTripCoordintes } = useContext(driverLiveLocation);
+  const { driverLive,setTripCoordintes} = useContext(driverLiveLocation);
   const dispatch = useDispatch();
 
   const [openChat,setOpenChat] = useState(false) 
@@ -37,13 +37,11 @@ function DriverMap() {
   const [viewState, setViewState] = useState({});
   const [route, setRoute] = useState(null);
   const [startRide, setStartRide] = useState(false);
+  const [rideStarted,setRideStarted] = useState(false)
   const [endRide, setEndRide] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [tripOtp, setOtp] = useState("");
-// const [nearByPickup,setNearByPickup] = useState(false)
-// const [nearByDropOff,setNearByDropOff] = useState(false)
 
-  // const notificationRef = useRef(null);
   const {socket} = useSocket();
   useEffect(() => {
     if (!tripDetail) {
@@ -128,7 +126,7 @@ useEffect(() => {
   const dropDestination = checkApproxDistance(driverLive, dropOff);
   
   // console.log('approx', approx);
-  // console.log('dropDestination', dropDestination);
+  console.log('dropDestination', dropDestination);
 
   // if (approx < 2 && approx > 1) {
   //   console.log('nearBy Aprrox');
@@ -140,14 +138,18 @@ useEffect(() => {
   //     distance: approx,
   //   });
   // } 
-   if (approx <= 1) {
-    console.log('pickup started');
-    setStartRide(true);
-    setEndRide(false);
+   if (approx <= 0.5) { 
+    if(!rideStarted){
+      setStartRide(true);
+    // setEndRide(false);
+    setRideStarted(true)
     socket.emit("ride-started", {
       userId: tripDetail?.userId,
       duration: tripDetail?.duration,
-    });
+    })
+
+    }
+    ;
   }
   //  else if (dropDestination < 2 && dropDestination > 1) {
   //   console.log('nearby dropOff');
@@ -159,14 +161,15 @@ useEffect(() => {
   //     distance: dropDestination,
   //   });
   // } 
-  else if (dropDestination <= 1) {
-    console.log('dropoff');
-    setEndRide(true);
-    setStartRide(false);
-    socket.emit("ride-complete", {
-      userId: tripDetail?.userId,
-      distance: dropDestination,
-    });
+  else if (dropDestination < 0.1 ) {
+    // console.log('dropoff');
+    completeJourney()
+    // setEndRide(true);
+    // setStartRide(false);
+    // socket.emit("ride-complete", {
+    //   userId: tripDetail?.userId,
+    //   distance: dropDestination,
+    // });
   }
    else {
     setEndRide(false);
@@ -298,14 +301,14 @@ console.log('drivreLive',driverLive);
               </button>
             }
             
-             {endRide && (
+             {/* {endRide && (
               <button
                 className="w-32 h-12 bg-red-600 text-white rounded-md font-bold shadow-md hover:bg-red-700 transition-colors duration-200"
                 onClick={() => completeJourney()}
               >
                 End Ride
               </button>
-            )} 
+            )}  */}
           </div>
         </div>
 

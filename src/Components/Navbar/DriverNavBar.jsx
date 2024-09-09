@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import {  useSelector } from "react-redux";
 import {  NavLink } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import * as turf from '@turf/turf'
 
 import { useSocket } from "../../Hooks/socket";
 
@@ -25,7 +26,7 @@ function DriverNavBar() {
   const notificationDurationRef = useRef(null);
   const liveIntervalRef = useRef(null)
 
-  const { setDriverLive,tripCoordinates,  setEnableChat } =
+  const { setDriverLive,tripCoordinates,  setEnableChat ,driverLive} =
     useContext(driverLiveLocation);
 
   const { token, driver } = useSelector((state) => state.driver);
@@ -108,6 +109,43 @@ function DriverNavBar() {
       }
       
     } ,[socket, tripDetail,tripCoordinates]);
+
+
+    // useEffect(()=>{
+    //   if(driverLive.length <= 0){
+    //     return 
+    //   }
+    //   const pickup = tripDetail?.startLocation?.coordinates
+    //   const dropOff = tripDetail?.endLocation?.coordinates
+      
+    //   const approxDistanceFromPickUp = checkApproxDistance(driverLive,pickup)
+    //   console.log("appPickup",approxDistanceFromPickUp);
+
+      
+    //   const approxDistanceFromDrop = checkApproxDistance(driverLive,dropOff)
+    //   console.log("appDropp",approxDistanceFromDrop);
+
+
+    //   if(approxDistanceFromPickUp < 200){
+    //     setStartRide(true)
+        
+    //   }
+      
+
+    // },[driverLive])
+
+    // const checkApproxDistance = (currentLocation,destination)=>{
+    //   if(!currentLocation || !currentLocation.length > 0 || !destination || !destination.length > 0){
+    //     return
+    //   }
+    //   const distance = turf.distance(currentLocation, destination, {
+    //     units: "meters",
+    //   });
+
+    //   console.log(distance);
+      
+
+    // }
 
   return (
     <>

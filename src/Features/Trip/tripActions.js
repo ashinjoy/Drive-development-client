@@ -6,7 +6,8 @@ import {
   rejectTripService,
   startRideService,
   finishRideService,
-  sendMessageService
+  sendMessageService,
+  cancelRideService
 } from "./tripService";
 import { UserPrivate } from "../../Utils/Axios/userInterceptor";
 
@@ -22,7 +23,7 @@ export const seacrhNearByDriver = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      console.error(error);
+      rejectWithValue(error?.response?.data?.error)
     }
   }
 );
@@ -85,8 +86,18 @@ export const rejectTrip = createAsyncThunk(
   export const sendMessage = createAsyncThunk('sendMessage',async(data)=>{
     try {
       const response = await sendMessageService(data)
+      return response.data
     } catch (error) {
       console.error(error)
+    }
+  })
+
+  export const cancelRide =createAsyncThunk('cancelRide',async(rideCancelInfo)=>{
+    try {
+      const response = await cancelRideService(rideCancelInfo)
+      return response.data
+    } catch (error) {
+      
     }
   })
 

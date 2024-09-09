@@ -8,16 +8,16 @@ import { toast } from "react-toastify";
 import { googleAuth, emailAuth } from "../../../Features/User/userActions";
 import UserNavbar from "../../../Components/Navbar/UserNavbar";
 import OtpModal from '../../../Components/User/Modal/OtpModal'
-import { useSocket } from "../../../Hooks/socket";
+
 
 function SignupForm() {
   const [email, setEmail] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [err,setErr] = useState('')
   const dispatch = useDispatch();
-  const {user,message,error} = useSelector((state) => state.user);
+  const {message,error} = useSelector((state) => state.user);
   const navigate = useNavigate()
-  console.log('in signup');
+
   
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

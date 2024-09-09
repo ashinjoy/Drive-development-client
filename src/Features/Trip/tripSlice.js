@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { seacrhNearByDriver,requestRideAction,acceptTrip,startTrip,finishRide } from "./tripActions";
+import { seacrhNearByDriver,requestRideAction,acceptTrip,startTrip,finishRide,cancelRide } from "./tripActions";
 
 const trip = JSON.parse(localStorage.getItem('tripDetail'))
 const initialState = {
     tripDetail:trip || null,
     nearbyDrivers:null,
+    tripStatus:null,
     additionalSearchMetaData:'',
+    cancelData:null,
     loading:false,
     success:false,
     message:'',
@@ -38,11 +40,12 @@ const tripSlice = createSlice({
             state.error = ''
         })
         .addCase(requestRideAction.pending,(state,action)=>{
-            // state.loading = true
+            state.loading = true
         })
         .addCase(requestRideAction.fulfilled,(state,action)=>{
-            // state.success = true
-            // state.tripDetail = action?.payload
+            console.log("action",action?.payload);
+            state.success = true
+            state.message = action.payload?.message
         })
         .addCase(requestRideAction.rejected,(state,action)=>{
             // state.error = action?.payload
@@ -56,9 +59,19 @@ const tripSlice = createSlice({
             localStorage.setItem('tripDetail',JSON.stringify(action?.payload?.acceptRide))
             state.tripDetail = action?.payload?.acceptRide
         })
-        // .addCase(acceptTrip.rejected,(state,action)=>{
-            
-        // })
+        .addCase(cancelRide.pending,(state)=>{
+            state.loading = true
+        })
+        .addCase(cancelRide.fulfilled,(state,action)=>{
+            state.tripStatus = action?.payload?.status
+            // state.message = action?.payload?.message
+            state.cancelData = action?.payload?.cancelDetails
+
+        })
+        .addCase(cancelRide.rejected,(state,action)=>{
+            state.error = action?.payload
+        })
+
         .addCase(startTrip.pending,(state,action)=>{
             state.loading = true
         })

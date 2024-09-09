@@ -16,7 +16,7 @@ function ListVehiclePriceDetails({
   const [eta, setEta] = useState(null);
   const bikeContainerRef = useRef(null);
   const autoContainerRef = useRef(null);
-  const [paymentMethod,setPaymentMethod] = useState("Online-Payment")
+  const [paymentMethod,setPaymentMethod] = useState("Online-Payment");
   const navigate = useNavigate();
 
   const { additionalSearchMetaData } = useSelector((state) => state.trip);
@@ -50,7 +50,7 @@ function ListVehiclePriceDetails({
     }
     dispatch(requestRideAction(data));
     navigate("/trip");
-  };
+  }
 
   useEffect(() => {
     const vehicleDetails = calculateFare(additionalSearchMetaData);

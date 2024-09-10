@@ -1,48 +1,49 @@
 import React from "react";
 
 function ChartConfig(input) {
+  
   const data = structuredClone(input);
-  console.log("datain u", data);
-  const dataToPlot = [];
-  // const obj = {};
+  const userData = data.slice(0,data.length/2).reverse()
+  const driverData = data.slice(data.length/2).reverse()
+  const userKeys = userData.map((el)=>Object.keys(el))
+  // console.log(userValues);
+  
+  const labels = userKeys.flat()
+  // console.log(userValuesFlat);
 
- for (const dataset in data[0]) {
-   if (data[0][dataset].length > 0) {
-     dataToPlot.push(data[0][dataset][0].totalNewUsers)
-   } else {
-    dataToPlot.push(0)
-   }
- }
-// const filter = dataToPlot.filter((obj)=>{
-//   if(Object.keys(obj).length > 0){
-// return obj
-//   }
-// })
-// console.log('foilyer',filter);
+  const userValues = userData.map((el)=>Object.values(el))
+  const userValuesFlat =  userValues.flat()
+  console.log(userValuesFlat);
+  
+  const driverValues = driverData.map((el)=>Object.values(el))
+  const driverValuesFlat = driverValues.flat()
+  console.log(driverValuesFlat);
+  
+  
+
 
   
 
-  const labels = Object.keys(data[0]).reverse();
-  console.log('datatoplot',dataToPlot);
-  // console.log(dataToPlot);
-  
-  
-  // const dataOfUsers = [];
 
-  //
-  // console.log('main',mainData);
+  
+
+  // const labels = Object.keys(data[0]).reverse();
+  // console.log('datatoplot',dataToPlot);
+
+  
+  
 
   return {
     labels: labels,
     datasets: [
       {
         label: "Newly Registerd Users",
-        data: dataToPlot.reverse(),
+        data: userValuesFlat,
       },
-      // {
-      //   label: "Newly Registerd Users",
-      //   data: [2, 3, 1],
-      // },
+      {
+        label: "Newly Registerd Drivers",
+        data: driverValuesFlat,
+      },
     ],
   };
 }

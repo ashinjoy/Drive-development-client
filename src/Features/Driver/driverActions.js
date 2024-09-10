@@ -8,7 +8,8 @@ import {
   profileUpdateService,
   driverActiveService,
   driverInactiveService,
-  logoutService
+  logoutService,
+  tripChartService
 } from "./driverService";
 
 export const registerDriver = createAsyncThunk(
@@ -109,4 +110,13 @@ try {
       console.error(error)
     }
       })
+
+export const tripChart = createAsyncThunk('tripChart',async(data,{rejectWithValue})=>{
+  try {
+    const response = await tripChartService(data)
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+})
   

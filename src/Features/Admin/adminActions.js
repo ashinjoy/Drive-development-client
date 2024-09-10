@@ -136,6 +136,8 @@ export const searchDrivers = createAsyncThunk(
 
 export const newlyRegisteredUsers = createAsyncThunk('newlyRegisterdUsers',async(filter,{rejectWithValue})=>{
 try {
+  console.log('fiyyer',filter);
+  
   const response = await newlyRegisteredUserService(filter)
   return response.data
 } catch (error) {

@@ -8,7 +8,8 @@ import {
   confirmUpdate,
   profileUpdateRequest,
   driverActive,
-  driverInctive
+  driverInctive,
+  tripChart
 } from "./driverActions";
 
 
@@ -21,6 +22,7 @@ const initialState = {
   loading: false,
   success: false,
   currentStatus:driverStatus || null,
+  report:null,
   message:'',
   error: "",
 };
@@ -131,6 +133,15 @@ const driverSlice = createSlice({
         })
         .addCase(driverInctive.rejected,(state,action)=>{
           // state.error = error
+        })
+        .addCase(tripChart.pending,(state)=>{
+          state.loading = true
+        })
+        .addCase(tripChart.fulfilled,(state,action)=>{
+          state.report = action?.payload?.tripStat
+        })
+        .addCase(tripChart.rejected,(state,action)=>{
+
         })
         
         

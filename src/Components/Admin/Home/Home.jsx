@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 
 function Home() {
-  // const data =   ChartConfig()
   const [filter,setFilter] = useState('Daily')
   const [data,setData]  = useState()
   const dispatch = useDispatch()
@@ -20,16 +19,18 @@ function Home() {
 
   useEffect(()=>{
     if(report){
-   const dataFromReport =   ChartConfig(report)
-console.log("dataFromReport",dataFromReport); 
-setData(dataFromReport)    
+      console.log('user');
+      
+   const dataFromReport =  ChartConfig(report)
+   setData(dataFromReport)    
     }
     
   },[report])
 
   const handleFilter = (e)=>{
-    setFilter(e.target.value)
-    dispatch(newlyRegisteredUsers(filter))
+    console.log('event',e.target.id);
+    setFilter(e.target.id)
+    dispatch(newlyRegisteredUsers(e.target.id))
   }
   return (
     <>

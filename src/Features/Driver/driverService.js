@@ -72,3 +72,7 @@ export const getDriverWalletHistoryService = async(driverId)=>{
 export const getDriverWalletDetailService = async(driverId)=>{
 return await driverPrivate.get(`payment/driver/walletdetails/${driverId}`)
 }
+
+export const tripChartService =async(data)=>{
+  return await driverPrivate.get(`trip/driver/tripcount?driverId=${data?.driverId}&filter=${data?.filter}`)
+}

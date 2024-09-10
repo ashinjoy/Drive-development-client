@@ -11,7 +11,7 @@ const options={
 }
 
 function Userchart({data}) {
-  console.log("data in userchart",data);
+ 
   
   return (
     <div className=''>

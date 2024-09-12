@@ -10,12 +10,13 @@ import { searchLocationContext } from "../../../Context/UserSearchContext";
 
 import ListVehiclePriceDetails from "../Trip/ListVehiclePriceDetails";
 
-function SearchLocation({ isSearch, setSearch }) {
+function SearchLocation() {
   const { selectDropOffLocation, pickUpCoords, dropCoords,selectPickupLocation } = useContext(searchLocationContext);
 
   const [isPickUpSuggestion, setPickupSuggestion] = useState(false);
 
   const [pickupLocation, setPickupLocation] = useState("");
+  const [isSearch,setSearch] = useState(false)
   const [dropLocation, setDropLocation] = useState("");
 
   const [suggestions, setSuggestions] = useState([]);
@@ -79,15 +80,15 @@ function SearchLocation({ isSearch, setSearch }) {
     } else {
       console.log("No metdata");
     }
-  }, [additionalSearchMetaData, setSearch]);
+  }, [additionalSearchMetaData]);
 
   return (
     <>
-      <div className="flex w-[40%]">
-        <div className="mt-[8rem] ml-[2rem]  ">
-          <div className="w-[100%] h-auto p-8  shadow-xl border-2 border-slate-300 rounded-lg bg-white flex flex-col gap-7">
+      <div className="flex w-[34%]">
+        <div className="mt-[7rem] ml-[2rem]  ">
+          <div className="w-[100%] h-auto p-3  shadow-xl border-2 border-slate-300 rounded-lg bg-white flex flex-col gap-3">
             <h1 className="font-medium text-xl text-gray-700">
-              Start The Ride
+              Start  Ride
             </h1>
             <form action="" onSubmit={handleSearchRide}>
               <div className="flex flex-col w-full max-w-md mx-auto relative">
@@ -97,12 +98,12 @@ function SearchLocation({ isSearch, setSearch }) {
                 >
                   Pickup Location
                 </label>
-                <div className="flex items-center border-2 border-gray-300 rounded-md overflow-hidden focus-within:border-blue-500 transition duration-200">
+                <div className="flex h-10 items-center border-2 border-gray-300 rounded-md overflow-hidden shadow-md focus-within:border-blue-500 transition duration-200">
                   <input
                     type="text"
                     id="pickup"
                     placeholder="Enter pickup location"
-                    className="w-full h-12 px-4 text-gray-700 outline-none flex-1"
+                    className="w-full h-10 px-4 text-gray-700 outline-none flex-1"
                     onFocus={() => setPickupSuggestion(true)}
                     value={pickupLocation}
                     onChange={handlePickUpLocation}

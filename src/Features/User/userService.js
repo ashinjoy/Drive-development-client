@@ -94,3 +94,7 @@ export const saveContactServices = async (contactDetails) => {
 export const SosAlertService = async(userId)=>{
   return await UserPrivate.post('trip/users/emergency-alert',{userId})
 }
+
+export const geoCodeService = async(pickup,pickupLong)=>{
+  return await axios.get(`trip/users/reverse-geocode?pickupLat=${pickup}&pickupLong=${pickupLong}`)
+}

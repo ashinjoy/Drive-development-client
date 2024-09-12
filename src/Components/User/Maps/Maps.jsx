@@ -7,12 +7,15 @@ import Map, { Marker, Source, Layer } from "react-map-gl";
 import {  useSelector } from "react-redux";
 import { searchLocationContext } from "../../../Context/UserSearchContext";
 import axios from "axios";
+import ListVehiclePriceDetails from "../Trip/ListVehiclePriceDetails";
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 
-function Maps() {
+function Maps({isSearch}) {
+  console.log("isSearch in Map",isSearch);
+  
 
-    const { pickUpCoords, dropCoords } = useContext(searchLocationContext);
+    const { pickUpCoords, dropCoords,pickupLocation,dropLocation } = useContext(searchLocationContext);
 
     
     const [pickupLongitude, setPickUpLng] = useState(null);
@@ -140,14 +143,20 @@ function Maps() {
 
   return (
     <>
-      <div className="w-[100%] ">
+      <div className="flex w-[100%] gap-2 ">
+      {isSearch &&  <ListVehiclePriceDetails
+          pickUpCoords={pickUpCoords}
+          dropCoords={dropCoords}
+          pickupLocation={pickupLocation}
+          dropLocation={dropLocation}
+        />}
         <Map
           ref={mapRef}
           {...viewState}
           onMove={(evt) => setViewState(evt.viewState)}
           style={{
             marginTop: "7rem",
-            width: "95%",
+            width:isSearch ? "45%" : "90%",
             height: 500,
             overflow: "hidden",
             marginRight: 12,

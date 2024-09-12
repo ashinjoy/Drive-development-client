@@ -8,16 +8,25 @@ import { Geocoder } from "@mapbox/search-js-react";
 import { seacrhNearByDriver } from "../../../Features/Trip/tripActions";
 import { searchLocationContext } from "../../../Context/UserSearchContext";
 
-import ListVehiclePriceDetails from "../Trip/ListVehiclePriceDetails";
+// import ListVehiclePriceDetails from "../Trip/ListVehiclePriceDetails";
 
-function SearchLocation() {
-  const { selectDropOffLocation, pickUpCoords, dropCoords,selectPickupLocation } = useContext(searchLocationContext);
+function SearchLocation({isSearch,setSearch}) {
+  const {
+    selectDropOffLocation,
+    pickUpCoords,
+    dropCoords,
+    selectPickupLocation,
+    pickupLocation,
+    setPickupLocation,
+    dropLocation,
+    setDropLocation,
+  } = useContext(searchLocationContext);
 
   const [isPickUpSuggestion, setPickupSuggestion] = useState(false);
 
-  const [pickupLocation, setPickupLocation] = useState("");
-  const [isSearch,setSearch] = useState(false)
-  const [dropLocation, setDropLocation] = useState("");
+  // const [pickupLocation, setPickupLocation] = useState("");
+  // const [isSearch, setSearch] = useState(false);
+  // const [dropLocation, setDropLocation] = useState("");
 
   const [suggestions, setSuggestions] = useState([]);
 
@@ -31,7 +40,9 @@ function SearchLocation() {
     setPickupLocation(value);
 
     try {
-      const response = await UserPrivate.get(`trip/users/pickup-location-autocomplete?search=${value}`);
+      const response = await UserPrivate.get(
+        `trip/users/pickup-location-autocomplete?search=${value}`
+      );
       const data = response.data;
       setSuggestions(data?.searchResults);
     } catch (error) {
@@ -44,7 +55,6 @@ function SearchLocation() {
   };
 
   const handleResult = (result) => {
-    
     selectDropOffLocation(result?.geometry?.coordinates);
   };
 
@@ -59,20 +69,25 @@ function SearchLocation() {
     dispatch(seacrhNearByDriver(formData));
   };
 
-  const handleCurrentLocation = ()=>{
-    if(!navigator.geolocation){
-      return
+  const handleCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      return;
     }
-    navigator.geolocation.getCurrentPosition(async(pos)=>{
-      
-      const response = await UserPrivate.get(`trip/users/pickup-location-autocomplete?search=${[pos?.coords?.longitude,pos?.coords?.latitude]}`)
-      console.log("pickup",response?.data?.searchResult?.properties?.full_address);
-      setPickupLocation(response?.data?.searchResult?.properties?.full_address)
-      selectPickupLocation([pos?.coords?.longitude,pos?.coords?.latitude])
-    })
-  }
-
-
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const response = await UserPrivate.get(
+        `trip/users/pickup-location-autocomplete?search=${[
+          pos?.coords?.longitude,
+          pos?.coords?.latitude,
+        ]}`
+      );
+      console.log(
+        "pickup",
+        response?.data?.searchResult?.properties?.full_address
+      );
+      setPickupLocation(response?.data?.searchResult?.properties?.full_address);
+      selectPickupLocation([pos?.coords?.longitude, pos?.coords?.latitude]);
+    });
+  };
 
   useEffect(() => {
     if (additionalSearchMetaData) {
@@ -82,14 +97,18 @@ function SearchLocation() {
     }
   }, [additionalSearchMetaData]);
 
+  useEffect(()=>{
+    console.log("isSearch clicked",isSearch);
+    
+
+  },[isSearch])
+
   return (
     <>
       <div className="flex w-[34%]">
         <div className="mt-[7rem] ml-[2rem]  ">
           <div className="w-[100%] h-auto p-3  shadow-xl border-2 border-slate-300 rounded-lg bg-white flex flex-col gap-3">
-            <h1 className="font-medium text-xl text-gray-700">
-              Start  Ride
-            </h1>
+            <h1 className="font-medium text-xl text-gray-700">Start Ride</h1>
             <form action="" onSubmit={handleSearchRide}>
               <div className="flex flex-col w-full max-w-md mx-auto relative">
                 <label
@@ -108,7 +127,11 @@ function SearchLocation() {
                     value={pickupLocation}
                     onChange={handlePickUpLocation}
                   />
-                  <button type="button" className="h-12 w-12 text-black flex items-center justify-center transition duration-200" onClick={handleCurrentLocation}>
+                  <button
+                    type="button"
+                    className="h-12 w-12 text-black flex items-center justify-center transition duration-200"
+                    onClick={handleCurrentLocation}
+                  >
                     <FaLocationArrow />
                   </button>
                 </div>
@@ -136,7 +159,6 @@ function SearchLocation() {
                   onChange={handleDropoffLocation}
                   accessToken={process.env.REACT_APP_MAPBOX_TOKEN}
                 />
-              
               </div>
 
               <button
@@ -149,14 +171,14 @@ function SearchLocation() {
           </div>
         </div>
       </div>
-      {isSearch && (
+      {/* {isSearch && (
         <ListVehiclePriceDetails
           pickUpCoords={pickUpCoords}
           dropCoords={dropCoords}
           pickupLocation={pickupLocation}
           dropLocation={dropLocation}
         />
-      )}
+      )} */}
     </>
   );
 }

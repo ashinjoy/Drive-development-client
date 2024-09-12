@@ -6,12 +6,16 @@ import Maps from "../../../Components/User/Maps/Maps";
 
 
 function RidePage() {
+  const [isSearch,setSearch] = useState(false)
+  console.log("isSearch in Parent",isSearch);
+  
   return (
     <>
       <UserNavbar />  
       <div className="flex  w-screen h-[100vh] gap-3">
-        <SearchLocation />
-        <Maps /> 
+        <SearchLocation isSearch={isSearch} setSearch={setSearch} />
+        
+        <Maps isSearch={isSearch} setSearch={setSearch} /> 
          
       </div>
     </>

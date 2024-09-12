@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Chat from "../../Chat/Chat";
-import { stripePaymentService, walletPaymentService } from "../../../Features/User/userService";
+import {
+  stripePaymentService,
+  walletPaymentService,
+} from "../../../Features/User/userService";
 import { SosAlert } from "../../../Features/User/userActions";
 import { UserPrivate } from "../../../Utils/Axios/userInterceptor";
 import { toast } from "react-toastify";
@@ -10,73 +13,77 @@ import { cancelRide } from "../../../Features/Trip/tripActions";
 import CancellationModal from "../Modal/CancellationModal";
 import CancelConfirmedModal from "../Modal/CancelConfirmedModal";
 
-
 function BookingInfo() {
-  const { tripDetail,message } = useSelector((state) => state.trip);
+  const { tripDetail, message } = useSelector((state) => state.trip);
   const [openChat, setOpenChat] = useState(false);
   const [openPayment, setOpenPayment] = useState(false);
-  const [cancelConfirmed,setCancelConfirmModal]=useState(false)
+  const [cancelConfirmed, setCancelConfirmModal] = useState(false);
 
   const [payOption, setPayOption] = useState(false);
-  const [openCancelModal,setCancelModal] = useState(false)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  
+  const [openCancelModal, setCancelModal] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [senderId, setSenderId] = useState(null);
   const [recieverId, setRecieverId] = useState(null);
   const { user } = useSelector((state) => state.user);
 
-  const selectPaymentOption =async(e)=>{
-    setPayOption(e.target.value)
-    const response =  await UserPrivate.put('trip/users/change-paymentmode',{tripId:tripDetail?._id,paymentMethod:e.target.value})
-  }
+  const selectPaymentOption = async (e) => {
+    setPayOption(e.target.value);
+    const response = await UserPrivate.put("trip/users/change-paymentmode", {
+      tripId: tripDetail?._id,
+      paymentMethod: e.target.value,
+    });
+  };
   useEffect(() => {
     if (tripDetail) {
       setRecieverId(tripDetail?.driverId);
       setSenderId(tripDetail?.userId);
-      setPayOption(tripDetail?.paymentMethod)
+      setPayOption(tripDetail?.paymentMethod);
     }
   }, [tripDetail]);
 
-  const handlePayment = async() => {
+  const handlePayment = async () => {
     const data = {
       userId: user?.id,
       tripId: tripDetail?._id,
-      driverId:tripDetail?.driverId,
+      driverId: tripDetail?.driverId,
       paymentMethod: payOption,
       fare: tripDetail?.fare,
-    }
-    if(payOption == "Online-Payment"){
-      const response =  await stripePaymentService(data)
-      console.log("response",response);
-      if(response.payment?.url){
-        window.location.href = response.payment.url
+    };
+    if (payOption == "Online-Payment") {
+      const response = await stripePaymentService(data);
+      console.log("response", response);
+      if (response.payment?.url) {
+        window.location.href = response.payment.url;
       }
-    }
-    else if(payOption == "Wallet"){
-      const response = await walletPaymentService(data)
+    } else if (payOption == "Wallet") {
+      const response = await walletPaymentService(data);
     }
   };
 
-  const handleSos =()=>{
-    dispatch(SosAlert(user?.id))
-  }
-  const  handleCancelRide =()=>{
-    setCancelModal(true)
+  const handleSos = () => {
+    dispatch(SosAlert(user?.id));
+  };
+  const handleCancelRide = () => {
+    setCancelModal(true);
     // dispatch(cancelRide({userId:user?.id,tripId:tripDetail?._id}))
-  }
+  };
 
-  useEffect(()=>{
-    if(message == "No Response from Drivers"){
-      toast('Drivers Not Available! Try again from differrnt Pickup Location or Retry after Sometime')
-      navigate('/search-ride')
+  useEffect(() => {
+    if (message == "No Response from Drivers") {
+      toast(
+        "Drivers Not Available! Try again from differrnt Pickup Location or Retry after Sometime"
+      );
+      navigate("/search-ride");
     }
-  })
-
+  });
 
   return (
-    <div className="w-[20rem] mt-[7rem] ml-[2rem] h-auto border-2 border-gray-300 shadow-lg rounded-lg overflow-hidden">
-      {openChat && <Chat openChat={openChat} user={user} setOpenChat={setOpenChat}/>}
+    <div className=" fixed w-[20rem] mt-[7rem] ml-[3rem]  border-2 border-gray-300 shadow-lg rounded-lg overflow-hidden h-[80vh]">
+      {openChat && (
+        <Chat openChat={openChat} user={user} setOpenChat={setOpenChat} />
+      )}
 
       <div className="relative h-[14rem] p-4 bg-gradient-to-r from-purple-50 to-blue-100 text-black">
         <h1 className="text-center text-xl font-bold tracking-wide">
@@ -112,7 +119,7 @@ function BookingInfo() {
         )}
       </div>
 
-      <div className="p-4 flex flex-col gap-4">
+      <div className="p-4  flex flex-col gap-4 overflow-y-scroll h-[27%]">
         <div className="flex justify-between items-center">
           <h1 className="font-semibold text-gray-600">Pick-Up Location:</h1>
           <span className="text-gray-800 font-medium">
@@ -125,6 +132,7 @@ function BookingInfo() {
             {tripDetail?.dropOffLocation || "N/A"}
           </span>
         </div>
+      
         <div className="flex justify-between items-center">
           <h1 className="font-semibold text-gray-600">Fare:</h1>
           <span className="text-gray-800 font-medium">
@@ -140,82 +148,77 @@ function BookingInfo() {
           </span>
         </div>
       </div>
-              {openCancelModal && <CancellationModal setCancelModal={setCancelModal} setCancelConfirmModal={setCancelConfirmModal}/>}
-              {cancelConfirmed && <CancelConfirmedModal/>}
+      {openCancelModal && (
+        <CancellationModal
+          setCancelModal={setCancelModal}
+          setCancelConfirmModal={setCancelConfirmModal}
+        />
+      )}
+      {cancelConfirmed && <CancelConfirmedModal />}
       <div className="flex flex-col items-center gap-4 p-4">
-        <button
-          className="bg-gray-300 w-full p-2 rounded-sm text-red-600 font-semibold hover:bg-gray-400 transition-colors shadow-md"
-          onClick={handleCancelRide}  
-        >
-          Cancel Ride
-        </button>
-       {tripDetail && <button
-          className="bg-blue-500 w-[60%] p-2 rounded-full text-white font-semibold hover:bg-blue-600 transition-colors shadow-md"
-          onClick={() => setOpenChat(true)}
-        >
-          Chat
-        </button>}
-       {/* {tripDetail && <button
+        
+        {tripDetail && (
+          <button
+            className="bg-blue-500 w-[60%] p-2 rounded-full text-white font-semibold hover:bg-blue-600 transition-colors shadow-md"
+            onClick={() => setOpenChat(true)}
+          >
+            Chat
+          </button>
+        )}
+        {/* {tripDetail && <button
           className="bg-green-500 w-[60%] p-2 rounded-full text-white font-semibold hover:bg-green-600 transition-colors shadow-md"
           onClick={() => setOpenPayment(true)} // Add open payment handler
         >
           Payment Options
         </button>} */}
-        {
-          tripDetail &&<>
-           <select value={payOption}  name="" id="" onChange={selectPaymentOption}>
-            <option value="Cash">Cash</option>
-            <option value="Online-Payment">Pay Online</option>
-            <option value="Wallet">Wallet</option>  
-          </select>
-          <button onClick={handlePayment}>Pay Now</button>
+        {tripDetail && (
+          <>
+            <select
+              value={payOption}
+              name=""
+              id=""
+              onChange={selectPaymentOption}
+            >
+              <option value="Cash">Cash</option>
+              <option value="Online-Payment">Pay Online</option>
+              <option value="Wallet">Wallet</option>
+            </select>
+            <button onClick={handlePayment}>Pay Now</button>
           </>
-        }
-              <div class="flex justify-center items-center ">
-  <button class="relative px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:ring-4 focus:ring-red-300 focus:outline-none" onClick={()=>{handleSos()}}>
-
-    <svg class="inline-block w-5 h-5 mr-2 animate-pulse" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11h14M5 11l-1 5m0 0H4a2 2 0 001.68 1.98L7 19h10l1.32-.02A2 2 0 0020 16h-1l-1-5m-12 0L5 7h14l1 4m-2-6V4a2 2 0 00-2-2h-6a2 2 0 00-2 2v1m0 6h6" />
-    </svg>
-    SOS
-    <span class="absolute top-0 right-0 mt-2 mr-2 bg-red-500 h-3 w-3 rounded-full animate-ping"></span>
-  </button>
-</div>
+        )}
+        {tripDetail &&  <div class="flex justify-center items-center ">
+          <button
+            class="relative px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg transition transform hover:scale-105 focus:ring-4 focus:ring-red-300 focus:outline-none"
+            onClick={() => {
+              handleSos();
+            }}
+          >
+            <svg
+              class="inline-block w-5 h-5 mr-2 animate-pulse"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 11h14M5 11l-1 5m0 0H4a2 2 0 001.68 1.98L7 19h10l1.32-.02A2 2 0 0020 16h-1l-1-5m-12 0L5 7h14l1 4m-2-6V4a2 2 0 00-2-2h-6a2 2 0 00-2 2v1m0 6h6"
+              />
+            </svg>
+            SOS
+            <span class="absolute top-0 right-0 mt-2 mr-2 bg-red-500 h-3 w-3 rounded-full animate-ping"></span>
+          </button>
+        </div>  }
+       
+        <button
+          className="bg-gray-300 w-full p-2 rounded-sm text-red-600 font-semibold hover:bg-gray-400 transition-colors shadow-md"
+          onClick={handleCancelRide}
+        >
+          Cancel Ride
+        </button>
       </div>
-
-
-      {/* {openPayment && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-          <div className="bg-white w-[20rem] p-6 rounded-lg shadow-lg">
-            <h2 className="text-lg font-bold text-center mb-4">
-              Select Payment Method
-            </h2>
-            <div className="flex flex-col gap-4"> */}
-              {/* <button className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors" onClick={()=>setPayOption()}>Credit/Debit Card</button> */}
-              {/* <button className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors" onClick={()=>setPayOption('Online Payment')}>
-                Online Payment
-              </button>
-              <button className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 transition-colors" onClick={()=>setPayOption('COD')}>
-                COD
-              </button>
-              <button
-                className="bg-gray-500 text-white p-2 rounded-lg shadow-md hover:bg-gray-600 transition-colors"
-                onClick={() => setOpenPayment(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-gray-500 text-white p-2 rounded-lg shadow-md hover:bg-gray-600 transition-colors"
-                onClick={handlePayment}
-              >
-                Pay
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
-
-
     </div>
   );
 }

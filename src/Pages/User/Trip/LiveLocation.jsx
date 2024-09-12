@@ -7,7 +7,6 @@ function LiveLocation() {
   return (
     <>
     <UserNavbar/>
-   
     <BookingInfo/>
     <LiveMapUpdates />
    

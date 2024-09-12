@@ -80,7 +80,7 @@ function BookingInfo() {
   });
 
   return (
-    <div className=" fixed w-[20rem] mt-[7rem] ml-[3rem]  border-2 border-gray-300 shadow-lg rounded-lg overflow-hidden h-[80vh]">
+    <div className="  w-[20rem] mt-[7rem] ml-[3rem]  border-2 border-gray-300 shadow-lg rounded-lg overflow-hidden h-[80vh]">
       {openChat && (
         <Chat openChat={openChat} user={user} setOpenChat={setOpenChat} />
       )}

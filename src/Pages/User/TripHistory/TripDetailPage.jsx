@@ -10,13 +10,9 @@ function TripDetailPage() {
     
      useEffect(() => {
         const getTripDetail = async()=>{
-            console.log(tripId,useParams);
-            
          const response =    await getTripDetailService(tripId)
          setTripDetail(response?.getTripDetail)
-         console.log('resdsds',response?.getTripDetail);
          setDate(response?.getTripDetail?.createdAt)
-         
         }
         getTripDetail()
        

@@ -51,7 +51,7 @@ export const getMessageService = async(tripId)=>{
 
 export const getAllTripsService =async(userId)=>{
   try {
-    const response =await UserPrivate.get(`payment/user/trip-details/${userId}`)
+    const response =await UserPrivate.get(`trip/users/trip-details/${userId}`)
     return response.data
   } catch (error) {
     console.error(error);

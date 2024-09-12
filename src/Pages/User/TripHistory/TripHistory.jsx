@@ -6,20 +6,20 @@ import { useSelector } from 'react-redux'
 
 function TripHistory() {
     const [tripDetails,settripDetails] = useState([])
+    const [pages,setPages] = useState(null)
     const {user} = useSelector(state=>state.user)
     useEffect(()=>{
         const getAllTrips=async()=>{
-        const response = await getAllTripsService(user?.id)
-        console.log("response of the trips",response);
-        
+        const response = await getAllTripsService(user?.id)        
         settripDetails(response?.getTripDetails)
+        setPages(new Array(response?.docsCount))
         }
         getAllTrips()
     },[])
   return (
     <>
     <UserNavbar/>
-    <div className="p-6 h-[80%] w-full mt-[8rem] flex flex-col justify-center items-center">
+    <div className=" h-[80%] w-full mt-[7rem] flex flex-col justify-center items-center">
       <h1 className="text-2xl font-bold mb-6">My Trips</h1>
        {(tripDetails && tripDetails.length > 0 ) && tripDetails.map((trip)=>{
         const dateFormat = new Date(trip?.createdAt)
@@ -40,10 +40,23 @@ function TripHistory() {
         status={trip?.tripStatus}
         id = {trip?._id}
       />)
-       })
-        } 
-     
-     
+       })} 
+       <div className='flex flex-row gap-3'>
+       <span className='w-[3rem] h-[2rem] rounded-sm border-2 shadow-sm bg-slate-300 text-black text-center'>
+      prev
+    </span>
+    <span className='w-[3rem] h-[2rem] rounded-sm border-2 shadow-sm bg-slate-300 text-black text-center'>
+      1
+    </span>
+    <span className='w-[3rem] h-[2rem] rounded-sm border-2 shadow-sm bg-slate-300 text-black text-center'>
+      2
+    </span>
+    <span className='w-[3rem] h-[2rem] rounded-sm border-2 shadow-sm bg-slate-300 text-black text-center'>
+      next
+    </span>
+
+    </div>
+    
     </div>
 
     </>

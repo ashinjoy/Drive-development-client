@@ -100,7 +100,6 @@ function SignupPage() {
 
   useEffect(() => {
     if (error) {
-      console.log(error);
       toast(error);
       dispatch(resestAll());
       return;

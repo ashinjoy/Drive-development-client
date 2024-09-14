@@ -57,7 +57,7 @@ const driverSlice = createSlice({
           state.message = action?.payload?.message
         })
         .addCase(verifyDriverOtp.rejected, (state, action) => {
-          state.error = action?.payload?.error
+          state.error = action?.payload
         })
         .addCase(resendDriverOtp.pending, (state, action) => {
           state.loading =  true

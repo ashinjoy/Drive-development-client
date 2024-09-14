@@ -14,12 +14,10 @@ export const registerDriverService = async (formDetails) => {
 };
 
 export const verifyOtpService = async (otp) => {
-  try {
-    const response = await axios.post("auth/driver/verify-otp", { otp });
-    return response;
-  } catch (error) {
-    console.error(error);
-  }
+
+    return await axios.post("auth/driver/verify-otp", { otp });
+  
+
 };
 
 export const resendOtpService = async (email) => {

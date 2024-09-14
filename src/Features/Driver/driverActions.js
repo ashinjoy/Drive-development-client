@@ -19,7 +19,6 @@ export const registerDriver = createAsyncThunk(
       const response = await registerDriverService(formDetails);
       return response?.data
     } catch (error) {
-      console.log('errr in register acrtion');
       return rejectWithValue(error?.response?.data?.error);
     }
   }
@@ -32,7 +31,7 @@ export const verifyDriverOtp = createAsyncThunk(
       const response = await verifyOtpService(otp);
       return response.data;
     } catch (error) {
-      console.error(error);
+      console.log(error);
       return rejectWithValue(error?.response?.data?.error)
     }
   }

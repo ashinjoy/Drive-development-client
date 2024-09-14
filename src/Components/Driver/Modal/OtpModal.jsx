@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaWindowClose } from "react-icons/fa";
 import { verifyDriverOtp ,resendDriverOtp} from "../../../Features/Driver/driverActions";
+import { toast } from "react-toastify";
 
 function OtpModal({ email, setShowModal }) {
   const [otpInp, setOtp] = useState(new Array(4).fill(""));
@@ -86,6 +87,13 @@ function OtpModal({ email, setShowModal }) {
       navigate("/");
     }
   };
+
+  // useEffect(()=>{
+  //   if(!error){
+  //     return
+  //   }
+  //   toast(error)
+  // },[error])
 
   const handleResendOtp = () => {
     setTimer(60);

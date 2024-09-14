@@ -1,6 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function PaymentSucessFullPage() {
+  const navigate = useNavigate()
+  useEffect(()=>{
+    setTimeout(()=>{
+navigate('/trip')
+    },3000)
+
+  },[])
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-white to-[#ffffe8]">
   <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center">

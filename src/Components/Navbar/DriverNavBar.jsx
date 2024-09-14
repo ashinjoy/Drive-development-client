@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import {  useSelector } from "react-redux";
+import {  useDispatch, useSelector } from "react-redux";
 import {  NavLink } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import * as turf from '@turf/turf'
@@ -15,6 +15,7 @@ import { GiJourney } from "react-icons/gi";
 import { FaWallet } from "react-icons/fa6";
 
 import { MdPayments } from "react-icons/md";
+import { resetTripDetails } from "../../Features/Trip/tripSlice";
 
 
 
@@ -32,6 +33,7 @@ function DriverNavBar() {
   const { token, driver } = useSelector((state) => state.driver);
   const { tripDetail } = useSelector((state) => state.trip);
   const { socket, chatSocket } = useSocket();
+  const dispatch = useDispatch()
   useEffect(() => {
     // let timeOut
 
@@ -104,8 +106,13 @@ function DriverNavBar() {
       }
 
       },5000)
+      socket?.on('cancel-ride',()=>{
+        clearInterval(liveIntervalRef.current)
+        dispatch(resetTripDetails())
+      })
       return ()=>{
         clearInterval(liveIntervalRef.current)
+        socket?.off('cancel-ride')
       }
       
     } ,[socket, tripDetail,tripCoordinates]);

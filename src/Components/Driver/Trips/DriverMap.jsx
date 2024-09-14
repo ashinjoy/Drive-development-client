@@ -161,6 +161,7 @@ useEffect(() => {
   //     distance: dropDestination,
   //   });
   // } 
+  
   else if (dropDestination < 0.1 ) {
     // console.log('dropoff');
     completeJourney()
@@ -232,12 +233,6 @@ console.log('drivreLive',driverLive);
     setShowOtp(true);
   };
 
-  // const startJourney = () => {
-  //   dispatch(
-  //     startTrip({ tripOtp, driverId: driver?.id, tripId: tripDetail?._id })
-  //   );
-  //   setShowOtp(false);
-  // };
 
   const completeJourney = () => {
     dispatch(
@@ -248,7 +243,7 @@ console.log('drivreLive',driverLive);
   useEffect(() => {
 
     if (message == "Ride Completed SuccessFully") {
-      toast("Ride Finished Completely");
+      setEndRide(true)
     }
   }, [socket, message, tripDetail]);
 
@@ -261,7 +256,7 @@ console.log('drivreLive',driverLive);
           <h1 className="text-2xl font-bold text-gray-800">Driver Status</h1>
           {currentStatus?.currentStatus == "inactive" ? (
             <button
-              className="absolute bottom-10 right-20 z-50 rounded-full w-28 h-14 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xl font-bold shadow-lg flex items-center justify-center transition-transform duration-200 transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300"
+              className="absolute bottom-10 right-20 z-50 rounded-full w-28 h-14 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xl font-bold shadow-lg flex items-center justify-center transition-transform duration-200 transform hover:scale-105 active:scale-95 "
               onClick={() => {
                 handleDriverActive();
               }}
@@ -279,7 +274,7 @@ console.log('drivreLive',driverLive);
           </button>
           )}
           <p className="text-lg text-gray-600">
-            You are currently{" "}
+            You are currently {!currentStatus?.currentStatus ? "Active" : currentStatus?.currentStatus == "active" ? "Active"  : "InActive" }
             <span className="font-semibold">
               {/* {currentStatus?.currentStatus == "active" ? "Online" : "Offline"} */}
             </span>
@@ -301,14 +296,6 @@ console.log('drivreLive',driverLive);
               </button>
             }
             
-             {/* {endRide && (
-              <button
-                className="w-32 h-12 bg-red-600 text-white rounded-md font-bold shadow-md hover:bg-red-700 transition-colors duration-200"
-                onClick={() => completeJourney()}
-              >
-                End Ride
-              </button>
-            )}  */}
           </div>
         </div>
 
@@ -319,7 +306,7 @@ console.log('drivreLive',driverLive);
           <div className="w-full flex justify-between mt-4">
             <div className="text-left">
               <p className="text-gray-600">Name: {driver?.name}</p>
-              <p className="text-gray-600">Earnings: $120.00</p>
+              <p className="text-gray-600">Earnings: {driver?.walletBalance}</p>
               <p className="text-gray-600">Rating: 4.8 ⭐</p>
             </div>
             <div className="text-right">
@@ -375,17 +362,14 @@ console.log('drivreLive',driverLive);
           )}
         </Map>
       </div>
-          {/* <AnimatePresence mode="wait">
-            {
-            nearByPickup &&
-          <DriverNearByPickup setNearByPickup={setNearByPickup} />
-            }
-             {
-            nearByDropOff &&
-          <DriverNearByDropOff setNearByDropOff={setNearByDropOff}  />
+          <AnimatePresence mode="wait">
+            
+             
+           { endRide &&
+          <DriverNearByDropOff setEndRide={setEndRide}/>
             }
 
-          </AnimatePresence> */}
+          </AnimatePresence>
     </div>
   );
 }

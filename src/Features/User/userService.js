@@ -73,6 +73,16 @@ export const getWalletBalance = async (userId) => {
   }
 };
 
+export const paymentService = async(data)=>{
+  try {
+    const response = await UserPrivate.post('payment/user/payment',data)
+    return response.data
+  } catch (error) {
+    console.error(error);
+    
+  }
+}
+
 export const getWalletHistoryService = async (userId) => {
   try {
     const response = await UserPrivate.get(

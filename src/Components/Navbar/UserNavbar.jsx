@@ -6,7 +6,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import { AnimatePresence } from "framer-motion";
 
 import { useSocket } from "../../Hooks/socket";
-import { resetTripDetails, setTripData } from "../../Features/Trip/tripSlice";
+import { resetTripDetails, setTripData, setTripStatus } from "../../Features/Trip/tripSlice";
 import NearByPickup from "../User/Notification/NearByPickup";
 import UserAccountMenu from "../User/UserAccountMenu/UserAccountMenu";
 import UserNavBarDrawer from "./UserNavBarDrawer";
@@ -19,6 +19,8 @@ function UserNavbar() {
   const [notifyData, setNotifyData] = useState("");
   const [showMenu, setShowMenu] = useState(false);
   const [navDrawer,setNavDrawer] = useState(false)
+  const [rideComplete,setRideComplete] =useState(false)
+  const [rideCompleteData,setRideCompleteData] = useState(null)
   const userId = user?.id;
 
   const { socket } = useSocket();
@@ -43,11 +45,14 @@ function UserNavbar() {
     }
 
     const handleRideStartSocket = (data) => {
-      setNotifyData(data);
+      dispatch(setTripStatus())
     };
 
-    const handleRideEndSocket = () => {
+    const handleRideEndSocket = (data) => {
       dispatch(resetTripDetails());
+      setRideComplete(true)
+      setRideCompleteData(data)
+
     };
     socket?.on("ride-start", handleRideStartSocket);
     socket?.on("ride-complete", handleRideEndSocket);
@@ -140,12 +145,15 @@ function UserNavbar() {
       </div>
 
       <AnimatePresence mode="wait">
-        {showNotification && (
+        {rideComplete && (
           <NearByPickup
-            setShowNofication={setShowNofication}
-            notifyData={notifyData}
+            setRideComplete={setRideComplete}
+            rideCompleteData={rideCompleteData}
           />
         )}
+        {
+
+        }
       </AnimatePresence>
 
       {showMenu && <UserAccountMenu />}

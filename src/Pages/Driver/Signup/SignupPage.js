@@ -14,8 +14,9 @@ function SignupPage() {
     password: "",
   });
   const [showModal, setModal] = useState(false);
+  const [errInfo, setErrorInfo] = useState({});
   const dispatch = useDispatch();
-  const { error,success } = useSelector((state) => state.driver);
+  const { error, success } = useSelector((state) => state.driver);
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const phoneRegex = /^\d{10}$/;
@@ -44,21 +45,70 @@ function SignupPage() {
       toast("Please Enter valid paswword");
     } else if (!passwordRegex.test(formState.password)) {
       toast("Password must contain minimum of 8 characters");
-    } else {
+    } 
+    else {
       dispatch(registerDriver(formState));
     }
+
   };
+
+  const validateInputs = (e) => {
+    if (e.target.id === "name"){
+      setFormState({ ...formState, name: e.target.value });
+      if (e.target.value.trim() == "") {
+        setErrorInfo({ ...errInfo, name: "Please Enter Your Name" });
+      } else {
+        setErrorInfo({ ...errInfo, name: "" });
+      }
+      return
+    }
+      if (e.target.id === "email") {
+      setFormState({...formState,email:e.target.value});
+      if(e.target.value.trim() == ""){
+        setErrorInfo({ ...errInfo, email: "Please Enter Your Email" });
+        
+      }else if(!emailRegex.test(e.target.value)){
+        setErrorInfo({...errInfo,email:'please Enter Valid Email'})
+        
+      }else{
+        setErrorInfo({...errInfo,email:''})
+      }
+      return
+    }
+    if(e.target.id === "phone"){
+      setFormState({...formState,phone:e.target.value})
+      if(e.target.value.trim() === ""){
+        setErrorInfo({...errInfo,phone:'Please Enter Your Phone Number'})
+      }else if(!phoneRegex.test(e.target.value)){
+        setErrorInfo({...errInfo,phone:'Please Enter Valid Phone Number'})
+      }else{
+        setErrorInfo({...errInfo,phone:''})
+      }
+      return
+    }
+    if(e.target.id === "password"){
+      setFormState({...formState,password:e.target.value})
+      if(e.target.value.trim() === ""){
+        setErrorInfo({...errInfo,password:"Enter Password"})
+      }else if(!passwordRegex.test(e.target.value)){
+        setErrorInfo({...errInfo,password:'Password must consist of 8 Characters'})
+      }else{
+        setErrorInfo({...errInfo,password:''})
+      }
+    }
+  };
+
   useEffect(() => {
     if (error) {
       console.log(error);
       toast(error);
-      dispatch(resestAll())
+      dispatch(resestAll());
       return;
     } else if (success) {
-        setModal(true);
-      dispatch(resestAll())
+      setModal(true);
+      dispatch(resestAll());
     }
-  }, [error,success]);
+  }, [error, success]);
 
   return (
     <>
@@ -66,15 +116,15 @@ function SignupPage() {
       {showModal && (
         <Modal email={formState.email} setShowModal={setModal} role="driver" />
       )}
-      <section class="bg-gray-50 bg-gradient-to-r from-white to-yellow-50 h-screen">
-        <div class="flex flex-col items-center justify-center px-6 py-8 mt-6 mx-auto md:h-screen lg:py-0">
-          <div class="w-full bg-white rounded-lg shadow-xl md:mt-16 sm:max-w-md xl:p-0 border border-yellow-200 ">
-            <div class="p-6 space-y-6 md:space-y-8 sm:p-8 border-yellow-300 bg-gradient-to-t from-white to-yellow-100">
-              <h1 class="text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-black md:text-3xl">
+      <section className="bg-gray-50 h-screen">
+        <div className=" flex flex-col items-center justify-center px-6 py-8 mt-6 mx-auto md:h-screen lg:py-0">
+          <div className=" w-full bg-yellow-50 rounded-lg shadow-2xl md:mt-16 sm:max-w-md xl:p-0 border border-gray-200">
+            <div className="p-6 space-y-6 md:space-y-8 sm:p-8">
+              <h1 className="text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-3xl">
                 Join As a Driver
               </h1>
               <form
-                class="space-y-6 md:space-y-5"
+                className="space-y-6 md:space-y-5"
                 action=""
                 onSubmit={(event) => {
                   handleRegisterSubmit(event);
@@ -82,8 +132,8 @@ function SignupPage() {
               >
                 <div>
                   <label
-                    for="name"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                    htmlFor="name"
+                    className="block mb-2 text-sm font-medium text-gray-900"
                   >
                     Name
                   </label>
@@ -91,35 +141,34 @@ function SignupPage() {
                     type="text"
                     name="name"
                     id="name"
-                    class="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-3 focus:ring-cyan-500 focus:border-cyan-500 transition duration-200 ease-in-out"
                     placeholder="Enter your name"
-                    onChange={(e) =>
-                      setFormState({ ...formState, name: e.target.value })
-                    }
+                    onChange={validateInputs}
                   />
+                  <p className="text-red-600 text-sm">{errInfo.name}</p>
                 </div>
                 <div>
                   <label
-                    for=""
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                    htmlFor="email"
+                    className="block mb-2 text-sm font-medium text-gray-900"
                   >
                     Email
                   </label>
                   <input
                     type="text"
-                    name=""
-                    id=""
-                    class="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500"
+                    name="email"
+                    id="email"
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-3 focus:ring-cyan-500 focus:border-cyan-500 transition duration-200 ease-in-out"
                     placeholder="Enter your email"
-                    onChange={(e) =>
-                      setFormState({ ...formState, email: e.target.value })
-                    }
+                    onChange={validateInputs}
                   />
+                  <p className="text-red-600 text-sm">{errInfo.email}</p>
+
                 </div>
                 <div>
                   <label
-                    for="phone"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                    htmlFor="phone"
+                    className="block mb-2 text-sm font-medium text-gray-900"
                   >
                     Phone
                   </label>
@@ -127,17 +176,17 @@ function SignupPage() {
                     type="tel"
                     name="phone"
                     id="phone"
-                    class="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-3 focus:ring-cyan-500 focus:border-cyan-500 transition duration-200 ease-in-out"
                     placeholder="Enter your phone number"
-                    onChange={(e) =>
-                      setFormState({ ...formState, phone: e.target.value })
-                    }
+                    onChange={validateInputs}
                   />
+                  <p className="text-red-600 text-sm">{errInfo.phone}</p>
+
                 </div>
                 <div>
                   <label
-                    for="password"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                    htmlFor="password"
+                    className="block mb-2 text-sm font-medium text-gray-900"
                   >
                     Password
                   </label>
@@ -145,22 +194,18 @@ function SignupPage() {
                     type="password"
                     name="password"
                     id="password"
-                    class="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-3 focus:ring-cyan-500 focus:border-cyan-500 transition duration-200 ease-in-out"
                     placeholder="Enter your password"
-                    onChange={(e) =>
-                      setFormState({ ...formState, password: e.target.value })
-                    }
+                    onChange={validateInputs}
                   />
+                  <p className="text-red-600 text-sm">{errInfo.password}</p>
                 </div>
                 <button
                   type="submit"
-                  class="w-full text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition duration-200"
+                  className="w-full text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-3 text-center transition duration-200 ease-in-out shadow-lg hover:shadow-xl"
                 >
                   Create an account
                 </button>
-                {/* <button type="submit" class="w-full text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition duration-200">
-            Create an account
-          </button> */}
               </form>
             </div>
           </div>

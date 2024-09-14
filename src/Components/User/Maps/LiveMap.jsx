@@ -10,7 +10,7 @@ import NearByPickup from "../Notification/NearByPickup";
 function LiveMapUpdates() {
   const mapContainerRef = useRef(null);
   const { token, user } = useSelector((state) => state.user);
-  const { tripDetail } = useSelector((state) => state.trip);
+  const { tripDetail,tripStatus } = useSelector((state) => state.trip);
 
   const [pickup, setPickUp] = useState([]);
   const [dropOff, setDropoff] = useState([]);
@@ -39,7 +39,7 @@ function LiveMapUpdates() {
 
   useEffect(() => {
     console.log('tripDetual',tripDetail);
-    if(tripDetail){
+    if(tripDetail && (tripStatus == "started" || tripStatus == "accepted")){
     setPickUp(tripDetail?.startLocation?.coordinates);
     setDropoff(tripDetail?.endLocation?.coordinates);
     // setDriverCoords(tripDetail?.driverId?.currentLocation?.coordinates)
@@ -77,7 +77,7 @@ function LiveMapUpdates() {
   }, [tripDetail]);
 
   useEffect(() => {
-      if(socket && tripDetail){
+      if(socket && tripDetail && (tripStatus == "accepted" || tripStatus == "started")){
         socket?.on("live-location",(data)=>{
         console.log('positional Coordinates-Live Trackinggggggggggg',data);          
         // setDriverCoords([data?.pos?.coords?.longitude,data?.pos?.coords?.latitude]);
@@ -87,7 +87,7 @@ function LiveMapUpdates() {
         // )
       }
 
-  }, [socket,tripDetail,driverCoords]);
+  }, [socket,tripDetail,driverCoords,tripStatus]);
 
 
 

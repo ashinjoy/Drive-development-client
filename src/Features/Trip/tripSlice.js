@@ -2,10 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { seacrhNearByDriver,requestRideAction,acceptTrip,startTrip,finishRide,cancelRide } from "./tripActions";
 
 const trip = JSON.parse(localStorage.getItem('tripDetail'))
+const tripStatus =localStorage.getItem('tripStatus')
 const initialState = {
     tripDetail:trip || null,
     nearbyDrivers:null,
-    tripStatus:null,
+    tripStatus:tripStatus||null,
     additionalSearchMetaData:'',
     cancelData:null,
     loading:false,
@@ -21,18 +22,25 @@ const tripSlice = createSlice({
             console.log('action',action);
             localStorage.setItem('tripDetail',JSON.stringify(action?.payload))
             state.tripDetail = action?.payload
+            state.tripStatus = "accepted"
+        },
+        setTripStatus:(state,action)=>{
+            localStorage.setItem('tripStatus','started')
+        state.tripStatus ="started"
         },
         resetTripDetails:(state,action)=>{
             localStorage.removeItem('tripDetail')
+            localStorage.removeItem('tripStatus')
             state.tripDetail = null
+            state.tripStatus = null
         }
     },
     extraReducers(builder){
-        builder.addCase(seacrhNearByDriver.pending,(state,action)=>{
+        builder.addCase(seacrhNearByDriver.pending,(state)=>{
             state.loading = true
         })
         .addCase(seacrhNearByDriver.fulfilled,(state,action)=>{
-            state.success =true
+            state.success = true
             state.nearbyDrivers = action?.payload?.getNearByDrivers
             state.additionalSearchMetaData = action?.payload?.getAdditionalTripData
         })
@@ -43,21 +51,27 @@ const tripSlice = createSlice({
             state.loading = true
         })
         .addCase(requestRideAction.fulfilled,(state,action)=>{
-            console.log("action",action?.payload);
+            localStorage.setItem('tripDetail',JSON.stringify(action.payload?.tripdata))
+            localStorage.setItem('tripStatus','requested')
+            
             state.success = true
+            state.tripDetail = action.payload?.tripdata
+            state.tripStatus = "requested"
             state.message = action.payload?.message
         })
         .addCase(requestRideAction.rejected,(state,action)=>{
-            // state.error = action?.payload
+            
         })
         .addCase(acceptTrip.pending,(state,action)=>{
             state.loading = true
         })
         .addCase(acceptTrip.fulfilled,(state,action)=>{
-            console.log(action?.payload)
             
             localStorage.setItem('tripDetail',JSON.stringify(action?.payload?.acceptRide))
+            localStorage.setItem('tripStatus','accepted')
+
             state.tripDetail = action?.payload?.acceptRide
+            state.tripStatus ="accepted"
         })
         .addCase(cancelRide.pending,(state)=>{
             state.loading = true
@@ -96,5 +110,5 @@ const tripSlice = createSlice({
         })
     }
 })
-export const {setTripData,resetTripDetails} = tripSlice.actions
+export const {setTripData,resetTripDetails,setTripStatus} = tripSlice.actions
 export default tripSlice.reducer

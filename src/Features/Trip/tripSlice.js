@@ -91,6 +91,7 @@ const tripSlice = createSlice({
         })
         .addCase(startTrip.fulfilled,(state,action)=>{
             localStorage.setItem('tripDetail',JSON.stringify(action?.payload?.tripDetail))
+            state.tripStatus = "started"
             state.tripDetail = action?.payload?.tripDetail
             state.message = action?.payload?.message
         })

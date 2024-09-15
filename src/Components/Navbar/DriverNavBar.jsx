@@ -16,6 +16,7 @@ import { FaWallet } from "react-icons/fa6";
 
 import { MdPayments } from "react-icons/md";
 import { resetTripDetails } from "../../Features/Trip/tripSlice";
+import { current } from "@reduxjs/toolkit";
 
 
 
@@ -25,13 +26,15 @@ function DriverNavBar() {
   const [openNotification, setOpenNotification] = useState(false);
   const [trip, setTrip] = useState(null);
   const notificationDurationRef = useRef(null);
+  const [rideStarted,setRideStarted] = useState(false)
   const liveIntervalRef = useRef(null)
+  const arrayIndexRef = useRef(0)
 
-  const { setDriverLive,tripCoordinates,  setEnableChat ,driverLive} =
+  const { setDriverLive,tripCoordinates,  setEnableChat ,driverLive,startRide,setTripCoordintes} =
     useContext(driverLiveLocation);
 
   const { token, driver } = useSelector((state) => state.driver);
-  const { tripDetail } = useSelector((state) => state.trip);
+  const { tripDetail,tripStatus } = useSelector((state) => state.trip);
   const { socket, chatSocket } = useSocket();
   const dispatch = useDispatch()
   useEffect(() => {
@@ -89,19 +92,54 @@ function DriverNavBar() {
     }
 
     
-    let i = 0
+    
+    
       liveIntervalRef.current =   setInterval(()=>{
-      if(i < tripCoordinates.length){
-        console.log("tripcoord",tripCoordinates);
+      if(arrayIndexRef.current < tripCoordinates.length){
+        // console.log('inside the interval');
         
-    setDriverLive(tripCoordinates[i])
+        // console.log("tripcoord",tripCoordinates);
+        // console.log('started',startRide);
+// if near pickup when start button appear the car hould stop and confirm pickup then only car should move
+// console.log("startRide inside the innterval",startRide);
+
+if(startRide){
+  console.log('start Ride');
+  console.log('entered inside the condition');
+  clearInterval(liveIntervalRef.current)
+  return
+}   
+const handleJourneyAfterStart =()=>{
+
+const coordinates = [...tripCoordinates]
+console.log(arrayIndexRef.current);
+console.log('coordsss',coordinates);
+
+const splicedArr = coordinates.splice(0,arrayIndexRef.current)
+console.log('spl',coordinates);
+setTripCoordintes(coordinates)
+}
+if(tripStatus == 'started'){
+  if(!rideStarted){
+    console.log('inside the condition');
+    
+  handleJourneyAfterStart()
+  setRideStarted(true)
+  }
+  
+}
+console.log('outdide  the condition');
+     
+    setDriverLive(tripCoordinates[arrayIndexRef.current])
        socket?.emit("location-update", {
-                   liveLocation:tripCoordinates[i],
+                   liveLocation:tripCoordinates[arrayIndexRef.current],
                    userId: tripDetail?.userId,
                 })
-    i++
+    arrayIndexRef.current++
 
       }else{
+        console.log('inside the terminatoin stage');
+        
         clearInterval(liveIntervalRef.current)
       }
 
@@ -115,7 +153,8 @@ function DriverNavBar() {
         socket?.off('cancel-ride')
       }
       
-    } ,[socket, tripDetail,tripCoordinates]);
+    } ,[socket, tripDetail,tripCoordinates,startRide,tripStatus]);
+
 
 
     // useEffect(()=>{
@@ -124,21 +163,13 @@ function DriverNavBar() {
     //   }
     //   const pickup = tripDetail?.startLocation?.coordinates
     //   const dropOff = tripDetail?.endLocation?.coordinates
-      
     //   const approxDistanceFromPickUp = checkApproxDistance(driverLive,pickup)
     //   console.log("appPickup",approxDistanceFromPickUp);
-
-      
     //   const approxDistanceFromDrop = checkApproxDistance(driverLive,dropOff)
     //   console.log("appDropp",approxDistanceFromDrop);
-
-
     //   if(approxDistanceFromPickUp < 200){
-    //     setStartRide(true)
-        
+    //     setStartRide(true)  
     //   }
-      
-
     // },[driverLive])
 
     // const checkApproxDistance = (currentLocation,destination)=>{
@@ -150,8 +181,6 @@ function DriverNavBar() {
     //   });
 
     //   console.log(distance);
-      
-
     // }
 
   return (

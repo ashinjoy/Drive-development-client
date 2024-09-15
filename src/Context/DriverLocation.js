@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 export const driverLiveLocation = createContext(null);
 
 function DriverLocation({ children }) {
@@ -6,12 +6,18 @@ function DriverLocation({ children }) {
 
   const [tripCoordinates, setTripCoordintes] = useState([]);
 
-  // const [startRide, setStartRide] = useState(false);
+  const [startRide, setStartRide] = useState(false);
 
   const [endRide, setEndRide] = useState(false);
 
 
   const [enableChat, setEnableChat] = useState(false);
+
+
+  useEffect(()=>{
+console.log('startRide in UseEffect',startRide);
+
+  },[startRide])
   return (
     <driverLiveLocation.Provider
       value={{
@@ -21,8 +27,8 @@ function DriverLocation({ children }) {
         setEnableChat,
         tripCoordinates,
         setTripCoordintes,
-        // startRide,
-        // setStartRide,
+        startRide,
+        setStartRide,
         endRide,
         setEndRide
       }}

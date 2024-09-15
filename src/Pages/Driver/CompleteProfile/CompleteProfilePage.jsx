@@ -9,6 +9,7 @@ import { MdCancel } from "react-icons/md";
 // import UserNavbar from '../../../Components/Navbar/UserNavbar'
 import { useNavigate } from "react-router-dom";
 import DriverNavBar from "../../../Components/Navbar/DriverNavBar";
+import UserNavbar from "../../../Components/Navbar/UserNavbar";
 
 function CompleteProfilePage() {
   const [licenseNumber, setLicenseNumber] = useState("");
@@ -20,6 +21,8 @@ function CompleteProfilePage() {
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const driverDetails = useSelector(state => state.driver)
+
+  
 
   const proImgRef = useRef(null)
   const licenseImgRef = useRef(null)
@@ -34,6 +37,7 @@ function CompleteProfilePage() {
 
    useEffect(() => {
     console.log('driverDetails',driverDetails);
+console.log(driverDetails.driver.id);
 
   }, []);
   const handleSubmit = (e) => {
@@ -134,10 +138,10 @@ const handlePermitUploads =(e)=>{
   return (
     <>
    
-    {/* <DriverNavBar/> */}
+  <UserNavbar/>
     <section className="h-screen">
-  <div className="flex flex-col items-center justify-center px-6 py-8 mx-24 mx-auto  lg:py-0">
-    <div className="w-full bg-white rounded-lg shadow-lg sm:max-w-xl xl:p-0 border border-yellow-300 bg-gradient-to-bl from-white to-yellow-50 mt-6">
+  <div className="flex flex-col items-center justify-center px-6 py-8 mx-24  mt-[4.7rem]  lg:py-0">
+    <div className="w-full   rounded-lg shadow-lg sm:max-w-xl xl:p-0 border bg-yellow-50 mt-6">
       <div className="p-6 space-y-6 md:space-y-9 sm:p-8">
         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center">
           Complete Profile

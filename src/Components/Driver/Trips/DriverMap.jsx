@@ -11,10 +11,9 @@ import {
   driverActive,
   driverInctive,
 } from "../../../Features/Driver/driverActions";
-import { startTrip, finishRide } from "../../../Features/Trip/tripActions";
+import { finishRide } from "../../../Features/Trip/tripActions";
 import { useSocket } from "../../../Hooks/socket";
-import { toast } from "react-toastify";
-import DriverNearByPickup from "../Notifications/DriverNearByPickup";
+
 import { AnimatePresence } from "framer-motion";
 import DriverNearByDropOff from "../Notifications/DriverNearByDropOff";
 import Chat from "../../Chat/Chat";
@@ -22,27 +21,26 @@ import RideStartConfirmationModal from "../Modal/RideStartConfirmationModal";
 
 function DriverMap() {
   const mapContainerRef = useRef(null);
-  const [recieverId,setRecieverId] = useState(null)
-  const [senderId,setSenderId] = useState(null)
-  const { token, driver, currentStatus } = useSelector((state) => state.driver);
+  const [recieverId, setRecieverId] = useState(null);
+  const [senderId, setSenderId] = useState(null);
+  const { driver, currentStatus } = useSelector((state) => state.driver);
   const { tripDetail, message } = useSelector((state) => state.trip);
-  const { driverLive,setTripCoordintes} = useContext(driverLiveLocation);
+  const { driverLive, setTripCoordintes,startRide,setStartRide } = useContext(driverLiveLocation);
   const dispatch = useDispatch();
 
-  const [openChat,setOpenChat] = useState(false) 
+  const [openChat, setOpenChat] = useState(false);
 
   const [pickup, setPickUp] = useState([]);
   const [dropOff, setDropoff] = useState([]);
   const [driverCoords, setDriverCoords] = useState([]);
   const [viewState, setViewState] = useState({});
   const [route, setRoute] = useState(null);
-  const [startRide, setStartRide] = useState(false);
-  const [rideStarted,setRideStarted] = useState(false)
+  // const [startRide, setStartRide] = useState(false);
+  const [rideStarted, setRideStarted] = useState(false);
   const [endRide, setEndRide] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
-  const [tripOtp, setOtp] = useState("");
 
-  const {socket} = useSocket();
+  const { socket } = useSocket();
   useEffect(() => {
     if (!tripDetail) {
       if (navigator.geolocation) {
@@ -57,12 +55,17 @@ function DriverMap() {
     }
   }, []);
 
+  useEffect(() => {
+    if (tripDetail) {
+      setRecieverId(tripDetail?.userId);
+      setSenderId(tripDetail?.driverId?._id);
+    }
+  }, [tripDetail]);
+
   useEffect(()=>{
-if(tripDetail){
-  setRecieverId(tripDetail?.userId)
-  setSenderId(tripDetail?.driverId?._id)
-}
-  },[tripDetail])
+console.log('start Ride in map',startRide);
+
+  },[startRide])
 
   useEffect(() => {
     if (tripDetail) {
@@ -79,7 +82,7 @@ if(tripDetail){
         );
         const routeInfo = response.data;
         setRoute(routeInfo?.routes[0]?.geometry);
-        setTripCoordintes(routeInfo?.routes[0]?.geometry?.coordinates)
+        setTripCoordintes(routeInfo?.routes[0]?.geometry?.coordinates);
       };
       const bounds = [
         [
@@ -117,70 +120,29 @@ if(tripDetail){
     }
   }, [tripDetail]);
 
-useEffect(() => {
-  if (!driverLive || !tripDetail) return;
-  console.log("driverLive in useEffect",driverLive);
-  
-  setDriverCoords(driverLive);
-  const approx = checkApproxDistance(driverLive, pickup);
-  const dropDestination = checkApproxDistance(driverLive, dropOff);
-  
-  // console.log('approx', approx);
-  console.log('dropDestination', dropDestination);
+  useEffect(() => {
+    if (!driverLive || !tripDetail) return;
 
-  // if (approx < 2 && approx > 1) {
-  //   console.log('nearBy Aprrox');
-  //   setNearByPickup(true);
-  //   setStartRide(false);
-  //   setEndRide(false);
-  //   socket?.emit("driver-NearBy-pickup", {
-  //     userId: tripDetail?.userId,
-  //     distance: approx,
-  //   });
-  // } 
-   if (approx <= 0.5) { 
-    if(!rideStarted){
-      setStartRide(true);
-    // setEndRide(false);
-    setRideStarted(true)
-    socket.emit("ride-started", {
-      userId: tripDetail?.userId,
-      duration: tripDetail?.duration,
-    })
+    setDriverCoords(driverLive);
+    const approx = checkApproxDistance(driverLive, pickup);
+    const dropDestination = checkApproxDistance(driverLive, dropOff);
 
+    if (approx <= 0.5) {
+      if (!rideStarted) {
+        setStartRide(true);
+        setRideStarted(true);
+        socket.emit("ride-started", {
+          userId: tripDetail?.userId,
+          duration: tripDetail?.duration,
+        });
+      }
+    } else if (dropDestination < 0.1) {
+      completeJourney();
+    } else {
+      setEndRide(false);
+      setStartRide(false);
     }
-    ;
-  }
-  //  else if (dropDestination < 2 && dropDestination > 1) {
-  //   console.log('nearby dropOff');
-  //   setNearByDropOff(true);
-  //   setStartRide(false);
-  //   setEndRide(false);
-  //   socket.emit("nearby-dropoff", {
-  //     userId: tripDetail?.userId,
-  //     distance: dropDestination,
-  //   });
-  // } 
-  
-  else if (dropDestination < 0.1 ) {
-    // console.log('dropoff');
-    completeJourney()
-    // setEndRide(true);
-    // setStartRide(false);
-    // socket.emit("ride-complete", {
-    //   userId: tripDetail?.userId,
-    //   distance: dropDestination,
-    // });
-  }
-   else {
-    setEndRide(false);
-    setStartRide(false);
-  }
-}, [socket, driverLive, tripDetail]);
-useEffect(()=>{
-console.log('drivreLive',driverLive);
-
-},[driverLive])
+  }, [socket, driverLive, tripDetail]);
 
   const checkApproxDistance = (driverLocation, destination) => {
     if (
@@ -213,15 +175,14 @@ console.log('drivreLive',driverLive);
 
   const handleDriverActive = () => {
     let currentLocation;
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const coordinates = [pos?.coords?.longitude, pos?.coords?.latitude];
-        currentLocation = coordinates;
-        dispatch(driverActive({ driverId: driver?.id, currentLocation }));
-      });
-    } else {
-      console.log("handle this case when location is not kitiyillrnkil");
+    if (!navigator.geolocation) {
+      return;
     }
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const coordinates = [pos?.coords?.longitude, pos?.coords?.latitude];
+      currentLocation = coordinates;
+      dispatch(driverActive({ driverId: driver?.id, currentLocation }));
+    });
   };
 
   const handleDriverInactive = () => {
@@ -233,7 +194,6 @@ console.log('drivreLive',driverLive);
     setShowOtp(true);
   };
 
-
   const completeJourney = () => {
     dispatch(
       finishRide({ userId: tripDetail?.userId, tripId: tripDetail?._id })
@@ -241,17 +201,20 @@ console.log('drivreLive',driverLive);
   };
 
   useEffect(() => {
-
     if (message == "Ride Completed SuccessFully") {
-      setEndRide(true)
+      setEndRide(true);
     }
   }, [socket, message, tripDetail]);
 
   return (
-    
     <div className="flex w-full h-screen">
-     {showOtp && <RideStartConfirmationModal setShowOtp={setShowOtp} setStartRide={setStartRide} />}
-      <div className="flex flex-col w-[24rem] p-4 items-center justify-around  ">
+      {showOtp && (
+        <RideStartConfirmationModal
+          setShowOtp={setShowOtp}
+          setStartRide={setStartRide}
+        />
+      )}
+      <div className="flex flex-col w-[24rem] p-4 items-center justify-evenly  ">
         <div className="w-full bg-white rounded-lg p-4 flex flex-col items-center justify-between h-[20%] shadow-md relative">
           <h1 className="text-2xl font-bold text-gray-800">Driver Status</h1>
           {currentStatus?.currentStatus == "inactive" ? (
@@ -265,60 +228,53 @@ console.log('drivreLive',driverLive);
             </button>
           ) : (
             <button
-            className="absolute bottom-10 right-20 z-50 rounded-full w-28 h-14 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white text-xl font-bold shadow-lg flex items-center justify-center transition-transform duration-200 transform hover:scale-105 active:scale-95 "
-            onClick={() => {
-              handleDriverInactive();
-            }}
-          >
-            Go Offline
-          </button>
+              className="absolute bottom-10 right-20 z-50 rounded-full w-28 h-14 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white text-xl font-bold shadow-lg flex items-center justify-center transition-transform duration-200 transform hover:scale-105 active:scale-95 "
+              onClick={() => {
+                handleDriverInactive();
+              }}
+            >
+              Go Offline
+            </button>
           )}
           <p className="text-lg text-gray-600">
-            You are currently {!currentStatus?.currentStatus ? "Active" : currentStatus?.currentStatus == "active" ? "Active"  : "InActive" }
-            <span className="font-semibold">
-              {/* {currentStatus?.currentStatus == "active" ? "Online" : "Offline"} */}
-            </span>
+            You are currently{" "}
+            {!currentStatus?.currentStatus
+              ? "Active"
+              : currentStatus?.currentStatus == "active"
+              ? "Active"
+              : "InActive"}
+            <span className="font-semibold"></span>
           </p>
         </div>
 
         <div className="w-full bg-white rounded-lg p-4 flex flex-col items-center justify-between h-[24%] shadow-md">
           <h2 className="text-xl font-semibold text-gray-800">Ride Controls</h2>
-         {tripDetail && <button onClick={()=>setOpenChat(true)}>Chat</button>}
-          {/* <p className="text-gray-600">No active ride</p> */}
+          {tripDetail && (
+            <button onClick={() => setOpenChat(true)}>Chat</button>
+          )}
 
           <div className="flex w-full justify-around mt-4">
-            {startRide &&
+            {startRide && (
               <button
                 className="w-32 h-12 bg-green-600 text-white rounded-md font-bold shadow-md hover:bg-green-700 transition-colors duration-200"
                 onClick={() => verifyRide()}
               >
                 Start Ride
               </button>
-            }
-            
-          </div>
-        </div>
-
-        <div className="w-full bg-white rounded-lg p-4 flex flex-col items-center justify-between h-[40%] shadow-md">
-          <h2 className="text-xl font-semibold text-gray-800">
-            Driver Information
-          </h2>
-          <div className="w-full flex justify-between mt-4">
-            <div className="text-left">
-              <p className="text-gray-600">Name: {driver?.name}</p>
-              <p className="text-gray-600">Earnings: {driver?.walletBalance}</p>
-              <p className="text-gray-600">Rating: 4.8 ⭐</p>
-            </div>
-            <div className="text-right">
-              <p className="text-gray-600">Trips: 34</p>
-              {/* <p className="text-gray-600">Online: 3h 20m</p> */}
-            </div>
+            )}
           </div>
         </div>
       </div>
 
       <div className=" ml-5 w-[95%] h-full">
-        {openChat && <Chat driver={driver} recieverId={recieverId} senderId={senderId} setOpenChat={setOpenChat}/>}
+        {openChat && (
+          <Chat
+            driver={driver}
+            recieverId={recieverId}
+            senderId={senderId}
+            setOpenChat={setOpenChat}
+          />
+        )}
         <Map
           {...viewState}
           onMove={(evt) => setViewState(evt.viewState)}
@@ -362,14 +318,9 @@ console.log('drivreLive',driverLive);
           )}
         </Map>
       </div>
-          <AnimatePresence mode="wait">
-            
-             
-           { endRide &&
-          <DriverNearByDropOff setEndRide={setEndRide}/>
-            }
-
-          </AnimatePresence>
+      <AnimatePresence mode="wait">
+        {endRide && <DriverNearByDropOff setEndRide={setEndRide} />}
+      </AnimatePresence>
     </div>
   );
 }

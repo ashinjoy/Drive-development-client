@@ -34,9 +34,14 @@ function Trip() {
 
   return (
     <>
-    <div className="flex gap-1">
-      <DriverNavBar/>
+    {/* <div className="flex gap-1"> */}
+      {/* <DriverNavBar/> */}
       {/* <DriverMenuBar/> */}
+      <div className="flex h-screen">
+  
+  <div className="hidden md:flex md:flex-col md:w-[12rem] bg-white border-r border-gray-300 shadow-lg">
+    <DriverNavBar/>
+  </div>
          <Map />
  </div>
     </>

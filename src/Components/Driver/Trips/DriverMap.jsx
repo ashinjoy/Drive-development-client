@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-// import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Map, { Marker, Source, Layer } from "react-map-gl";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import * as turf from "@turf/turf";
+import { FaCar } from 'react-icons/fa'; 
+import { MdLocationOn } from 'react-icons/md'; 
+import { MdLocationPin } from 'react-icons/md'; 
 
 import { driverLiveLocation } from "../../../Context/DriverLocation";
 import {
@@ -13,11 +15,13 @@ import {
 } from "../../../Features/Driver/driverActions";
 import { finishRide } from "../../../Features/Trip/tripActions";
 import { useSocket } from "../../../Hooks/socket";
-
+import { AiOutlineBell } from 'react-icons/ai';  // For the notification bell icon
+import { FaComments, FaPlay } from 'react-icons/fa';  // For the chat and play icons
 import { AnimatePresence } from "framer-motion";
 import DriverNearByDropOff from "../Notifications/DriverNearByDropOff";
 import Chat from "../../Chat/Chat";
 import RideStartConfirmationModal from "../Modal/RideStartConfirmationModal";
+
 
 function DriverMap() {
   const mapContainerRef = useRef(null);
@@ -35,7 +39,7 @@ function DriverMap() {
   const [driverCoords, setDriverCoords] = useState([]);
   const [viewState, setViewState] = useState({});
   const [route, setRoute] = useState(null);
-  // const [startRide, setStartRide] = useState(false);
+
   const [rideStarted, setRideStarted] = useState(false);
   const [endRide, setEndRide] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
@@ -62,10 +66,6 @@ function DriverMap() {
     }
   }, [tripDetail]);
 
-  useEffect(()=>{
-console.log('start Ride in map',startRide);
-
-  },[startRide])
 
   useEffect(() => {
     if (tripDetail) {
@@ -207,108 +207,57 @@ console.log('start Ride in map',startRide);
   }, [socket, message, tripDetail]);
 
   return (
-    <div className="flex w-full h-screen">
-      {showOtp && (
-        <RideStartConfirmationModal
-          setShowOtp={setShowOtp}
-          setStartRide={setStartRide}
-        />
-      )}
-      <div className="flex flex-col w-[24rem] p-4 items-center justify-evenly  ">
-        <div className="w-full bg-white rounded-lg p-4 flex flex-col items-center justify-between h-[20%] shadow-md relative">
-          <h1 className="text-2xl font-bold text-gray-800">Driver Status</h1>
-          {currentStatus?.currentStatus == "inactive" ? (
-            <button
-              className="absolute bottom-10 right-20 z-50 rounded-full w-28 h-14 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xl font-bold shadow-lg flex items-center justify-center transition-transform duration-200 transform hover:scale-105 active:scale-95 "
-              onClick={() => {
-                handleDriverActive();
-              }}
-            >
-              Go Online
-            </button>
-          ) : (
-            <button
-              className="absolute bottom-10 right-20 z-50 rounded-full w-28 h-14 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white text-xl font-bold shadow-lg flex items-center justify-center transition-transform duration-200 transform hover:scale-105 active:scale-95 "
-              onClick={() => {
-                handleDriverInactive();
-              }}
-            >
-              Go Offline
-            </button>
-          )}
-          <p className="text-lg text-gray-600">
-            You are currently{" "}
-            {!currentStatus?.currentStatus
-              ? "Active"
-              : currentStatus?.currentStatus == "active"
-              ? "Active"
-              : "InActive"}
-            <span className="font-semibold"></span>
-          </p>
-        </div>
 
-        <div className="w-full bg-white rounded-lg p-4 flex flex-col items-center justify-between h-[24%] shadow-md">
-          <h2 className="text-xl font-semibold text-gray-800">Ride Controls</h2>
-          {tripDetail && (
-            <button onClick={() => setOpenChat(true)}>Chat</button>
-          )}
-
-          <div className="flex w-full justify-around mt-4">
-            {startRide && (
-              <button
-                className="w-32 h-12 bg-green-600 text-white rounded-md font-bold shadow-md hover:bg-green-700 transition-colors duration-200"
-                onClick={() => verifyRide()}
-              >
-                Start Ride
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className=" ml-5 w-[95%] h-full">
-        {openChat && (
-          <Chat
-            driver={driver}
-            recieverId={recieverId}
-            senderId={senderId}
-            setOpenChat={setOpenChat}
-          />
+  <div className="flex flex-1 flex-col">
+   {showOtp && (
+         <RideStartConfirmationModal
+           setShowOtp={setShowOtp}
+           setStartRide={setStartRide}
+         />
+   )}
+    <div className="w-full bg-white border-b border-gray-300 shadow-md p-4 flex items-center justify-between">
+      <h1 className="text-2xl font-bold text-gray-800">Driver Dashboard</h1>
+      <div className="flex items-center space-x-4">
+       
+        <button >
+          <AiOutlineBell className="text-xl text-gray-600" />
+        </button>
+        
+        {tripDetail && (
+          <button onClick={() => setOpenChat(true)}>
+            <FaComments className="text-xl text-gray-600" />
+          </button>
         )}
+      </div>
+    </div>
+
+    
+    <div className="flex flex-1">
+      
+      <div className="flex-1 relative">
         <Map
           {...viewState}
           onMove={(evt) => setViewState(evt.viewState)}
           ref={mapContainerRef}
           mapStyle="mapbox://styles/mapbox/streets-v9"
-          style={{ width: "95%", height: "95%", marginTop: "1rem" }}
+          style={{ width: "100%", height: "100%" }}
           attributionControl={false}
           mapboxAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
         >
+          
           {pickup.length > 0 && (
-            <Marker
-              longitude={pickup[0]}
-              latitude={pickup[1]}
-              style={{ width: "2rem" }}
-            >
-              <img src="/assets/pickup_marker.png" alt="Pickup Marker" />
+            <Marker longitude={pickup[0]} latitude={pickup[1]} >
+              <MdLocationOn className="text-blue-600 text-3xl"/>
             </Marker>
           )}
           {dropOff.length > 0 && (
-            <Marker
-              longitude={dropOff[0]}
-              latitude={dropOff[1]}
-              style={{ width: "2rem" }}
-            >
-              <img src="/assets/dest_marker.png" alt="Dropoff Marker" />
+            <Marker longitude={dropOff[0]} latitude={dropOff[1]} >
+              <MdLocationPin className="text-red-600 text-3xl"/>
             </Marker>
           )}
           {driverCoords.length > 0 && (
-            <Marker
-              longitude={driverCoords[0]}
-              latitude={driverCoords[1]}
-              style={{ width: "2.5rem" }}
-            >
-              <img src="/assets/wifi-tracking.png" alt="Driver Marker" />
+            <Marker longitude={driverCoords[0]} latitude={driverCoords[1]} >
+              <FaCar  className="text-black text-3xl"/>
             </Marker>
           )}
           {route && (
@@ -317,11 +266,75 @@ console.log('start Ride in map',startRide);
             </Source>
           )}
         </Map>
+
+       
+        <button
+          className="absolute bottom-8 right-8 bg-green-600 text-white rounded-full p-4 shadow-lg hover:bg-green-700 transition-transform transform hover:scale-105"
+          onClick={() => verifyRide()}
+        >
+          <FaPlay className="text-2xl" />
+        </button>
       </div>
-      <AnimatePresence mode="wait">
-        {endRide && <DriverNearByDropOff setEndRide={setEndRide} />}
-      </AnimatePresence>
+
+      
+      <div className="w-[24rem] p-4 flex flex-col space-y-4 bg-gray-100">
+        
+        <div className="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+          <h2 className="text-2xl font-bold text-gray-800">Driver Status</h2>
+          <p className="text-lg text-gray-600 mt-2">
+            You are currently{" "}
+            {currentStatus?.currentStatus === "active" ? "Active" : "Inactive"}
+          </p>
+          <button
+            className={`mt-4 rounded-full w-full h-14 text-xl font-bold shadow-lg transition-transform duration-200 ${
+              currentStatus?.currentStatus === "inactive"
+                ? "bg-blue-500 hover:bg-blue-600 active:bg-blue-700"
+                : "bg-red-500 hover:bg-red-600 active:bg-red-700"
+            }`}
+            onClick={() => {
+              currentStatus?.currentStatus === "inactive"
+                ? handleDriverActive()
+                : handleDriverInactive();
+            }}
+          >
+            {currentStatus?.currentStatus === "inactive" ? "Go Online" : "Go Offline"}
+          </button>
+        </div>
+
+       
+        <div className="bg-white rounded-lg p-4 shadow-md">
+          <h2 className="text-xl font-semibold text-gray-800">Ride Controls</h2>
+          {startRide && (
+            <button
+              className="w-full h-12 bg-green-600 text-white rounded-md font-bold shadow-md hover:bg-green-700"
+              onClick={() => verifyRide()}
+            >
+              Start Ride
+            </button>
+          )}
+        </div>
+      </div>
     </div>
+
+    {/* Modals and Notifications */}
+    <AnimatePresence mode="wait">
+      {/* {openNotification && ( */}
+        {/* <RideRequestNotifications */}
+           {/* trip={trip}
+           setOpenNotification={setOpenNotification}
+        /> */}
+      {/* )} */}
+      {openChat && (
+        <Chat
+          driver={driver}
+          recieverId={recieverId}
+          senderId={senderId}
+          setOpenChat={setOpenChat}
+        />
+      )}
+      {endRide && <DriverNearByDropOff setEndRide={setEndRide} />}
+    </AnimatePresence>
+  </div>
   );
 }
 

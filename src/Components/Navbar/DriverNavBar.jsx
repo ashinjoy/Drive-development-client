@@ -14,7 +14,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { GiJourney } from "react-icons/gi";
 import { FaWallet } from "react-icons/fa6";
 
-import { MdPayments } from "react-icons/md";
+import { MdPayments ,MdPerson } from "react-icons/md";
 import { resetTripDetails } from "../../Features/Trip/tripSlice";
 import { current } from "@reduxjs/toolkit";
 
@@ -185,7 +185,7 @@ console.log('outdide  the condition');
 
   return (
     <>
-      <nav className="flex flex-col min-h-screen gap-11 items-center  max-w-[12rem]  bg-white border border-gray-300 bg-gradient-to-t from-yellow-50 to-white text-black rounded-md shadow-xl p-3">
+      {/* <nav className="flex flex-col min-h-screen gap-11 items-center  max-w-[12rem]  bg-white border border-gray-300 bg-gradient-to-t from-yellow-50 to-white text-black rounded-md shadow-xl p-3">
         <div>
           <img src="/assets/logo-cl.png" alt="logo" />
         </div>
@@ -224,7 +224,45 @@ console.log('outdide  the condition');
             setOpenNotification={setOpenNotification}
           />
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
+      <nav className="flex flex-col min-h-screen gap-6 items-center max-w-[12rem]   rounded-sm border-r-2  shadow-md p-3">
+  <div className="flex items-center justify-center w-full">
+    <img src="/assets/logo-cl.png" alt="logo" className="w-full " />
+  </div>
+  
+  <div className="w-full">
+    <NavLink to="/driver/dashboard" className="flex gap-2 items-center text-lg font-semibold hover:bg-gray-100 p-3 rounded-lg transition-all">
+      <MdSpaceDashboard className="text-xl" /> DashBoard
+    </NavLink>
+  </div>
+  
+  <div className="w-full">
+    <NavLink to="/driver/trip" className="flex gap-2 items-center text-lg font-semibold hover:bg-gray-100 p-3 rounded-lg transition-all">
+      <GiJourney className="text-xl" /> Trip
+    </NavLink>
+  </div>
+  
+  <div className="w-full">
+    <NavLink to="/driver/wallet" className="flex gap-2 items-center text-lg font-semibold hover:bg-gray-100 p-3 rounded-lg transition-all">
+      <FaWallet className="text-xl" /> Wallet
+    </NavLink>
+  </div>
+  
+  <div className="w-full">
+    <NavLink to="/driver/profile" className="flex gap-2 items-center text-lg font-semibold hover:bg-gray-100 p-3 rounded-lg transition-all">
+      <MdPerson className="text-xl" /> Profile
+    </NavLink>
+  </div>
+</nav>
+<AnimatePresence mode="wait">
+        {openNotification && (
+          <RideRequestNotifications
+            trip={trip}
+            setOpenNotification={setOpenNotification}
+          />
+        )}
+      </AnimatePresence> 
+
     </>
   );
 }

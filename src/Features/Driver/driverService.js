@@ -49,7 +49,7 @@ export const driverLoginService = async(formDetails)=>{
 }
 
 export const logoutService = async()=>{
-  return await axios.get('auth/driver/logout')
+  return await driverPrivate.get('auth/driver/logout')
 }
 
 export const driverActiveService = async(driverDetails)=>{

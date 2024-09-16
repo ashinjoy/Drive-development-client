@@ -9,7 +9,8 @@ import {
   profileUpdateRequest,
   driverActive,
   driverInctive,
-  tripChart
+  tripChart,
+  logoutAction
 } from "./driverActions";
 
 
@@ -34,6 +35,12 @@ const driverSlice = createSlice({
       resestAll: (state) => {
        return initialState   
       },
+      reset:(state)=>{
+        state.loading = false
+        state.success = false
+        state.message = ""
+      }
+      
     },
     extraReducers(builder) {
       builder
@@ -143,9 +150,21 @@ const driverSlice = createSlice({
         .addCase(tripChart.rejected,(state,action)=>{
 
         })
-        
+        .addCase(logoutAction.pending,(state)=>{
+          state.loading = true
+        })
+        .addCase(logoutAction.fulfilled,(state,action)=>{
+          localStorage.removeItem('driverData')
+          localStorage.removeItem('driverAccessToken')  
+          state.driver = null
+          state.token = null          
+        })
+        .addCase(logoutAction.rejected,(state)=>{
+          console.log('error');
+          
+        })
         
     }
 })  
-export const {resestAll} = driverSlice.actions
+export const {resestAll,reset} = driverSlice.actions
 export default driverSlice.reducer;

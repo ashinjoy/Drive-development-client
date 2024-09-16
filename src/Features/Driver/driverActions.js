@@ -85,7 +85,7 @@ try {
 
 export const logoutAction = createAsyncThunk('handleLogoutAction',async(userId,{rejectWithValue})=>{
   try {
-    const response = await logoutService(userId)
+    const response = await logoutService()
     return response
   } catch (error) {
    return rejectWithValue(error?.response?.data?.error)

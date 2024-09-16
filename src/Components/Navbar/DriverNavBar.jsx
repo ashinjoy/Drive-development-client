@@ -17,6 +17,7 @@ import { FaWallet } from "react-icons/fa6";
 import { MdPayments ,MdPerson } from "react-icons/md";
 import { resetTripDetails } from "../../Features/Trip/tripSlice";
 import { current } from "@reduxjs/toolkit";
+import { logoutAction } from "../../Features/Driver/driverActions";
 
 
 
@@ -37,6 +38,9 @@ function DriverNavBar() {
   const { tripDetail,tripStatus } = useSelector((state) => state.trip);
   const { socket, chatSocket } = useSocket();
   const dispatch = useDispatch()
+  const handleLogout = ()=>{
+    dispatch(logoutAction())
+  }
   useEffect(() => {
     // let timeOut
 
@@ -252,6 +256,11 @@ console.log('outdide  the condition');
     <NavLink to="/driver/profile" className="flex gap-2 items-center text-lg font-semibold hover:bg-gray-100 p-3 rounded-lg transition-all">
       <MdPerson className="text-xl" /> Profile
     </NavLink>
+  </div>
+  <div className="w-full">
+    <button  className="flex gap-2 items-center text-lg font-semibold hover:bg-gray-100 p-3 rounded-lg transition-all" onClick={handleLogout}>
+      <MdSpaceDashboard className="text-xl" /> Logout
+    </button>
   </div>
 </nav>
 <AnimatePresence mode="wait">

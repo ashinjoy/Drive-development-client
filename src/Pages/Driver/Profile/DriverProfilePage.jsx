@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import UserNavbar from "../../../Components/Navbar/UserNavbar";
-import { profileUpdateRequest } from "../../../Features/Driver/driverActions";
+import { profileUpdateRequest,logoutAction } from "../../../Features/Driver/driverActions";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import DriverMenuBar from "../../../Components/Navbar/DriverMenuBar";
@@ -110,6 +110,10 @@ if(driverState?.message == 'Profile request send'){
     form.append('permitImg',VehiclePermit)
     form.append('driverId',driverDetails?.id) 
     dispatch(profileUpdateRequest(form))
+  }
+
+  const handleLogout=()=>{
+    dispatch(logoutAction())
   }
 
   return (
@@ -330,6 +334,7 @@ if(driverState?.message == 'Profile request send'){
                 >
                 Profile Update Request
                 </button>
+               
                 {/* <button
                   type="submit"
                   class="w-full text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition duration-200"
@@ -337,6 +342,13 @@ if(driverState?.message == 'Profile request send'){
                   Save Changes
                 </button> */}
               </form>
+              {/* <button
+                  type="submit"
+                  class="w-full text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition duration-200"
+                  onClick={handleLogout}
+                >
+                Logout
+                </button> */}
             </div>
           </div>
         </div>

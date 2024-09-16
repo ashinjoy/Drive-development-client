@@ -6,6 +6,7 @@ import { driverLogin } from "../../../Features/Driver/driverActions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useSocket } from "../../../Hooks/socket";
+import { reset } from "../../../Features/Driver/driverSlice";
 
 function DriverLoginPage() {
   const [email, setEmail] = useState("");
@@ -35,11 +36,13 @@ function DriverLoginPage() {
     } else {
       console.log('entry');
       dispatch(driverLogin(loginDetails));
+      
     }
   };
   useEffect(() => {
     if (message == "Logged In Successfully") {  
       socket?.emit('driver-connected',driver.id)
+      dispatch(reset())
       navigate("/driver/home");
     } else if (error) {
       toast(error);

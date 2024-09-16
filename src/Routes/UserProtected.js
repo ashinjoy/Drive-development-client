@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 function UserProtected({ children }) {
   const {user,token} = useSelector((state) => state.user);
+  console.log(token);
+  
   const userData = user;
   const location = useLocation();
   const navigate = useNavigate();
@@ -12,13 +14,12 @@ function UserProtected({ children }) {
   console.log("user", user);
   useEffect(() => {
     if (!token) {
-      console.log('tokrn changes');
-      
+      console.log('token',token);
       navigate("/login", { replace: true });
     } else if (userData.isBlocked) {
       navigate("/login", { replace: true });
     }
-  }, []);
+  }, [token,user]);
 
   if (token && user) {
     return children;

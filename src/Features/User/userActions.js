@@ -76,8 +76,12 @@ export const userProfileUpdate = createAsyncThunk(
 
 export const userLogout = createAsyncThunk("userLogout", async () => {
   try {
-    await userLogoutService();
-  } catch (error) {}
+  const response =  await userLogoutService();
+  return response.data
+  } catch (error) {
+    console.error(error);
+    
+  }
 });
 
 export const userCurrentLocation = createAsyncThunk(

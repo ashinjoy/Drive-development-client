@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { emailAuth, googleAuth, verifyOtp, resendOtp,userProfileUpdate,userCurrentLocation, saveContacts } from "./userActions";
+import { emailAuth, googleAuth, verifyOtp, resendOtp,userProfileUpdate,userCurrentLocation, saveContacts, userLogout } from "./userActions";
 
 
 const userDetails = JSON.parse(localStorage.getItem('userDetail'))
@@ -127,6 +127,20 @@ const userSlice = createSlice({
       })
       .addCase(saveContacts.rejected,(state,action)=>{
         // state.error = 
+      })
+      .addCase(userLogout.pending,(state)=>{
+        state.loading = true
+      })
+      .addCase(userLogout.fulfilled,(state,action)=>{
+        localStorage.removeItem('userDetail')
+        localStorage.removeItem('userAccessToken')
+        state.token = null
+        state.user =null
+        state.message = action.payload?.message
+      })
+      .addCase(userLogout.rejected,(state,action)=>{
+        console.log('err');
+        
       })
   },
 });

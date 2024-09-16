@@ -25,7 +25,7 @@ export const userProfileUpdateService = async (formdata) => {
 };
 
 export const userLogoutService = async () => {
-  return await axios.get("auth/user/logout");
+  return await UserPrivate.get("auth/user/logout");
 };
 
 export const userCurrentLocationService = async (coordinates) => {

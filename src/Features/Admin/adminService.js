@@ -46,3 +46,42 @@ export const newlyRegisteredUserService = async(filter)=>{
   return adminPrivate.get(`auth/admin/dashboard/newusers/${filter}`)
 }
 
+export const companyBalanceService = async()=>{
+  try {
+    const response = await adminPrivate.get('payment/admin/balance')
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const tripsCountService = async()=>{
+  try {
+    const response = await adminPrivate.get('trip/admin/total-trips-completed')
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const latestRidesService =async()=>{
+  try {
+    
+    const response = await adminPrivate.get('trip/admin/latest-trips')
+    return response.data
+  } catch (error) {
+    console.error(error)
+    
+  }
+}
+export const mostActiveDriversService =async()=>{
+  try {
+    
+    const response = await adminPrivate.get('trip/admin/most-active-drivers')
+    return response.data
+  } catch (error) {
+    console.error(error)
+    
+  }
+}
+

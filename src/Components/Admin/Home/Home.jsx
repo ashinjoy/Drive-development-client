@@ -34,14 +34,14 @@ function Home() {
   }
   return (
     <>
-    <div className='fixed top-[8rem] left-[13rem] flex gap-3 bg-yellow-100 w-[20%]'>
+ <div className='flex gap-3  w-[20%]'>
         <p id='Daily' onClick={(e)=>handleFilter(e)}>Daily</p>
         <p id='Weekly' onClick={(e)=>handleFilter(e)}>Weekly</p>
         <p id='Monthly' onClick={(e)=>handleFilter(e)}>Monthly</p>
         <p id='Yearly' onClick={(e)=>handleFilter(e)}>Yearly</p>
 
     </div>
-    <div className='fixed top-[9rem] left-[15rem] w-[60%]'>
+    <div className="w-[100%]">
         <Userchart data={data}/>
     </div>
     </>

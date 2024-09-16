@@ -14,7 +14,7 @@ const options={
 function BarChart({data}) {
  
   return (
-    <div>
+    <div className='w-[100%] h-[100%]'>
     {data && <Bar data={data} options={options}/>}
     </div>
   )

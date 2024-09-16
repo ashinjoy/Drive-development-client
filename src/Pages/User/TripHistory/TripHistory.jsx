@@ -42,7 +42,7 @@ function TripHistory() {
       />)
        })} 
        <div className='flex flex-row gap-3'>
-       <span className='w-[3rem] h-[2rem] rounded-sm border-2 shadow-sm bg-slate-300 text-black text-center'>
+       {/* <span className='w-[3rem] h-[2rem] rounded-sm border-2 shadow-sm bg-slate-300 text-black text-center'>
       prev
     </span>
     <span className='w-[3rem] h-[2rem] rounded-sm border-2 shadow-sm bg-slate-300 text-black text-center'>
@@ -53,7 +53,8 @@ function TripHistory() {
     </span>
     <span className='w-[3rem] h-[2rem] rounded-sm border-2 shadow-sm bg-slate-300 text-black text-center'>
       next
-    </span>
+    </span> */}
+    
 
     </div>
     

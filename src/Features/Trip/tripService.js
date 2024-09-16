@@ -71,3 +71,4 @@ export const getTripDetailService =async(tripId)=>{
 export const cancelRideService =async(rideCancelInfo)=>{
   return await UserPrivate.post('trip/users/cancel-ride',rideCancelInfo)
 }
+

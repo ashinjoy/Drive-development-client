@@ -60,7 +60,14 @@ export const driverInactiveService = async(driverId)=>{
   return await driverPrivate.put('trip/driver/offline',{driverId})
   }
 export const getDriverBalance = async(driverId)=>{
-  return await driverPrivate.get(`payment/driver/get-walletbalance/${driverId}`)
+  try {
+  const response = await driverPrivate.get(`payment/driver/walletbalance/${driverId}`)
+  console.log(response.data);
+  
+  return response.data
+  } catch (error) {
+    console.error(error)
+  }
 }  
 
 export const getDriverWalletHistoryService = async(driverId)=>{
@@ -73,4 +80,32 @@ return await driverPrivate.get(`payment/driver/walletdetails/${driverId}`)
 
 export const tripChartService =async(data)=>{
   return await driverPrivate.get(`trip/driver/tripcount?driverId=${data?.driverId}&filter=${data?.filter}`)
+}
+
+export const getCompletedTripsCountService = async(driverId)=>{
+  try {
+  const response =  await driverPrivate.get(`trip/driver/completedtrip-count/${driverId}`)
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const getTopTripsService = async(driverId)=>{
+  try {
+    const response = await driverPrivate.get(`trip/driver/top-trips/${driverId}`)
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const latestTripService = async(driverId)=>{
+  try {
+    const response = await driverPrivate.get(`trip/driver/latest-trips/${driverId}`)
+    return response.data
+  } catch (error) {
+    console.error(error);
+    
+  }
 }

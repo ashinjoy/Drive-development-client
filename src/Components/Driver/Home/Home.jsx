@@ -5,6 +5,7 @@ import ChartConfig from "../Chart/ChartConfig";
 
 import { useDispatch, useSelector } from "react-redux";
 import { tripChart } from "../../../Features/Driver/driverActions";
+import Card from "../DashBoard/Card";
 
 
 function Home() {
@@ -34,16 +35,18 @@ function Home() {
   return (
 
     <>
-    <div className='fixed top-[8rem] left-[13rem] flex gap-3 bg-yellow-100 w-[20%]'>
+     
+   <div className='flex gap-3  w-[20%]'>
         <p id='Daily' onClick={(e)=>handleFilter(e)}>Daily</p>
         <p id='Weekly' onClick={(e)=>handleFilter(e)}>Weekly</p>
         <p id='Monthly' onClick={(e)=>handleFilter(e)}>Monthly</p>
         <p id='Yearly' onClick={(e)=>handleFilter(e)}>Yearly</p>
 
     </div>
-    <div className="fixed top-[14rem] left-[20%]  w-[50%] h-[70%] border-2 border-black">
+    <div className="w-[100%]">
       <BarChart data={data} />
-    </div>
+    </div> 
+    
     </>
   );
 }

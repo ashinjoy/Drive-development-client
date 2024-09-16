@@ -15,8 +15,8 @@ import {
 } from "../../../Features/Driver/driverActions";
 import { finishRide } from "../../../Features/Trip/tripActions";
 import { useSocket } from "../../../Hooks/socket";
-import { AiOutlineBell } from 'react-icons/ai';  // For the notification bell icon
-import { FaComments, FaPlay } from 'react-icons/fa';  // For the chat and play icons
+import { AiOutlineBell } from 'react-icons/ai';  
+import { FaComments, FaPlay } from 'react-icons/fa';  
 import { AnimatePresence } from "framer-motion";
 import DriverNearByDropOff from "../Notifications/DriverNearByDropOff";
 import Chat from "../../Chat/Chat";

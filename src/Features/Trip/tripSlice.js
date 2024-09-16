@@ -1,14 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { seacrhNearByDriver,requestRideAction,acceptTrip,startTrip,finishRide,cancelRide } from "./tripActions";
+import { seacrhNearByDriver,requestRideAction,acceptTrip,startTrip,finishRide,cancelRide, payment } from "./tripActions";
 
 const trip = JSON.parse(localStorage.getItem('tripDetail'))
 const tripStatus =localStorage.getItem('tripStatus')
+const paymentStatus =localStorage.getItem('paymentStatus')
 const initialState = {
     tripDetail:trip || null,
     nearbyDrivers:null,
     tripStatus:tripStatus||null,
     additionalSearchMetaData:'',
-    cancelData:null,
+    paymentStatus:paymentStatus||null,
     loading:false,
     success:false,
     message:'',
@@ -31,6 +32,7 @@ const tripSlice = createSlice({
         resetTripDetails:(state,action)=>{
             localStorage.removeItem('tripDetail')
             localStorage.removeItem('tripStatus')
+            localStorage.removeItem('paymentStatus')
             state.tripDetail = null
             state.tripStatus = null
         }
@@ -108,6 +110,16 @@ const tripSlice = createSlice({
         })
         .addCase(finishRide.rejected,(state,action)=>{
             // state.error = 
+        })
+        .addCase(payment.pending,(state)=>{
+            state.loading  = true
+        })
+        .addCase(payment.fulfilled,(state,action)=>{
+            localStorage.setItem('paymentStatus','completed')
+            state.paymentStatus = "completed"
+        })
+        .addCase(payment.rejected,(state,action)=>{
+
         })
     }
 })

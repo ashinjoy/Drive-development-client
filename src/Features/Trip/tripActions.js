@@ -10,6 +10,7 @@ import {
   cancelRideService
 } from "./tripService";
 import { UserPrivate } from "../../Utils/Axios/userInterceptor";
+import { paymentService } from "../User/userService";
 
 export const seacrhNearByDriver = createAsyncThunk(
   "searchNearByDrivers",
@@ -95,6 +96,20 @@ export const rejectTrip = createAsyncThunk(
   export const cancelRide =createAsyncThunk('cancelRide',async(rideCancelInfo)=>{
     try {
       const response = await cancelRideService(rideCancelInfo)
+      return response.data
+    } catch (error) {
+      
+    }
+  })
+
+  export const payment =createAsyncThunk('payment',async(paymentData)=>{
+    try {
+      const response = await paymentService(paymentData)
+      console.log('response in payment',response);
+      
+      if(response.payment.url){
+        window.location.href = response.payment.url
+      }
       return response.data
     } catch (error) {
       

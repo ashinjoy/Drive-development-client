@@ -116,14 +116,14 @@ function UsersList() {
                                     {!user.isBlocked ? 'Block' : 'Unblock'}
                                   </button>
                                 </td>
-                                <td className="whitespace-nowrap p-3">
+                                {/* <td className="whitespace-nowrap p-3">
                                   <Link
                                     to={`/admin/viewuser-Detail/${user._id}`}
                                     className="font-medium text-blue-500 hover:text-blue-700 transition duration-150"
                                   >
                                     View Details
                                   </Link>
-                                </td>
+                                </td> */}
                               </tr>
                               );
                             })

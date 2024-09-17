@@ -31,7 +31,7 @@ function ChartConfig(input) {
         labels: labels,
         datasets: [
           {
-            label: "Newly Registerd Users",
+            label: "Trips Completed",
             data: driverValuesFlat,
           },
         ],

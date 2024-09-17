@@ -18,16 +18,6 @@ function WalletCard({component,setWalletHistory}) {
       getBalance()
       return
     }
-    // if(component == 'driverBalance'){
-    //   const getBalance = async()=>{
-    //     const response =  await getDWalletBalance(user?.id)
-    //     console.log(response?.balance);
-    //     setBalance(response?.balance)
-    // }
-    // getBalance()
-    // return
-
-    // }
   },[])
   const handleAddMoney = async()=>{
     const data = {
@@ -36,9 +26,16 @@ function WalletCard({component,setWalletHistory}) {
     }
   const response  =  await addMoneyToWalletService(data)
   console.log(response);  
-  setBalance(response.Balance)
-  setWalletHistory((prev)=>[...prev,response.walletHistory])
+  if(response.stripeSession.url){
+    window.location.href = response.stripeSession.url
   }
+  setWalletHistory((prev)=>[...prev,response.walletHistory])
+  setAmount('')
+  }
+
+  // useEffect(()=>{
+
+  // },[balance])
 
   return (
     <div className="w-[25dvw] h-[30dvh] border-2 border-gray-300 bg-white shadow-lg  rounded-lg p-6">

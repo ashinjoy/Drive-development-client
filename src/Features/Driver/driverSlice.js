@@ -5,7 +5,6 @@ import {
   resendDriverOtp,
   verifyDriverOtp,
   driverLogin,
-  confirmUpdate,
   profileUpdateRequest,
   driverActive,
   driverInctive,

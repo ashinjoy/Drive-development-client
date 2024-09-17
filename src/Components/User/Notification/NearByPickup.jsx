@@ -21,7 +21,7 @@ timerRef.current = setTimeout(()=>{
     <div>
       <h1 className='text-xl font-bold text-white'>Jourey completed SucessFully</h1>
       <p className='text-md text-gray-200'>{rideCompleteData.distance} miles away | ETA: {Math.ceil(rideCompleteData.duration/60)} mins</p>
-      <p>Payment Status : {rideCompleteData?.isPaymentComplete ? "completed"  : "not completed"}</p>
+      {/* <p>Payment Status : {rideCompleteData?.isPaymentComplete ? "completed"  : "not completed"}</p> */}
       <p>Fare:{rideCompleteData?.fare}</p>
     </div>
     <svg className='w-8 h-8 text-white' fill='currentColor' viewBox='0 0 24 24'>

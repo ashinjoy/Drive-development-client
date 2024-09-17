@@ -83,7 +83,7 @@ try {
 }
 })
 
-export const logoutAction = createAsyncThunk('handleLogoutAction',async(userId,{rejectWithValue})=>{
+export const logoutAction = createAsyncThunk('LogoutAction',async(_,{rejectWithValue})=>{
   try {
     const response = await logoutService()
     return response

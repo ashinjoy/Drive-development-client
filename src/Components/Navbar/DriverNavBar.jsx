@@ -47,7 +47,7 @@ function DriverNavBar() {
     const handleRideRequest = (tripData) => {
       setTrip(tripData);
       setOpenNotification(true);
-      chatSocket?.emit("driver-chat-connect", { driverId: driver?.id });
+      chatSocket?.emit("driver-chat-connect", { driverId: driver?.id })
       setEnableChat(true);
       notificationDurationRef.current = setTimeout(() => {
         setOpenNotification(false);
@@ -235,8 +235,8 @@ console.log('outdide  the condition');
   </div>
   
   <div className="w-full">
-    <NavLink to="/driver/dashboard" className="flex gap-2 items-center text-lg font-semibold hover:bg-gray-100 p-3 rounded-lg transition-all">
-      <MdSpaceDashboard className="text-xl" /> DashBoard
+    <NavLink to="/driver/home" className="flex gap-2 items-center text-lg font-semibold hover:bg-gray-100 p-3 rounded-lg transition-all">
+      <MdSpaceDashboard className="text-xl" /> Home
     </NavLink>
   </div>
   

@@ -52,22 +52,22 @@ function DriverLoginPage() {
   return (
     <>
       <UserNavbar />
-      <section class="bg-gray-50 bg-gradient-to-r from-white to-yellow-50 h-screen">
-        <div class="flex flex-col items-center justify-center px-6 py-8 mt-6 mx-auto md:h-screen lg:py-0">
-          <div class="w-full bg-white rounded-lg shadow-lg md:mt-16 sm:max-w-md xl:p-0 border border-yellow-300 bg-gradient-to-t from-white to-yellow-100">
-            <div class="p-6 space-y-6 md:space-y-8 sm:p-8">
-              <h1 class="text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-black md:text-3xl">
-                Login
+      <section className="bg-gray-50  h-screen">
+        <div className="flex flex-col items-center justify-center px-6 py-8 mt-6 mx-auto md:h-screen lg:py-0">
+          <div className="w-full bg-white rounded-lg shadow-lg md:mt-16 sm:max-w-md xl:p-0 border bg-gradient-to-t from-white to-yellow-100">
+            <div className="p-6 space-y-6 md:space-y-8 sm:p-8">
+              <h1 className="text-2xl font-bold leading-tight tracking-tight text-gray-900 dark:text-black md:text-3xl">
+              Driver  Login
               </h1>
               <form
-                class="space-y-6 md:space-y-5"
+                className="space-y-6 md:space-y-5"
                 action=""
                 onSubmit={(e) => handleSubmit(e)}
               >
                 <div>
                   <label
-                    for="email"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                    htmlFor="email"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                   >
                     Email
                   </label>
@@ -75,7 +75,7 @@ function DriverLoginPage() {
                     type="text"
                     name="email"
                     id="email"
-                    class="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -83,8 +83,8 @@ function DriverLoginPage() {
                 </div>
                 <div>
                   <label
-                    for="password"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                    htmlFor="password"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                   >
                     Password
                   </label>
@@ -92,7 +92,7 @@ function DriverLoginPage() {
                     type="password"
                     name="password"
                     id="password"
-                    class="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:ring-yellow-500 focus:border-yellow-500"
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -100,11 +100,11 @@ function DriverLoginPage() {
                 </div>
                 <button
                   type="submit"
-                  class="w-full text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition duration-200"
+                  className="w-full text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition duration-200"
                 >
                   Login
                 </button>
-                {/* <button type="button" class="w-full flex items-center gap-3 justify-center border border-gray-300 rounded-lg p-2.5 bg-white hover:bg-yellow-50 transition duration-200 focus:ring-4 focus:outline-none focus:ring-yellow-300" >
+                {/* <button type="button" className="w-full flex items-center gap-3 justify-center border border-gray-300 rounded-lg p-2.5 bg-white hover:bg-yellow-50 transition duration-200 focus:ring-4 focus:outline-none focus:ring-yellow-300" >
             <FcGoogle class="w-6 h-6 mr-2" />
             <span class="font-medium text-sm text-gray-700">Sign Up with Google</span>
           </button> */}

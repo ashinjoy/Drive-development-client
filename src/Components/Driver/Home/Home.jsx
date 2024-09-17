@@ -36,16 +36,18 @@ function Home() {
 
     <>
      
-   <div className='flex gap-3  w-[20%]'>
-        <p id='Daily' onClick={(e)=>handleFilter(e)}>Daily</p>
-        <p id='Weekly' onClick={(e)=>handleFilter(e)}>Weekly</p>
-        <p id='Monthly' onClick={(e)=>handleFilter(e)}>Monthly</p>
-        <p id='Yearly' onClick={(e)=>handleFilter(e)}>Yearly</p>
-
+     <div className="absolute top-[20rem] left-64 w-1/2 p-6 bg-white shadow-lg rounded-lg">
+    <h2 className="text-xl font-bold mb-4">Trips Completed</h2>
+    <div className="flex gap-4 mb-4">
+      <p id="Daily" className="cursor-pointer" onClick={handleFilter}>Daily</p>
+      <p id="Weekly" className="cursor-pointer" onClick={handleFilter}>Weekly</p>
+      <p id="Monthly" className="cursor-pointer" onClick={handleFilter}>Monthly</p>
+      <p id="Yearly" className="cursor-pointer" onClick={handleFilter}>Yearly</p>
     </div>
-    <div className="w-[100%]">
+    <div className="w-full">
       <BarChart data={data} />
-    </div> 
+    </div>
+  </div>
     
     </>
   );

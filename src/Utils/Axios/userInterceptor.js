@@ -9,6 +9,7 @@ const getAccessToken = () => {
 // reference from medium article
 //https://medium.com/@velja/token-refresh-with-axios-interceptors-for-a-seamless-authentication-experience-854b06064bde
 
+
 export const UserPrivate = axios.create({
   baseURL: "http://localhost:3001/api/",
   headers: {
@@ -67,6 +68,7 @@ UserPrivate.interceptors.response.use(
       if(error?.response?.status === 403 && error?.response?.data?.error === "Your Account has been Blocked temporarily" && !originalRequest._retry){
         localStorage.removeItem('userAccessToken')
         localStorage.removeItem('userDetail')
+        
       }
     } catch (error) {
       

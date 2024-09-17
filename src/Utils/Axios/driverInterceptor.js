@@ -1,4 +1,7 @@
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { logoutAction } from '../../Features/Driver/driverActions'
+
 
 const getAccessToken =()=>{
     return localStorage.getItem('driverAccessToken')
@@ -28,6 +31,8 @@ driverPrivate.interceptors.response.use((response)=>{
     const originalRequest = error.config;
     console.log(error);
     try {
+      console.log("insied the block");
+      
       if (error?.response?.status === 401 && !originalRequest._retry) {
         console.log('entry');
         
@@ -44,11 +49,17 @@ driverPrivate.interceptors.response.use((response)=>{
         ] = `Bearer ${newUserAccessToken}`;
         return driverPrivate(originalRequest);
       }
-      if(error?.response?.status === 403 && error?.response?.data?.error === "Your Account has been Blocked temporarily" && !originalRequest._retry){
+      if(error?.response?.status === 403  && !originalRequest._retry){
+        // console.log("entrered response");
         localStorage.removeItem('driverAccessToken')
         localStorage.removeItem('driverData')
+        // const dispatch = useDispatch()
+        window.location.reload()
       }
     } catch (error) {
+console.log('catch error',error);
+console.error("w",error);
+
 
     }
     return Promise.reject(error)

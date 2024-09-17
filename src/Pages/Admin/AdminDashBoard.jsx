@@ -20,7 +20,9 @@ function AdminDashBoard() {
     <Home/>
     </div>
     <div className='absolute flex flex-col  top-[50rem] gap-[4rem] left-64 w-full'>
+      Most Active Drivers with Max Trips Completed
     <Table type={"mostActiveDrivers"}/>
+    Latest Rides
     <Table type={"latestRide"}/>
     </div>
     </div>

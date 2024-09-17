@@ -6,7 +6,7 @@ const options={
   plugins: {
     title: {
       display: true,
-      text: "Users Gained between 2016-2020"
+      text: "Trips Completed"
     }
   }
 }
@@ -14,9 +14,14 @@ const options={
 function BarChart({data}) {
  
   return (
-    <div className='w-[100%] h-[100%]'>
-    {data && <Bar data={data} options={options}/>}
-    </div>
+    // <div className='w-[100%] h-[100%]'>
+    // {data && <Bar data={data} options={options}/>}
+    // </div>
+    
+<div className="w-full h-96">
+  {data && <Bar data={data} options={options} />}
+</div>
+
   )
 }
 

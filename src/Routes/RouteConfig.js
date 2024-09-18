@@ -27,6 +27,7 @@ import TripDetailPage from "../Pages/User/TripHistory/TripDetailPage.jsx";
 import WalletPage from "../Pages/User/Profile/WalletPage.jsx";
 import AddContacts from "../Pages/User/AddContacts/AddContacts.jsx";
 import DriverWalletPage from "../Pages/Driver/Wallet/DriverWalletPage.jsx";
+import TripReport from "../Pages/Admin/TripReport.jsx";
 // import Chat from "../Components/Driver/Chat/Chat.jsx";
 // import ChatPage from "../Pages/Driver/Chat/ChatPage.jsx";
 // import UserSearchContext from "../Context/UserSearchContext.js";
@@ -197,10 +198,19 @@ function RouteConfig() {
           path: "Users-list",
           element: (
             <AdminProtected>
-              <UsersList />
+              <UsersList/>
             </AdminProtected>
           ),
         },
+        {
+          path:'trip-report',
+          element:(
+            <AdminProtected>
+              <TripReport/>
+            </AdminProtected>
+            
+          )
+        }
       ],
     },
   ]);

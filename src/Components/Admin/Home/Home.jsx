@@ -34,14 +34,38 @@ function Home() {
   }
   return (
     <>
- <div className='flex gap-3  w-[20%]'>
-        <p id='Daily' onClick={(e)=>handleFilter(e)}>Daily</p>
-        <p id='Weekly' onClick={(e)=>handleFilter(e)}>Weekly</p>
-        <p id='Monthly' onClick={(e)=>handleFilter(e)}>Monthly</p>
-        <p id='Yearly' onClick={(e)=>handleFilter(e)}>Yearly</p>
+<div className="flex gap-4 w-[50%] justify-center items-center">
+  <p
+    id="Daily"
+    onClick={(e) => handleFilter(e)}
+    className="cursor-pointer px-4 py-2 rounded-md hover:bg-blue-50 transition-all duration-300 ease-in-out active:bg-blue-100"
+  >
+    Daily
+  </p>
+  <p
+    id="Weekly"
+    onClick={(e) => handleFilter(e)}
+    className="cursor-pointer px-4 py-2 rounded-md hover:bg-blue-50 transition-all duration-300 ease-in-out active:bg-blue-100"
+  >
+    Weekly
+  </p>
+  <p
+    id="Monthly"
+    onClick={(e) => handleFilter(e)}
+    className="cursor-pointer px-4 py-2 rounded-md hover:bg-blue-50 transition-all duration-300 ease-in-out active:bg-blue-100"
+  >
+    Monthly
+  </p>
+  <p
+    id="Yearly"
+    onClick={(e) => handleFilter(e)}
+    className="cursor-pointer px-4 py-2 rounded-md hover:bg-blue-50 transition-all duration-300 ease-in-out active:bg-blue-100"
+  >
+    Yearly
+  </p>
+</div>
 
-    </div>
-    <div className="w-[100%]">
+    <div className="min-w-full">
         <Userchart data={data}/>
     </div>
     </>

@@ -23,11 +23,21 @@ function Cards({type}) {
         getData()
     },[])
   return (
-    <div className="w-[25dvw] h-[25dvh] border-2 border-gray-300 bg-white shadow-lg  rounded-lg p-6">
-    <div className='flex flex-col items-center gap-7'>
-    <h1 className='text-2xl font-bold'>{type == "companyBalance" ? "Revenue Earned" : "Total Trips Completed"}</h1>
-    <h1 className='text-3xl font-bold'>{type ==  "companyBalance" ? `₹${companyBalance}` : TripCount }</h1>
-    </div>
+    <div className="w-[17dvw] h-[18dvh] border-2 border-gray-300 bg-white shadow-lg  rounded-lg p-6">
+        <div className='flex flex-row'>
+            <div className='flex flex-col justify-center items-center'>
+            <p className='text-base font-medium'>{type == "companyBalance" ? "Total Revenue Earned" : "Trips Completed"}</p>
+            <h1 className='text-3xl font-bold'>{type ==  "companyBalance" ? `₹${companyBalance.toFixed(2)}` : TripCount }</h1>
+            </div>
+            <div>
+                <img src="" alt="" />
+            </div>
+
+        </div>
+    {/* <div className='flex flex-col items-center gap-7'>
+    <h1 className='text-lg font-bold'>{type == "companyBalance" ? "Total Revenue Earned" : "Total Trips Completed"}</h1>
+    <h1 className='text-3xl font-bold'>{type ==  "companyBalance" ? `₹${companyBalance.toFixed(2)}` : TripCount }</h1>
+    </div> */}
   </div>
   )
 }

@@ -11,11 +11,8 @@ const options={
 }
 
 function Userchart({data}) {
- 
-  
   return (
     <div className='relative'>
-      {console.log('hello usechaty')}
       {data && <Line data={data} options={{
         ...options,
         responsive:true,

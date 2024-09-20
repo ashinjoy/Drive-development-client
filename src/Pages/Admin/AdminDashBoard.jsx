@@ -1,40 +1,49 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AdminNavbar from '../../Components/Navbar/AdminNavbar'
 import AdminSideBar from '../../Components/Navbar/AdminSidebar'
 import Home from '../../Components/Admin/Home/Home'
 import Cards from '../../Components/Admin/DashBoard/Cards'
 import Table from '../../Components/Admin/DashBoard/Table'
+import TripChart from '../../Components/Admin/Home/TripChart'
+import DatePicker from 'react-datepicker'
+import { useDispatch } from 'react-redux'
+import { downloadReport } from '../../Features/Admin/adminActions'
 
 
 function AdminDashBoard() {
+  const [startDate,SetStartDate] = useState(new Date())
+  const [endDate,SetEndDate] = useState(new Date())
+  const dispatch = useDispatch()
+  const handleReport =()=>{
+    dispatch(downloadReport({startDate,endDate}))
+  }
+
   return (
     <>
-    <div className='flex flex-row'>
     <AdminSideBar/>
-    <div className='flex flex-1 flex-col ml-[19rem] mt-[4rem] gap-[2.5rem] '>
+    <div className='flex  flex-col ml-[16rem] p-8 gap-[2.5rem] bg-gray-100 '>
     <div className='flex flex-row  gap-[1rem] '>
     <Cards type={"companyBalance"}/>
     <Cards type={"trips"}/>
     <Cards type={"trips"}/>
     <Cards type={"trips"}/>
     </div>
-    <div className=''>
-      <div className='w-[70%]'>
+    <div className='flex flex-col gap-8'>
+      <div className='w-[70%] bg-white rounded-lg '>
       <Home/>
       </div>
-      {/* <div className='w-[30%]'> */}
-      {/* <div className='max-w-xl rounded-lg bg-white p-6 shadow-lg flex flex-col gap-6'>
-        <h1 className=''> Drivers with Maximum Completed Trips</h1>
-      <Table type={"mostActiveDrivers"} />
-      </div> */}
-      {/* </div> */}
+      <div className='w-[70%] bg-white rounded-lg '>
+      <DatePicker selected={startDate} onChange={(date)=>SetStartDate(date)} />
+      <DatePicker selected={endDate} onChange={(date)=>SetEndDate(date)}/>
+        <button onClick={handleReport}>Crreate Report</button>
+      <TripChart/>
+      </div>
     </div>
     <div className='flex flex-col  gap-[4rem]'>
       <div className='max-w-[90%] rounded-lg bg-white p-4 shadow-lg '>
         <h1 className='text-lg font-semibold'>Latest Trips</h1>
     <Table type={"latestRide"}/>
       </div>
-    </div>
     </div>
     </div>
     </>

@@ -85,3 +85,11 @@ export const mostActiveDriversService =async()=>{
   }
 }
 
+export const tripReportService = async(filter)=>{
+return await adminPrivate.get(`payment/admin/trip-report/${filter}`)
+}
+
+export const downloadReportService = async(filter)=>{
+  return await adminPrivate.post(`payment/admin/download-report`,filter)
+}
+

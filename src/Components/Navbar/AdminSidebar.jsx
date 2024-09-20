@@ -8,7 +8,7 @@ import { FcSalesPerformance } from "react-icons/fc";
 
 function AdminSidebar() {
   return (
-    <div className="fixed top-0 bottom-0 left-0 h-screen w-[18rem]   border-r-2 z-40 bg-white">
+    <div className="fixed top-0 bottom-0 left-0 h-screen w-[16rem]   border-r-2 z-40 bg-white">
       <div className="w-full flex justify-center items-center ">
         <img
           src="/assets/logo-cl.png"

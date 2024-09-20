@@ -11,33 +11,27 @@ import BarChartConfig from '../Chart/BarChartConfig'
 
 
 
-function Home() {
+function TripChart() {
   const [filter,setFilter] = useState('Daily')
   const [data,setData]  = useState()
-  const [tripData,setTripData] = useState('')
   const dispatch = useDispatch()
-  const {report,tripReport} = useSelector(state=>state.admin)
+  const {tripReport} = useSelector(state=>state.admin)
   useEffect(()=>{
-    dispatch(newlyRegisteredUsers(filter))
     dispatch(tripReports(filter))
-
   },[])
 
   useEffect(()=>{
-    if(report){ 
-   const dataFromReport =  ChartConfig(report)
-   setData(dataFromReport)    
-    }
+
     if(tripReport){
       const dataFromReport = BarChartConfig(tripReport)
-      setTripData(dataFromReport)
+      setData(dataFromReport)
     }
     
-  },[report,tripReport])
+  },[tripReport])
 
   const handleFilter = (e)=>{
     setFilter(e.target.id)
-    dispatch(newlyRegisteredUsers(e.target.id))
+    dispatch(tripReports(e.target.id))
   }
   return (
     <>
@@ -71,12 +65,11 @@ function Home() {
     Yearly
   </p>
 </div>
-
     <div className="min-w-full ">
-        <Userchart data={data}/>
+        <TripReportChart data={data}/>
     </div>
     </>
   )
 }
 
-export default Home
+export default TripChart

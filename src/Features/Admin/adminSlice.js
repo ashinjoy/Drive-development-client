@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import {adminLogin,getDriverDetails,blockUnblockDriver,driverDetails,getUserDetails, blockUnblockUser,searchDrivers,approveDriver,newlyRegisteredUsers} from './adminActions'
+import {adminLogin,getDriverDetails,blockUnblockDriver,driverDetails,getUserDetails, blockUnblockUser,searchDrivers,approveDriver,newlyRegisteredUsers, tripReports} from './adminActions'
 
 const adminData = JSON.parse(localStorage.getItem('adminData'))
 const adminAccessToken = localStorage.getItem('adminAccessToken')
@@ -14,7 +14,8 @@ const initialState = {
     success:false,
     message:'',
     error:'',
-    report:null
+    report:null,
+    tripReport:null
   };
   const adminSlice = createSlice({
       name: "adminSlice",
@@ -123,6 +124,17 @@ const initialState = {
         })
         .addCase(newlyRegisteredUsers.rejected,(state,action)=>{
           // state.error
+        })
+        .addCase(tripReports.pending,(state)=>{
+          state.loading = true
+        })
+        .addCase(tripReports.fulfilled,(state,action)=>{
+          console.log('action in tripReport',action?.payload?.tripStat);
+          
+          state.tripReport = action?.payload?.tripStat
+        })
+        .addCase(tripReports.rejected,(state,action)=>{
+          // state.error = 
         })
       }   
   })

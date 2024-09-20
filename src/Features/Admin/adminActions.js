@@ -9,7 +9,9 @@ import {
   getUserDetailService,
   blockUnblockUserService,
   searchDriverService,
-  newlyRegisteredUserService
+  newlyRegisteredUserService,
+  tripReportService,
+  downloadReportService
 } from "./adminService";
 
 
@@ -143,5 +145,33 @@ try {
 } catch (error) {
   console.error(error)
 }
+})
+
+export const tripReports = createAsyncThunk('tripReport',async(filter,{rejectWithValue})=>{
+  try {
+    const response = await tripReportService(filter)
+    return response.data
+  } catch (error) {
+    console.error(error);
+    
+  }
+})
+
+export const downloadReport = createAsyncThunk('downloadReport',async(filter,{rejectWithValue})=>{
+  try {
+    const response = await downloadReportService(filter)
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'driver-TripCollection-Report.pdf');
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    
+  }
 })
 
